@@ -1,0 +1,76 @@
+page-tutorial {
+  
+  .toolbar-background {
+    background: #fff;
+    border-color: transparent;
+  }
+
+  .slide-zoom {
+    height: 100%;
+  }
+
+  .slide-title {
+    margin-top: 2.8rem;margin-bottom: 44px; font-size: 36px; color: #616161;
+  }
+
+  .slide-image {
+    max-height: 50%;
+    max-width: 60%;
+    margin: 70px 0px 18px 0px;
+  }
+
+  b {
+    font-weight: 500;
+  }
+
+  p {
+    padding: 0px;
+    font-size: 30px;
+    line-height: 1.5;
+    color: #424242;font-family: 'open_sanslight'; letter-spacing: 2.5px;line-height: 44px;
+
+    b {
+      color: #000000;
+    }
+  }
+
+  h2{font-size: 36px; color:#5F5F5F; letter-spacing: 2.5px;    font-family: 'open-sans';}
+
+  .swiper-pagination-bullet-active{ height:22px; width:22px; background:#02ACD7 !important;opacity: 1;}
+  .swiper-pagination-bullet{ background:#CDEFF7; height:22px; width:22px;opacity: 1;}
+  .swiper-pagination{ padding-bottom:10px;}
+  .button-ios{color:#fff; font-size: 30px; letter-spacing: 2.5px;font-family: 'open_sanssemibold';height: 120px;
+	/* Firefox v3.6+ */
+	background-image:-moz-linear-gradient(100% 50% -180deg,rgb(2,173,216) 0%,rgb(2,199,249) 100%); 
+	/* safari v4.0+ and by Chrome v3.0+ */
+	background-image:-webkit-gradient(linear,100% 50%,30% 50%,color-stop(0, rgb(2,173,216)),color-stop(1, rgb(2,199,249)));
+	/* Chrome v10.0+ and by safari nightly build*/
+	background-image:-webkit-linear-gradient(-180deg,rgb(2,173,216) 0%,rgb(2,199,249) 100%);
+	/* Opera v11.10+ */
+	background-image:-o-linear-gradient(-180deg,rgb(2,173,216) 0%,rgb(2,199,249) 100%);
+	/* IE v10+ */
+	background-image:-ms-linear-gradient(-180deg,rgb(2,173,216) 0%,rgb(2,199,249) 100%);
+	background-image:linear-gradient(270deg,rgb(2,173,216) 0%,rgb(2,199,249) 100%);	
+	}
+
+.start-button:active{opacity: 0.5;}
+@media(max-width:749px){
+
+ h2{font-size: 18px; }
+ p{ font-size: 16px; letter-spacing: 0.2px; line-height: 24px; padding: 0px 28px; }
+  .swiper-pagination-bullet-active{ height:12px; width:12px;}
+  .swiper-pagination-bullet{height:12px; width:12px;}
+  .button-ios{ font-size: 16px; letter-spacing: normal; margin:0px; border-radius:0px;height: 66px;}
+  .slide-title {margin-top: 33px; margin-bottom: 16px; font-size: 18px; letter-spacing: 1px;   }
+  .slide-image {margin: 93px 0px 24px 0px; max-width: 72%;}
+ .swiper-pagination{bottom: 10px;}  
+
+}
+@media(max-width:479px){
+.slide-image{margin: 45px 0px 24px 0px;}
+.slide-title{margin-top: 16px;}
+p{padding: 0px 9px;}
+}
+
+  
+}

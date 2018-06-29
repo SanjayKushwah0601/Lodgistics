@@ -1,0 +1,230 @@
+<ion-header ion-fixed>
+
+  <ion-navbar>
+
+    <div align="center">
+      <ion-title (click)="!isPrivateChat?editGroup(groupInfo):''">{{groupInfo?groupInfo.name:''}}
+        <span *ngIf="!isPrivateChat">({{groupInfo?groupInfo.users.length:'0'}})</span>
+      </ion-title>
+    </div>
+
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding overflow-scroll="true" [ngClass]="isKeyboardOpen?'keyboard-open':'keyboard-close'" (click)="closekeyboard()"
+  (ionScroll)="onScroll($event)">
+  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="createFromDate!=fromDate">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-spinner *ngIf="showLoader && this.commonMethod.checkNetwork()" style="text-align:center;width:100%;">
+  </ion-spinner>
+  <ion-label class="label label-ios label-ios1" *ngIf="showLoader && this.commonMethod.checkNetwork()">Loading</ion-label>
+  <ion-label class="label label-ios label-ios1" *ngIf="createFromDate!=fromDate">Scroll down to see older messages</ion-label>
+  <span *ngFor="let res of allMessages; let i=index;let last = last" id="{{res.message_obj?res.message_obj.id:i+'str'}}">
+
+    <ion-label *ngIf="i==0 || (res.dateGroup | amDateFormat:'LL')  != (allMessages[i-1].dateGroup | amDateFormat:'LL')" class="btn-day label label-ios"
+      style="text-align:center;">{{(res.dateGroup | date:'MMM d, yyyy') | uppercase}}</ion-label>
+
+    <ion-label class="label label-ios label-ios1" *ngIf="!isPrivateChat && createFromDate==fromDate && i==0">{{userId != groupInfo.owner_id?groupCreatorName:'You'}} created group</ion-label>
+    <p *ngIf="res.user_added && res.user_id!=groupInfo.owner_id" style="text-align: center;" class="label label-ios label-ios1">{{res.user_id==userId?'You':res.user_name}} {{res.user_id==userId?'were':'was'}} added</p>
+
+    <ion-grid class="option-row" *ngIf="!res.user_added && res.message_obj && res.message_obj.showSeelected && res.message_obj.showSeelectedPosition!='bottom'">
+      <ion-row class="speech-bubble">
+        <ion-col col-12 class="option-col align-center">
+          <ion-icon ios="ios-copy-outline" md="md-copy" class="option-icon" (click)="coptyText(res.message_obj.id,i)"></ion-icon>
+          <ion-icon ios="ios-undo-outline" md="md-undo" class="option-icon" (click)="replyOnMessage(res.message_obj.id,i)"></ion-icon>
+          <ion-icon *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !(res.message_obj.work_order_id && res.message_obj.work_order_id>0)"
+            ios="ios-construct-outline" md="md-construct" [ngClass]="(allowWO && res.message_obj.work_order_id && res.message_obj.work_order_id>0)?'wo-dissable option-icon':'option-icon'"
+            (click)="(res.message_obj.work_order_id && res.message_obj.work_order_id>0)?'':confirmWorkOrder(res.message_obj.id,res.message_obj.message,i,res.message_obj.image_url,res.message_obj.mentioned_user_ids,res.message_obj.room_id)"></ion-icon>
+          <ion-icon ios="ios-close-outline" md="md-close" class="option-icon last-option-icon" (click)="closeOptions(res.message_obj.id,i)"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+    <ion-list *ngIf="!res.user_added && res.userInfo && res.userInfo.id==userId" [ngClass]="res.message_obj.showSeelected?'list2 select-chat-area':'list2'">
+      <div *ngIf="showNewId != null && res.message_obj.id==showNewId" style="text-align: center; color:#ec1455;font-family:'open_sanslight';font-size: 11px;font-weight: bold;">NEW MESSAGES
+        <hr style="background-color:#ec1455;height:0.9px;">
+      </div>
+
+
+
+      <ion-item [ngClass]="res.message_obj.showSeelected?'color-down':''">
+         <h2><span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
+        <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && res.message_obj.work_order_id && res.message_obj.work_order_id>0"
+          (click)="allowWO?editWorkOrder(res.message_obj.id,res.message_obj.work_order_id,i):''" style="padding-left:0px;">
+          <span class="{{(res.message_obj.work_order.status && res.message_obj.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{res.message_obj.work_order_id}}</span>
+        </span></h2> 
+        <p (press)="res.userInfo.is_system_user!='1'?openOptions(res.message_obj.id,i):''" class="self-msg" [ngClass]="res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'blue-border gray-background':!res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'gray-background':res.message_obj.temp_data && res.message_obj.id!=groupInfo.message_id?'blue-border':res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && !groupInfo.highlight_message? 'blue-border':highlightReplyMessage==true && highlightReplyMessageId==res.message_obj.id?'gray-background':''"
+          (click)="translate(res.message_obj.message,'es',i,res.message_obj.mentioned_user_ids)">
+          <span class="chat-msg-box">
+            <span *ngIf="res.message_obj.responding_to_chat_message_id && res.message_obj.responding_to_chat_message_id != null && res.message_obj.responding_to_chat_message_id != undefined && res.message_obj.responding_to_chat_message_id != 'null'"
+              class="reply-msg-box left" (click)="moveOnChatMsg(res.message_obj.responding_to_chat_message_id)">
+              <ion-note class="note note-ios" [innerHTML]="getchatMessage(res.message_obj.responding_to_chat_message_id)">
+              </ion-note>
+            </span>
+
+            <span *ngIf="res.message_obj.image_url">
+              <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth"
+                [style.width.px]="imageWidth" class="img_right" />
+              <br/>
+            </span>
+            <span class="msg_margin msg-span img_right" data-tap-disabled=true [innerHTML]="updateHtml(res.message_obj.message,res.message_obj.mentioned_user_ids) | safeHtml"></span>
+
+            <ion-note item-right="" class="note note-ios img_right">{{res.message_obj.created_at | date:'shortTime'}}</ion-note>
+          </span>
+        </p>
+        <span class="read_right sent" *ngIf="(res.read_count?res.read_count:'0')<=1">Sent</span>
+        <span class="read_right read_by_some" *ngIf="groupInfo.users.length>2 && !isPrivateChat && (res.read_count?res.read_count:'0')>1 && ((res.read_count?res.read_count:'0')<(groupInfo.users.length))">Read by some</span>
+        <span class="read_right read_by_all" *ngIf="groupInfo.users.length>2 && !isPrivateChat && (res.read_count?res.read_count:'0')>1 && ((res.read_count?res.read_count:'0')>=(groupInfo.users.length))">Read by All</span>
+        <span class="read_right read_by_all" *ngIf="(groupInfo.users.length<=2 && (res.read_count?res.read_count:'0')>1) || (isPrivateChat && (res.read_count?res.read_count:'0')>1)">Read</span>
+
+      </ion-item>
+    </ion-list>
+
+
+
+    <ion-list *ngIf="res.userInfo && !(res.userInfo.id==userId)" [ngClass]="res.message_obj.showSeelected==true?'select-chat-area':''">
+      <div *ngIf="showNewId != null && res.message_obj.id==showNewId" style="text-align: center; color:#ec1455;font-family:'open_sanslight';font-size: 11px;font-weight: bold;">NEW MESSAGES
+        <hr style="background-color:#ec1455;height:0.9px;">
+      </div>
+
+
+      <ion-item [ngClass]="res.message_obj.showSeelected?'color-down':''">
+        <ion-avatar *ngIf="res.userInfo.is_system_user!='1' && res.userInfo.image" item-left>
+          <img src="{{res.userInfo.image}}">
+        </ion-avatar>
+
+        <p *ngIf="res.userInfo.is_system_user=='1'" class="bot_user">
+          <span>
+            <img class="bot_user_img" src="{{res.userInfo.image}}" />
+            <span class="bot_user_name">
+              <b>{{res.userInfo?res.userInfo.name:''}}</b>
+            </span>
+          </span>
+
+        </p>
+
+        <h2 *ngIf="res.userInfo.is_system_user!='1'" style="padding-left:6px;">{{res.userInfo?res.userInfo.name:''}}
+            <span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
+          <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && res.message_obj.work_order_id && res.message_obj.work_order_id>0"
+            (click)="allowWO?editWorkOrder(res.message_obj.id,res.message_obj.work_order_id,i):''" class="{{(res.message_obj.work_order.status && res.message_obj.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{res.message_obj.work_order_id}}</span>
+        </h2>
+        <div [ngClass]="res.userInfo.is_system_user!='1'?'pull_left':'bot_user_msg'">
+          <p (press)="res.userInfo.is_system_user!='1'?openOptions(res.message_obj.id,i):''" [ngClass]="res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'blue-border gray-background':!res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'gray-background':res.message_obj.temp_data && res.message_obj.id!=groupInfo.message_id?'blue-border':res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && !groupInfo.highlight_message? 'blue-border':highlightReplyMessage==true && highlightReplyMessageId==res.message_obj.id?'gray-background':'' "
+            (click)="res.userInfo.is_system_user!='1'?translate(res.message_obj.message,'es',i,res.message_obj.mentioned_user_ids):''">
+            <span class="chat-msg-box">
+              <span *ngIf="res.message_obj.responding_to_chat_message_id && res.message_obj.responding_to_chat_message_id!=null && res.message_obj.responding_to_chat_message_id!='null' && res.message_obj.responding_to_chat_message_id != undefined"
+                class="reply-msg-box right" (click)="moveOnChatMsg(res.message_obj.responding_to_chat_message_id)">
+                <ion-note class="note note-ios" [innerHTML]="getchatMessage(res.message_obj.responding_to_chat_message_id)">
+                </ion-note>
+              </span>
+
+              <span *ngIf="res.message_obj.image_url">
+                <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth"
+                  [style.width.px]="imageWidth" class="img_left" />
+                <br/>
+              </span>
+
+              <span *ngIf="res.userInfo.is_system_user!='1'" class="msg_margin msg-span img_left" data-tap-disabled=true [innerHTML]="updateHtml(res.message_obj.message,res.message_obj.mentioned_user_ids) | safeHtml"></span>
+              <span *ngIf="res.userInfo.is_system_user=='1'" class="msg_margin msg-span img_left" data-tap-disabled=true>
+                <b>WO #{{res.message_obj.work_order_id}}</b> has been closed by
+                <b>{{res.woUserDetail?res.woUserDetail.name:''}}</b> at {{res.message_obj.work_order.closed_at | date:'shortTime'}}.
+                <br/>
+                <b>Location:</b>
+                <span [innerHTML]="(res.message_obj.work_order.location_detail?(res.message_obj.work_order.location_detail):'') | safeHtml"></span>
+                <br/>
+                <b>Request:</b> {{res.message_obj.work_order.description}}
+              </span>
+
+              <ion-note *ngIf="res.userInfo.is_system_user!='1'" item-right="" class="note note-ios img_left">{{res.message_obj.created_at | date:'shortTime'}}</ion-note>
+            </span>
+          </p>
+
+
+          <ng-container *ngIf="res.userInfo.is_system_user!='1' && groupInfo.users.length>2">
+            <span class="read_right read_by_some" *ngIf="!isPrivateChat && (res.read_count?res.read_count:'0')>=1 && ((res.read_count?res.read_count:'0')<(groupInfo.users.length))">Read by some</span>
+            <span class="read_right read_by_all" *ngIf="!isPrivateChat && (res.read_count?res.read_count:'0')>1 && ((res.read_count?res.read_count:'0')>=(groupInfo.users.length))">Read by All</span>
+            <span class="read_right read_by_all" *ngIf="!isPrivateChat && ((res.read_count == null) || (res.read_count== undefined) || (res.read_count==''))"
+              style="color:transparent">Loading...</span>
+          </ng-container>
+
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <ion-grid class="option-row" *ngIf="!res.user_added && res.message_obj && res.message_obj.showSeelected && res.message_obj.showSeelectedPosition=='bottom'">
+      <ion-row class="speech-bubble-bottom">
+        <ion-col col-12 class="option-col align-center">
+          <ion-icon ios="ios-copy-outline" md="md-copy" class="option-icon" (click)="coptyText(res.message_obj.id,i)"></ion-icon>
+          <ion-icon ios="ios-undo-outline" md="md-undo" class="option-icon" (click)="replyOnMessage(res.message_obj.id,i)"></ion-icon>
+          <ion-icon *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !(res.message_obj.work_order_id && res.message_obj.work_order_id>0)"
+            ios="ios-construct-outline" md="md-construct" [ngClass]="(allowWO && res.message_obj.work_order_id && res.message_obj.work_order_id>0)?'wo-dissable option-icon':'option-icon'"
+            (click)="(res.message_obj.work_order_id && res.message_obj.work_order_id>0)?'':confirmWorkOrder(res.message_obj.id,res.message_obj.message,i,res.message_obj.image_url,res.message_obj.mentioned_user_ids,res.message_obj.room_id)"></ion-icon>
+          <ion-icon ios="ios-close-outline" md="md-close" class="option-icon last-option-icon" (click)="closeOptions(res.message_obj.id,i)"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </span>
+
+</ion-content>
+
+<ion-footer *ngIf="showFooterBar">
+  <div *ngIf="!this.commonMethod.checkNetwork()" class="toast-message">Network connection loss.</div>
+  <div *ngIf="!socketConnection && this.commonMethod.checkNetwork()" class="toast-message">Loading...</div>
+  <ion-toolbar *ngIf="socketConnection" position="bottom">
+
+    <span class="scroll-ion" *ngIf="showMembers">
+      <span class="counting">@
+        <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label>
+      </span>
+      <ion-scroll scrollX="true">
+        <ul class="results">
+          <ng-container *ngFor="let memberInfo of mentionMembers">
+            <li *ngIf="memberInfo.is_system_user!='1'" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+              <span>
+                <img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
+              </span>
+              <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
+            </li>
+          </ng-container>
+          <li *ngIf="!isPrivateChat && totalMentionUsers>1" style="padding-left: 5px;" (mousedown)="(this.mentionUsers.length != totalMentionUsers)?selectAllMention($event,true):selectAllMention($event,false)"
+            [ngClass]="mentionUsers.length == totalMentionUsers?'selected':''">
+            <label style="font-weight:600;">ALL</label>
+          </li>
+        </ul>
+      </ion-scroll>
+    </span>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col col-9>
+
+
+
+          <textarea *ngIf="!isPrivateChat" type="text" placeholder="Start typing here" autocomplete="off" autocorrect="on" spellcheck="on"
+            autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+          <textarea *ngIf="isPrivateChat" type="text" placeholder="Message {{groupInfo.name}}" autocomplete="off" autocorrect="on"
+            spellcheck="on" autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+
+        </ion-col>
+        <ion-col col-3 align-self-end>
+
+
+          <label *ngIf="!textMessage.trim()" for="file">
+            <ion-icon ios="ios-image" md="md-image" (click)="showGalleryPrompt()"></ion-icon>
+          </label>
+
+
+          <button *ngIf="textMessage.trim()" ion-button (click)="sendMessage('','')" [disabled]="!textMessage.trim()">Post</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+  </ion-toolbar>
+
+
+</ion-footer>

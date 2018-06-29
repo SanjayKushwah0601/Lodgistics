@@ -1,0 +1,40 @@
+<!-- <ion-backdrop disable-activated="" role="presentation" tappable="" class="backdrop-no-tappable" style="opacity: 0.5;"></ion-backdrop> -->
+<div class="reply-box" style="height: 100%; padding-top: 20%;">
+  <div class="popup-box">
+
+    <div class="msg-box" [innerHTML]="tempMessageData.message_obj.message"></div>
+
+    <span class="scroll-ion">
+      <span class="counting">@
+        <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label>
+      </span>
+      <ion-scroll scrollX="true">
+        <ul class="results">
+          <ng-container *ngFor="let memberInfo of mentionMembersFilter">
+            <li *ngIf="memberInfo.is_system_user!='1'" (mousedown)="selectUser($event,memberInfo,'false')" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+              <span>
+                <img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
+              </span>
+              <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
+            </li>
+          </ng-container>
+          <li *ngIf="mentionMembers.length>1" style="padding-left: 5px;" (mousedown)="this.mentionUsers.length != mentionMembers.length?selectAllMention($event,true):selectAllMention($event,false)"
+            [ngClass]="mentionUsers.length == mentionMembers.length?'selected':''">
+            <label style="font-weight:600;">ALL</label>
+          </li>
+        </ul>
+      </ion-scroll>
+    </span>
+
+
+    <textarea name="Text1" placeholder="Your Response" rows="3" [(ngModel)]="messageText" (ngModelChange)="changeModelValue()"
+    (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+
+    <div class="popup-buttons">
+      <button ion-button (click)="dismiss()">CANCEL</button>
+      <button ion-button [disabled]="!messageText.trim()" (click)="send()">SEND</button>
+    </div>
+
+
+  </div>
+</div>

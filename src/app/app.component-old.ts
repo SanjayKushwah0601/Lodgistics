@@ -1,0 +1,1638 @@
+import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Nav, Platform, AlertController, Events, MenuController } from 'ionic-angular';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { NativeStorage } from '@ionic-native/native-storage';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { srviceMethodsCall } from '../services/serviceMethods';
+
+import { TutorialPage } from '../pages/tutorial/tutorial';
+import { LoginPage } from '../pages/login/login';
+import { ProfilePage } from '../pages/profile/profile';
+import { FeedsPage } from '../pages/feeds/feeds';
+import { CreateFeedsPage } from '../pages/createFeeds/createFeeds';
+import { FeedDetailPage } from '../pages/feedDetail/feedDetail';
+import { CreateHotelPage } from '../pages/createHotel/createHotel';
+import { NewAccountPage } from '../pages/newAccount/newAccount';
+import { ForgetPasswordPage } from '../pages/forgetPassword/forgetPassword';
+import { ChattingPage } from '../pages/chatting/chatting';
+import { TranslationPage } from '../pages/translation/translation';
+import { MyMentionPage } from '../pages/myMention/myMention';
+import { GroupChatPage } from '../pages/groupChat/groupChat';
+import { ReplyMessagePage } from '../pages/replyMessage/replyMessage';
+import { getPrivateOnlyUrl } from '../services/configURLs';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { getGroupsOnlyUrl } from '../services/configURLs';
+import { WebHomePage } from '../pages/webHomePage/webHomePage';
+import { Keyboard } from '@ionic-native/keyboard';
+import { deleteMentionUrl } from '../services/configURLs';
+import { getAllMembersUrl } from '../services/configURLs';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { viewWorkOrderUrl } from '../services/configURLs';
+import { dbVersion } from '../providers/appConfig';
+import {hotelSwitchMsg} from '../providers/appConfig';
+import ActionCable from 'actioncable';
+import { webSocketBaseUrl } from '../services/configURLs';
+
+@Component({
+  templateUrl: 'app.html',
+  providers: [NativeStorage, Push, srviceMethodsCall, SQLite, Keyboard, InAppBrowser]
+})
+export class MyApp {
+  @ViewChild(Nav) nav: Nav;
+  @ViewChild('content') elementView: ElementRef;
+
+  rootPage: any;
+  public chanelCreateData: any;
+  public groupReponse: any;
+  pages: Array<{ title: string, component: any }>;
+  public fullAppHeight;
+  public keyboardHeight = 0;
+  hotelMenu = [];
+  currentHotelName = "";
+  showHotelMenu = false;
+  public cable: any;
+  public userPermissions: any;
+public alerts=[];
+
+  constructor(public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController) {
+    this.initializeApp();
+    // used for an example of ngFor and navigation
+    this.userPermissions = {
+      "wo_access": {
+        "view_listing": false
+      }
+    };
+    events.subscribe('update:permiossion', () => {
+      console.log("update:permiossion");
+      this.getWOPermission();
+    });
+
+    /* If you are updating Work order page title then please also update on in app.html */
+    this.pages = [
+      { title: 'Work Orders', component: WebHomePage },
+      { title: 'Profile', component: ProfilePage }
+    ];
+    events.subscribe('updateHotel:list', (hotels,index) => {
+      // user and time are the same arguments passed in `events.publish(user, time)`
+      console.log('updateHotel:list', JSON.stringify(hotels)+index);
+      this.hotelMenu = [];
+      for (let i = 0; i < hotels.length; i++) {
+        if (i == index) {
+          // if (this.currentHotelName == "") {
+            this.currentHotelName = hotels[i].name;
+          // }
+        }
+        this.hotelMenu.push({ name: hotels[i].name, token: hotels[i].token, created_at: hotels[i].created_at });
+      }
+    });
+
+    events.subscribe('subscribeInAppNotification', () => {
+      this.subscribeAcNotification();
+    });
+
+    this.keyboard.onKeyboardShow().subscribe(data => {
+
+      this.keyboardHeight = data.keyboardHeight;
+      let view = this.nav.getActive();
+      if (view.component.name == FeedsPage.name || view.component.name == ChattingPage.name || view.component.name == MyMentionPage.name) {
+        this.fullAppHeight = window.innerHeight;
+      }
+      else {
+        this.fullAppHeight = window.innerHeight - this.keyboardHeight;
+      }
+      this.zone.run(() => {
+        this.fullAppHeight = this.fullAppHeight;
+      });
+      console.log("Galaxy show" + this.fullAppHeight);
+    });
+    events.subscribe('hide:keyboard', () => {
+      this.zone.run(() => {
+        this.fullAppHeight = window.innerHeight;
+      });
+
+    });
+
+    this.keyboard.onKeyboardHide().subscribe(data => {
+      this.zone.run(() => {
+        this.fullAppHeight = window.innerHeight;
+      });
+
+    });
+    events.subscribe('login:Notification', (notification) => {
+      // alert("view");
+      console.log("login:Notification");
+      this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
+      this.commonMethod.showLoader();
+      this.openSpecificPage(notification);
+    });
+
+
+
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      // Okay, so the platform is ready and our plugins are available.
+      // Here you can do any higher level native things you might need.
+      this.hotelMenu = [];
+      this.nativeStorage.getItem('user_properties').then(
+        hotels => {
+          console.log("userProperties=" + hotels);
+          for (let i = 0; i < hotels.length; i++) {
+            this.hotelMenu.push({ name: hotels[i].name, token: hotels[i].token, created_at: hotels[i].created_at });
+          }
+        },
+        error => {
+          console.log("userProperties error" + error);
+        }
+      );
+      this.getWOPermission();
+      this.initPushNotification();
+      this.subscribeAcNotification();
+      this.fullAppHeight = window.innerHeight;
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+          /* If user login redirect to feed page */
+          if (accessToken.access_token && accessToken.access_token != '') {
+
+            this.currentHotelName = accessToken.hotel_name;
+            let alertVar = this.alertCtrl.create({
+              title: 'Error!',
+              subTitle: 'Invalid Details!',
+              buttons: ['OK']
+            });
+
+            if (accessToken.db_version != null && accessToken.db_version != undefined &&  accessToken.db_version!=dbVersion) {
+              
+              this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: accessToken.property_token, hotel_created: accessToken.hotel_created, hotel_name: accessToken.hotel_name, user_id: accessToken.user_id, db_version: dbVersion })
+              .then(() => {
+                this.changeHotel(accessToken.property_token,accessToken.hotel_name,accessToken.hotel_created,undefined);
+              },
+              error => {
+              });
+            }
+            else{
+              this.rootPage = FeedsPage;
+            }
+
+            // if (accessToken.db_version != null && accessToken.db_version != undefined) {
+            //   //parseFloat(accessToken.db_version)<dbVersion
+            //   if (accessToken.db_version <= 0.1) {
+            //     this.sqlite.create({
+            //       name: 'data.db',
+            //       location: 'default'
+            //     }).then((db: SQLiteObject) => {
+            //       console.log("no previous data");
+
+            //       db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
+            //         .then((dbRes) => {
+            //           console.log("chat_messages added");
+            //         }, (error) => {
+            //           console.error("Unable to execute sql", error);
+            //         }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //       db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
+            //         .then((dbRes) => {
+            //           console.log("is_system_user added");
+            //         }, (error) => {
+            //           console.error("Unable to execute sql", error);
+            //         }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //       db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
+            //         .then((dbRes) => {
+            //           console.log("chat_messages added");
+            //           this.syncMembers(dbRes, db, alertVar);
+            //         }, (error) => {
+            //           console.error("Unable to execute sql", error);
+            //         }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //     }).catch(e => console.log(e));
+            //   }
+            // }
+            // else {
+
+            //   this.sqlite.create({
+            //     name: 'data.db',
+            //     location: 'default'
+            //   }).then((db: SQLiteObject) => {
+            //     console.log("no previous data");
+
+            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_id INTEGER", {})
+            //       .then((dbRes) => {
+            //         console.log("chat_messages added");
+            //       }, (error) => {
+            //         console.error("Unable to execute sql", error);
+            //       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+
+            //     db.executeSql("ALTER TABLE members ADD COLUMN is_maintenance_dep INTEGER", {})
+            //       .then((dbRes) => {
+            //         this.syncMembers(dbRes, db, alertVar);
+            //       }, (error) => {
+            //         console.error("Unable to execute sql", error);
+            //       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //     db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
+            //       .then((dbRes) => {
+            //         console.log("is_system_user added");
+            //       }, (error) => {
+            //         console.error("Unable to execute sql", error);
+            //       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
+            //       .then((dbRes) => {
+            //         console.log("chat_messages added");
+            //       }, (error) => {
+            //         console.error("Unable to execute sql", error);
+            //       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
+            //       .then((dbRes) => {
+            //         console.log("chat_messages added");
+            //       }, (error) => {
+            //         console.error("Unable to execute sql", error);
+            //       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+            //   }).catch(e => console.log(e));
+            // }
+            // this.rootPage = FeedsPage;
+          }
+
+        },
+        error => {
+          this.rootPage = LoginPage;
+          return '';
+        }
+      );
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+
+    });
+  }
+
+  syncMembers(dbRes, db, alertVar) {
+
+    console.log("TABLE CREATED: " + JSON.stringify(dbRes));
+
+    let allExistingIds = [];
+    db.executeSql("SELECT * FROM members", []).then((dataSQL) => {
+      console.log("TABLE DATA: " + JSON.stringify(dataSQL));
+
+      if (dataSQL.rows.length > 0) {
+        for (var i = 0; i < dataSQL.rows.length; i++) {
+          allExistingIds.push({
+            user_id: dataSQL.rows.item(i).user_id
+          });
+        }
+      }
+
+      /*  get member api call start */
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+
+          if (this.commonMethod.checkNetwork()) {
+            this.commonMethod.getDataWithoutLoder(getAllMembersUrl, accessToken).subscribe(
+              data => {
+                //this.foundRepos = data.json();
+                let users = data.json();
+                console.error(users);
+
+
+                for (let i = 0; i < users.length; i++) {
+                  let insertFlag = true;
+                  for (let j = 0; j < allExistingIds.length; j++) {
+                    if (users[i].id == allExistingIds[j].user_id) {
+                      insertFlag = false;
+                    }
+                  }
+                  let is_maintenance_dep = 0;
+                  for (let val = 0; val < users[i].departments.length; val++) {
+                    console.log("departments" + users[i].departments[val].name);
+                    if (users[i].departments[val].name == "Maintenance") {
+                      is_maintenance_dep = 1;
+                    }
+                  }
+                  console.log("departments maintainance" + is_maintenance_dep);
+
+                  let is_system_user = users[i].is_system_user == true ? 1 : 0;
+                  if (insertFlag == true) {
+                    db.executeSql("INSERT INTO members (user_id, hotel_token, name, image, role, title,is_maintenance_dep,is_system_user) VALUES ('" + users[i].id + "','','" + users[i].name + "','" + users[i].avatar.medium + "','" + users[i].role + "','" + users[i].title + "'," + is_maintenance_dep + "," + is_system_user + ")", {}).then((data1) => {
+
+                      console.log("INSERTED: " + JSON.stringify(data1));
+                    }, (error1) => {
+                      console.log("INSERT ERROR: " + JSON.stringify(error1));
+                    });
+                  }
+                  else {
+                    db.executeSql("UPDATE members SET user_id='" + users[i].id + "', hotel_token='', name='" + users[i].name + "', image='" + users[i].avatar.medium + "', role='" + users[i].role + "', is_maintenance_dep=" + is_maintenance_dep + ", is_system_user=" + is_system_user + " WHERE user_id='" + users[i].id + "'", {}).then((data1) => {
+                      console.log("UPDATED: " + JSON.stringify(data1));
+                    }, (error1) => {
+                      console.log("UPDATED ERROR: " + JSON.stringify(error1));
+                    });
+                  }
+
+                }
+
+                this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: accessToken.property_token, hotel_created: accessToken.hotel_created, hotel_name: accessToken.hotel_name, user_id: accessToken.user_id, db_version: dbVersion })
+                  .then(() => { console.log('Stored item') },
+                  error => { console.error('Error storing item', error) }
+                  );
+
+              },
+              err => {
+                //this.commonMethod.hideLoader();
+                alertVar.present();
+                console.error("Error : " + err);
+              },
+              () => {
+                //this.commonMethod.hideLoader();
+                console.log('get member Data completed');
+              }
+            );
+
+          }
+          else {
+            this.commonMethod.hideLoader();
+            this.commonMethod.showNetworkError();
+          }
+
+        },
+        error => {
+          this.commonMethod.hideLoader();
+          return '';
+        }
+      );
+      /*  get member api call end */
+
+    }, (error) => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  openPage(page) {
+    // Reset the content nav to have just this page
+    // we wouldn't want the back button to show in this scenario
+    if (page.component == ProfilePage) {
+      this.nav.push(page.component);
+    }
+    else {
+      this.nav.setRoot(page.component);
+    }
+  }
+
+  changeHotel(propertyToken, hotelName, hotelCreated, notification) {
+
+    if (this.commonMethod.checkNetwork()) {
+      this.commonMethod.showLoader();
+      let hotelCreatedDate = new Date(hotelCreated);
+      let dd = ("0" + hotelCreatedDate.getDate()).slice(-2);
+      let mm = ("0" + ((hotelCreatedDate.getMonth()) + 1)).slice(-2); //January is 0!
+      let yyyy = hotelCreatedDate.getFullYear();
+
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+          //accessToken.db_version
+
+          /* disconnect in app notification */
+          if (this.cable == undefined) {
+          } else {
+            this.cable.disconnect();
+          }
+
+          // alert(accessToken.db_version);
+          // console.log(accessToken.db_version);
+          this.nativeStorage.remove('user_auth')
+            .then(
+            () => {
+              console.log('Removed item!');
+              this.nativeStorage.remove('lastPage');
+              this.nativeStorage.remove('groupInfo');
+
+              this.nativeStorage.remove('feedData')
+                .then(
+                () => {
+                  console.log('Removed feedData!');
+                },
+                error => console.error('Error storing item', error)
+                );
+
+              this.nativeStorage.remove('wo_data').then(() => {
+                console.log('Removed wo_data!');
+              },
+                error => console.error('Error remove wo_data', error)
+              );
+
+              this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: propertyToken, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: hotelName, user_id: accessToken.user_id, db_version: accessToken.db_version })
+                .then(
+                () => {
+                  console.log('Stored item!');
+
+                  this.sqlite.deleteDatabase({
+                    name: 'data.db',
+                    location: 'default'
+                  })
+                    .then((db: SQLiteObject) => {
+                      console.log('DELETE DATABASE');
+
+                      this.sqlite.create({
+                        name: 'data.db',
+                        location: 'default'
+                      }).then((db: SQLiteObject) => {
+
+                        db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
+                          .then((dbRes) => {
+
+                            db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
+                              .then((dbUserRes) => {
+                                console.log("CREATE TABLE chat_group_users" + JSON.stringify(dbUserRes));
+
+                                db.executeSql("CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER, sender_id INTEGER,hotel_token TEXT, message TEXT, image TEXT, target_id INTEGER, type TEXT, deleted_at TEXT, created_at TEXT, updated_at TEXT, read_status INTEGER, mentioned_user_ids TEXT, parent_id TEXT, work_order_id INTEGER, work_order_url TEXT, work_order_status TEXT, work_order_closed_by_user_id INTEGER, work_order_closed_at TEXT, work_order_location_detail TEXT, work_order_description TEXT)", {}).then((data1) => {
+                                  console.log("MESSAGE TABLE CREATED: " + JSON.stringify(data1));
+
+                                  db.executeSql('CREATE TABLE IF NOT EXISTS chat_groups(id INTEGER, name TEXT, hotel_token TEXT, created_by_id INTEGER,deleted_at TEXT,created_at TEXT,updated_at TEXT, image_url TEXT)', {})
+                                    .then((dbRes) => {
+                                      console.log("CREATE TABLE chat_groups" + JSON.stringify(dbRes));
+
+                                    db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
+                                      .then((dbRes) => {
+                                        console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
+                                      
+                                      /*  get member api call start */
+                                      this.nativeStorage.getItem('user_auth').then(
+                                        accessToken => {
+
+                                          this.subscribeAcNotification();
+
+                                          if (this.commonMethod.checkNetwork()) {
+                                            this.commonMethod.getDataWithoutLoder(getAllMembersUrl, accessToken).subscribe(
+                                              data => {
+                                                //this.foundRepos = data.json();
+                                                let users = data.json();
+                                                console.error(users);
+
+
+                                                for (let i = 0; i < users.length; i++) {
+                                                  let is_maintenance_dep = 0;
+                                                  for (let val = 0; val < users[i].departments.length; val++) {
+                                                    console.log("departments" + users[i].departments[val].name);
+                                                    if (users[i].departments[val].name == "Maintenance") {
+                                                      is_maintenance_dep = 1;
+                                                    }
+                                                  }
+                                                  console.log("departments maintainance" + is_maintenance_dep);
+
+                                                  let is_system_user = users[i].is_system_user == true ? 1 : 0;
+                                                  db.executeSql("INSERT INTO members (user_id, hotel_token, name, image, role, title,is_maintenance_dep, is_system_user) VALUES ('" + users[i].id + "','','" + users[i].name + "','" + users[i].avatar_img_url + "','" + users[i].role + "','" + users[i].title + "'," + is_maintenance_dep + "," + is_system_user + ")", {}).then((data1) => {
+                                                    console.log("INSERTED: " + JSON.stringify(data1));
+                                                  }, (error1) => {
+                                                    console.log("INSERT ERROR: " + JSON.stringify(error1));
+                                                  });
+                                                }
+
+                                                this.nativeStorage.getItem('user_properties').then(
+                                                  properties => {
+                                                    var index;
+                                                    for (let i = 0; i < properties.length; i++) {
+                                                      if (properties[i].token == propertyToken) {
+                                                        index = i;
+                                                      }
+                                                    }
+                                                    this.events.publish('updateHotel:list', properties,index);
+    
+                                                    this.events.publish('subscribeInAppNotification');
+                                                  },
+                                                  error => {
+                                                    console.log("userProperties error" + error);
+                                                  }
+                                                );
+                                                
+                                                this.currentHotelName = hotelName;
+                                                this.showHotelMenu = false;
+                                                if (notification == undefined || notification == 'undefined') {
+                                                  this.commonMethod.hideLoader();
+                                                  this.nav.setRoot(FeedsPage);
+                                                } else {
+                                                  this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
+
+                                                  this.openSpecificPage(notification);
+                                                }
+                                              },
+                                              err => {
+
+                                                this.commonMethod.hideLoader();
+                                                let alertVar = this.alertCtrl.create({
+                                                  title: 'Error!',
+                                                  subTitle: 'Invalid Details!',
+                                                  buttons: ['OK']
+                                                });
+                                                alertVar.present();
+                                                console.error("Error : " + err);
+                                              },
+                                              () => {
+                                                //this.commonMethod.hideLoader();
+                                                console.log('get member Data completed');
+                                              }
+                                            );
+
+                                          }
+                                          else {
+                                            this.commonMethod.hideLoader();
+                                            this.commonMethod.showNetworkError();
+                                          }
+
+                                        },
+                                        error => {
+                                          this.commonMethod.hideLoader();
+                                          return '';
+                                        }
+                                      );
+                                      /*  get member api call end */
+
+                                    }, (error) => {
+                                      console.error("Unable to execute sql user_mentions", error);
+                                    }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
+
+                                    }, (error) => {
+                                      console.error("Unable to execute sql", error);
+                                    }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+                                }, (error) => {
+                                  console.error("Unable to execute sql", error);
+                                }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+                              }, (error) => {
+                                console.error("Unable to execute sql", error);
+                              }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+
+                          }, (error) => {
+                            console.error("Unable to execute sql", error);
+                          }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+                      });
+
+                    })
+                    .catch(e => console.log(e));
+                },
+                error => console.error('Error storing item', error)
+                );
+
+            },
+            error => console.error('Error storing item', error)
+            );
+        },
+        error => {
+          this.commonMethod.hideLoader();
+          return '';
+        }
+      );
+
+    }
+    else {
+      this.commonMethod.showNetworkError();
+    }
+
+  }
+
+  initPushNotification() {
+    // to check if we have permission
+    this.push.hasPermission()
+      .then((res: any) => {
+
+        if (res.isEnabled) {
+          console.log('We have permission to send push notifications');
+        } else {
+          console.log('We do not have permission to send push notifications');
+        }
+
+      });
+    // to initialize push notifications
+    const options: PushOptions = {
+      android: {
+        senderID: '51863109530',
+        icon: "ic_launcher"
+
+      },
+      ios: {
+        alert: 'true',
+        badge: true,
+        clearBadge: "true",
+        sound: 'true'
+      },
+      windows: {}
+    };
+
+    const pushObject: PushObject = this.push.init(options);
+    pushObject.on('notification').subscribe((notification: any) => {
+      console.log('Received a notification', JSON.stringify(notification));
+      // "additionalData":{"type":{"name":"private_unread_messages","property_token"
+
+      /*
+      let activeView = this.nav.getActive();
+      console.log("page status = "+JSON.stringify(activeView));
+      if (activeView != null) {
+        if(activeView.isOverlay) {      
+          activeView.dismiss();
+        }
+      }
+      */
+
+    if (this.alerts.length) {
+        this.alerts.forEach(e => {
+          e.dismiss();
+          console.log("Dismiss all");
+       });
+      }
+     
+
+
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+
+          if (notification.additionalData.foreground) {
+            let confirmAlert = this.alertCtrl.create({
+              title: 'New Notification',
+              cssClass: 'alert-notification',
+              enableBackdropDismiss: false,
+              message: notification.message,
+              buttons: [{
+                text: 'Ignore',
+                role: 'cancel'
+              }, {
+                text: 'View',
+                handler: () => {
+                  if (notification.additionalData.type.property_token && notification.additionalData.type.property_token == accessToken.property_token) {
+                    this.commonMethod.showLoader();
+                    this.openSpecificPage(notification);
+                  } else {
+                    let confirmAlert = this.alertCtrl.create({
+                      title: 'New Notification',
+                      cssClass: 'alert-notification',
+                      enableBackdropDismiss: false,
+                      message: hotelSwitchMsg,
+                      buttons: [{
+                        text: 'Ignore',
+                        role: 'cancel'
+                      }, {
+                        text: 'Change',
+                        handler: () => {
+                          this.hotelMenu = [];
+                          this.nativeStorage.getItem('user_properties').then(
+                            hotels => {
+                              console.log("userProperties=" + hotels);
+                              for (let i = 0; i < hotels.length; i++) {
+                                if (hotels[i].token == notification.additionalData.type.property_token) {
+                                  this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification);
+                                }
+                              }
+
+                            },
+                            error => {
+                              console.log("userProperties error" + error);
+                            }
+                          );
+
+                        }
+                      }]
+                    });
+                    this.alerts.push(confirmAlert);
+                    confirmAlert.present();
+                  }
+                }
+              }]
+            });
+            this.alerts.push(confirmAlert);
+            confirmAlert.present();
+            
+          } else {
+            // this.commonMethod.showLoader();
+            // this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": -1 });
+            // this.openSpecificPage(notification);
+            if (notification.additionalData.type.property_token && notification.additionalData.type.property_token == accessToken.property_token) {
+              this.commonMethod.showLoader();
+              this.openSpecificPage(notification);
+            } else {
+              let confirmAlert = this.alertCtrl.create({
+                title: 'New Notification',
+                cssClass: 'alert-notification',
+                enableBackdropDismiss: false,
+                message: 'Would you like to change hotel?',
+                buttons: [{
+                  text: 'Ignore',
+                  role: 'cancel'
+                }, {
+                  text: 'Change',
+                  handler: () => {
+                    this.hotelMenu = [];
+                    this.nativeStorage.getItem('user_properties').then(
+                      hotels => {
+                        console.log("userProperties=" + hotels);
+                        for (let i = 0; i < hotels.length; i++) {
+                          if (hotels[i].token == notification.additionalData.type.property_token) {
+                            // this.hotelMenu.push({ name: hotels[i].name, token: hotels[i].token, created_at:hotels[i].created_at });
+                            this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification);
+                          }
+                        }
+
+                      },
+                      error => {
+                        console.log("userProperties error" + error);
+                      }
+                    );
+
+                  }
+                }]
+              });
+              this.alerts.push(confirmAlert);
+              confirmAlert.present();
+            }
+          }
+
+        },
+        error => {
+          // this.commonMethod.hideLoader();
+
+          if (notification.additionalData.foreground) {
+            let confirmAlert = this.alertCtrl.create({
+              title: 'New Notification',
+              cssClass: 'alert-notification',
+              enableBackdropDismiss: false,
+              message: notification.message,
+              buttons: [{
+                text: 'Ignore',
+                role: 'cancel'
+              }, {
+                text: 'View',
+                handler: () => {
+                  this.nav.setRoot(LoginPage, { notification: notification });
+                }
+              }]
+            });
+            this.alerts.push(confirmAlert);
+            confirmAlert.present();
+          } else {
+            this.nav.setRoot(LoginPage, { notification: notification });
+
+          }
+          return '';
+        });
+    });
+    pushObject.on('registration').subscribe((registration: any) => {
+      console.log('Device registered', JSON.stringify(registration));
+      //alert(registration.registrationId); 
+
+      this.nativeStorage.setItem('device_token', { tokenId: registration.registrationId }).then(
+        () => console.log('Stored device_token!'),
+        error => console.error('Error storing device_token', error)
+      );
+
+    });
+    pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
+  }
+  openSpecificPage(notification) {
+    //TODO: Your logic here
+    let view = this.nav.getActive();
+    this.menuCtrl.close();
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        // alert(JSON.stringify(notification));
+        if (accessToken.access_token != undefined && accessToken.access_token != '') {
+          if (notification.additionalData == undefined || notification.additionalData.type == undefined) {
+            this.commonMethod.hideLoader;
+          } else {
+            let typeName = notification.additionalData.type.name;
+            let detail = notification.additionalData.type.detail;
+            if (typeName == "feed") {
+              this.commonMethod.hideLoader();
+              this.openFeeds(detail.feed_id, detail.notified_user_mention_id);
+            } else if (typeName == "feed_comment") {
+
+              if (detail.notified_user_mention_id == undefined) {
+                this.commonMethod.hideLoader();
+                this.nav.push(FeedDetailPage, { feed_id: detail.feed_id, feed_comment_id: detail.feed_comment_id });
+              } else {
+                this.openDetail(detail.feed_id, detail.notified_user_mention_id, detail.feed_comment_id);
+              }
+
+            } else if (typeName == "group_chat" || typeName == "direct_chat") {
+              console.log(detail.is_acknowledged + " 1q acknowledge");
+
+              this.nativeStorage.getItem('groupInfo').then(group => {
+                if (detail.chat_id == group.groupID && notification.additionalData.foreground) {
+                  // this.commonMethod.hideLoader();
+
+                  this.notifyChat(detail.chat_message_id, detail.notified_user_mention_id, detail.is_acknowledged);
+                } else {
+                  this.nativeStorage.setItem('groupInfo', { "groupID": detail.chat_id });
+                  if (typeName == "direct_chat") {
+                    this.commonMethod.hideLoader();
+                    this.openPrivateChat(detail.chat_id, detail.chat_message_id, detail.chat_message_created_at, detail.notified_user_mention_id, detail.is_acknowledged);
+                  } else {
+                    this.openGroupCaht(detail.chat_id, detail.chat_message_id, detail.chat_message_created_at, detail.notified_user_mention_id, detail.is_acknowledged);
+                  }
+
+                }
+
+              },
+                error => {
+                  this.nativeStorage.setItem('groupInfo', { "groupID": detail.chat_id });
+
+                  if (typeName == "direct_chat") {
+                    this.commonMethod.hideLoader();
+                    this.openPrivateChat(detail.chat_id, detail.chat_message_id, detail.chat_message_created_at, detail.notified_user_mention_id, detail.is_acknowledged);
+                  } else {
+                    this.openGroupCaht(detail.chat_id, detail.chat_message_id, detail.chat_message_created_at, detail.notified_user_mention_id, detail.is_acknowledged);
+                  }
+
+                }
+              );
+
+
+            }
+            else if (typeName == "wo_added") {
+              this.commonMethod.hideLoader();
+              this.openWorkOrderPage(detail.work_order_id);
+              // this.nav.setRoot(WebHomePage, { id: detail.work_order_id });
+            } else if (typeName == "unchecked_mentions") {
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(MyMentionPage);
+            } else if (typeName == "group_unread_messages") {
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(ChattingPage);
+            } else if (typeName == "private_unread_messages") {
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(ChattingPage, { show_private_list: true });
+            } else if (typeName == "group_create") {
+              this.commonMethod.hideLoader();
+              this.openGroupCaht(detail.chat_id, undefined, undefined, undefined, detail.is_acknowledged);
+
+            }
+            else {
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(MyMentionPage);
+            }
+          }
+        }
+        else {
+          // alert("A");
+          this.commonMethod.hideLoader();
+          this.nav.setRoot(LoginPage);
+        }
+      },
+      error => {
+        this.commonMethod.hideLoader();
+        return '';
+      }
+    );
+  }
+
+
+  openWorkOrderPage(id) {
+
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        let token = accessToken.access_token ? accessToken.access_token : '';
+        let property_id = accessToken.property_token ? accessToken.property_token : '';
+        let url = viewWorkOrderUrl + "?authorization=" + token + "&property_id=" + property_id + "&id=" + id;
+        console.log(url);
+        let browser = this.iab.create(url, '_blank', 'location=no,closebuttoncaption=Back,toolbar=yes,EnableViewPortScale=yes,toolbarposition=top');
+        console.log("link viewed");
+        browser.on('exit').subscribe(
+          () => {
+            console.log('done');
+            this.nav.setRoot(FeedsPage);
+          },
+          err => console.error(err));
+
+      },
+      error => {
+        return '';
+      }
+    );
+
+    //this.navCtrl.setRoot(WebHomePage,{id:id,page:'group_chat',group_data:this.groupInfo});
+  }
+
+  notifyChat(id, mention_id, is_acknowledged) {
+
+    let objData = { status: 'checked' };
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        if (this.commonMethod.checkNetwork() && mention_id != undefined) {
+          this.commonMethod.putData(deleteMentionUrl + "/" + mention_id, objData, accessToken).subscribe(
+            data => {
+              this.commonMethod.hideLoader();
+
+              this.events.publish("notifyChat", id, is_acknowledged);
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+
+        }
+        else if (mention_id == undefined) {
+          this.commonMethod.hideLoader();
+          this.events.publish("notifyChat", id, is_acknowledged);
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        return '';
+      }
+    );
+
+
+  }
+  openDetail(id, mention_id, feed_comment_id) {
+
+    let objData = { status: 'checked' };
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        if (this.commonMethod.checkNetwork() && mention_id != undefined) {
+          // this.commonMethod.showLoader();
+          this.commonMethod.putData(deleteMentionUrl + "/" + mention_id, objData, accessToken).subscribe(
+            data => {
+
+              this.commonMethod.hideLoader();
+              this.nav.push(FeedDetailPage, { feed_id: id, feed_comment_id: feed_comment_id });
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+
+        } else if (mention_id == undefined) {
+          this.commonMethod.hideLoader();
+          this.nav.push(FeedDetailPage, { feed_id: id, feed_comment_id: feed_comment_id });
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        return '';
+      }
+    );
+
+
+  }
+  openFeeds(id, mention_id) {
+
+    let objData = { status: 'checked' };
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        if (this.commonMethod.checkNetwork() && mention_id != undefined) {
+          // this.commonMethod.showLoader();
+          this.commonMethod.putData(deleteMentionUrl + "/" + mention_id, objData, accessToken).subscribe(
+            data => {
+
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(FeedsPage, { feedId: id });
+              //  this.nav.push(FeedDetailPage, { feed_id: id, feed_comment_id: feed_comment_id });
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+
+        } else if (mention_id == undefined) {
+          this.commonMethod.hideLoader();
+          this.nav.setRoot(FeedsPage, { feedId: id });
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        return '';
+      }
+    );
+
+
+  }
+  openGroupCaht(id, chat_message_id, message_date, mention_id, is_acknowledged) {
+
+
+
+    this.sqlite.create({
+      name: 'data.db',
+      location: 'default'
+    }).then((db: SQLiteObject) => {
+
+      db.executeSql("SELECT chat_groups.*,chat_group_users.user_id FROM chat_groups LEFT JOIN chat_group_users ON chat_group_users.group_id=chat_groups.id WHERE chat_groups.id='" + id + "'", {}).then((allData) => {
+        console.log("SELECT chat_groups.*,chat_group_users.user_id FROM chat_groups LEFT JOIN chat_group_users ON chat_group_users.group_id=chat_groups.id WHERE chat_groups.id='" + id + "'" + JSON.stringify(allData));
+
+        if (allData.rows.length > 0) {
+          this.commonMethod.hideLoader();
+
+          this.goToGroupChat(id, chat_message_id, message_date, mention_id, is_acknowledged);
+        }
+        else {
+
+          console.log("Group data not available!");
+          /* Start DB code */
+          let insertChatGroupsData = "";
+          let updateChatGroupsData = "";
+          let updateImageChatGroupsData = "";
+          let updateChatGroupsQuery = "Update chat_groups SET name = (case ";
+          let updateImageChatGroupsQuery = "Update chat_groups SET image_url = (case ";
+          let tempVal = 0;
+          let insertChatGroupUsersData = "";
+          let updateChatGroupUsersGroupIdData = "";
+          let updateChatGroupUsersUserIdData = "Else group_id End), user_id = (case ";
+          let insertChatGroupUsersQuery = 'INSERT INTO chat_group_users (group_id, user_id, is_admin, deleted_at, created_at) VALUES ';
+          let updateChatGroupUsersQuery = "UPDATE chat_group_users SET group_id = (case ";
+          let insertChatGroupsQuery = 'INSERT INTO chat_groups (id, name, hotel_token, created_by_id, deleted_at, created_at, updated_at, image_url) VALUES ';
+          let alertVar = this.alertCtrl.create({
+            title: 'Error!',
+            subTitle: 'Invalid Details!',
+            buttons: ['OK']
+          });
+
+          this.nativeStorage.getItem('user_auth').then(
+            accessToken => {
+
+              if (this.commonMethod.checkNetwork()) {
+
+                this.commonMethod.getData(getGroupsOnlyUrl + "?chat_id=" + id, accessToken).subscribe(
+                  data => {
+                    this.groupReponse = data.json();
+                    this.sqlite.create({
+                      name: 'data.db',
+                      location: 'default'
+                    }).then((db: SQLiteObject) => {
+
+                      let allExistingIds = [];
+                      db.executeSql("SELECT * FROM chat_groups", []).then((dataSQL) => {
+                        console.log("GROUPS TABLE DATA: " + JSON.stringify(dataSQL));
+
+                        if (dataSQL.rows.length > 0) {
+                          for (let i = 0; i < dataSQL.rows.length; i++) {
+                            allExistingIds.push({
+                              id: dataSQL.rows.item(i).id
+                            });
+                          }
+                        }
+
+                        for (let i = 0; i < this.groupReponse.length; i++) {
+                          let insertFlag = true;
+                          for (let j = 0; j < allExistingIds.length; j++) {
+                            if (this.groupReponse[i].chat.id == allExistingIds[j].id) {
+                              insertFlag = false;
+                            }
+                          }
+
+                          if (insertFlag == true) {
+                            insertChatGroupsData = insertChatGroupsData + "('" + this.groupReponse[i].chat.id + "','" + this.groupReponse[i].chat.name + "','','" + this.groupReponse[i].chat.owner_id + "','','" + this.groupReponse[i].chat.created_at + "','','" + this.groupReponse[i].chat.image_url + "'),";
+                          }
+                          else {
+                            updateChatGroupsData = updateChatGroupsData + "when id = " + this.groupReponse[i].chat.id + " then '" + this.groupReponse[i].chat.name + "' ";
+                            updateImageChatGroupsData = updateImageChatGroupsData + "when id = " + this.groupReponse[i].chat.id + " then '" + this.groupReponse[i].chat.image_url + "' ";
+
+                            if (i == this.groupReponse.length - 1) {
+                              console.log("Update  chat_groups Data == " + updateChatGroupsQuery + updateChatGroupsData + " Else name End)");
+                              if (updateChatGroupsData != "") {
+                                db.executeSql(updateChatGroupsQuery + updateChatGroupsData + " Else name End)", {}).then((data1) => {
+                                  console.log("UPDATED: " + JSON.stringify(data1));
+                                }, (error1) => {
+                                  console.log("UPDATED ERROR: " + JSON.stringify(error1));
+                                });
+                                db.executeSql(updateImageChatGroupsQuery + updateImageChatGroupsData + " Else image_url End)", {}).then((data1) => {
+                                  console.log("UPDATED: " + JSON.stringify(data1));
+                                }, (error1) => {
+                                  console.log("UPDATED ERROR: " + JSON.stringify(error1));
+                                });
+
+                              }
+                            }
+                          }
+
+                          /* Group users DB code start */
+                          // db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
+                          //   .then((dbUserRes) => {
+                          //     console.log("GROUP USER TABLE CREATED: " + JSON.stringify(dbUserRes));
+
+                          let allExistingUserIds = [];
+                          db.executeSql("SELECT * FROM chat_group_users WHERE group_id='" + this.groupReponse[i].chat.id + "'", []).then((dataUserSQL) => {
+                            console.log("GROUP USER TABLE DATA: " + JSON.stringify(dataUserSQL));
+                            tempVal = tempVal + 1;
+                            if (dataUserSQL.rows.length > 0) {
+                              for (let k = 0; k < dataUserSQL.rows.length; k++) {
+                                allExistingUserIds.push({
+                                  user_id: dataUserSQL.rows.item(k).user_id
+                                });
+                              }
+                            }
+
+                            for (let k = 0; k < this.groupReponse[i].chat.users.length; k++) {
+                              let insertUserFlag = true;
+                              for (let l = 0; l < allExistingUserIds.length; l++) {
+                                if (this.groupReponse[i].chat.users[k].id == allExistingUserIds[l].user_id) {
+                                  insertUserFlag = false;
+                                }
+                              }
+                              if (insertUserFlag == true) {
+                                insertChatGroupUsersData = insertChatGroupUsersData + "('" + this.groupReponse[i].chat.id + "','" + this.groupReponse[i].chat.users[k].id + "','0','','" + this.groupReponse[i].chat.users[k].joined_at + "'),";
+                                console.log("insertChatGroupUsersData  " + insertChatGroupUsersData);
+                              }
+                              else {
+
+                                updateChatGroupUsersGroupIdData = updateChatGroupUsersGroupIdData + "when user_id='" + this.groupReponse[i].chat.users[k].id + "' AND group_id='" + this.groupReponse[i].chat.id + "' then '" + this.groupReponse[i].chat.id + "' ";
+                                updateChatGroupUsersUserIdData = updateChatGroupUsersUserIdData + "when user_id='" + this.groupReponse[i].chat.users[k].id + "' AND group_id='" + this.groupReponse[i].chat.id + "' then '" + this.groupReponse[i].chat.users[k].id + "' ";
+                              }
+
+                            }
+
+                            if (tempVal == this.groupReponse.length) {
+                              if (insertChatGroupUsersData != "") {
+                                db.executeSql(insertChatGroupUsersQuery + insertChatGroupUsersData.substring(0, insertChatGroupUsersData.length - 1), {}).then((dataUser1) => {
+                                  console.log("Data  == GROUP USER INSERTED: " + JSON.stringify(dataUser1));
+
+                                  if (insertChatGroupsData != "") {
+                                    db.executeSql(insertChatGroupsQuery + insertChatGroupsData.substring(0, insertChatGroupsData.length - 1), {}).then((data1) => {
+                                      console.log("Data  == GROUPS INSERTED: " + JSON.stringify(data1));
+                                      this.commonMethod.hideLoader();
+                                      this.goToGroupChat(id, chat_message_id, message_date, mention_id, is_acknowledged);
+                                    }, (error1) => {
+                                      console.log("Data  == GROUPS INSERT ERROR: " + JSON.stringify(error1));
+                                    });
+                                  }
+
+                                }, (errorUser1) => {
+                                  console.log("Data  == GROUP USER INSERT ERROR: " + JSON.stringify(errorUser1));
+                                });
+                              } else if (updateChatGroupUsersGroupIdData == "") {
+                                this.commonMethod.hideLoader();
+                              }
+                              if (updateChatGroupUsersGroupIdData != "") {
+                                console.log("chat_group_users Data  == " + updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)");
+                                db.executeSql(updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)", {}).then((dataUser1) => {
+
+                                  if (insertChatGroupsData != "") {
+                                    db.executeSql(insertChatGroupsQuery + insertChatGroupsData.substring(0, insertChatGroupsData.length - 1), {}).then((data1) => {
+                                      console.log("Data  == GROUPS INSERTED: " + JSON.stringify(data1));
+                                      this.commonMethod.hideLoader();
+                                      this.goToGroupChat(id, chat_message_id, message_date, mention_id, is_acknowledged);
+                                    }, (error1) => {
+                                      console.log("Data  == GROUPS INSERT ERROR: " + JSON.stringify(error1));
+                                    });
+                                  }
+
+                                  console.log(" 1 GROUP USER UPDATED: " + JSON.stringify(dataUser1) + "  " + i + "  " + this.groupReponse.length);
+                                }, (errorUser1) => {
+                                  console.log("GROUP USER UPDATED ERROR: " + JSON.stringify(errorUser1));
+                                });
+                              }
+                            }
+                          }, (errorUser) => {
+                            console.log("1 ERROR: " + JSON.stringify(errorUser));
+                          });
+
+                          /* Group SQL code end  */
+
+                        }
+
+                      }, (error) => {
+                        console.log("2 ERROR: " + JSON.stringify(error));
+                      });
+
+
+
+                      // }, (error) => {
+                      //   console.error("Unable to execute sql", error);
+                      // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                    }).catch(e => console.log(e));
+
+                    this.commonMethod.hideLoader();
+
+                  },
+                  err => {
+                    this.commonMethod.hideLoader();
+                    alertVar.present();
+                    console.error("Error : " + err);
+                  },
+                  () => {
+                    console.log('getData completed');
+                  }
+                );
+
+              }
+              else {
+                this.commonMethod.showNetworkError();
+              }
+
+            },
+            error => {
+              return '';
+            }
+          );
+
+          /* End DB code */
+
+        }
+      }, (error1) => {
+        console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
+      });
+
+    }).catch(e => console.log(e));
+
+    //  }
+  }
+  openPrivateChat(id, message_id, message_date, mention_id, is_acknowledged) {
+    this.commonMethod.showLoader();
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        if (this.commonMethod.checkNetwork()) {
+
+          this.commonMethod.getData(getPrivateOnlyUrl + "?chat_id=" + id + "&is_private=true", accessToken).subscribe(
+            data => {
+              // this.commonMethod.hideLoader();
+
+              this.chanelCreateData = data.json();
+              console.log(this.chanelCreateData);
+              // this.navCtrl.setRoot(ChattingPage);
+              let privateInfoData = {
+                "private_chat": true,
+                "id": this.chanelCreateData[0].chat.id,
+                "name": this.chanelCreateData[0].target_user.name,
+                "created_at": this.chanelCreateData[0].chat.created_at,
+                "owner_id": this.chanelCreateData[0].chat.owner_id,
+                "message_date": message_date,
+                "message_id": message_id,
+                "highlight_message": true,
+                "call": true,
+                "is_acknowledged": is_acknowledged,
+                "users": []
+              };
+              privateInfoData.users.push({ "id": this.chanelCreateData[0].chat.users[0].id });
+              privateInfoData.users.push({ "id": this.chanelCreateData[0].chat.users[1].id });
+
+              console.log(JSON.stringify(privateInfoData));
+              // this.commonMethod.hideLoader();
+              // this.nav.push(GroupChatPage, { groupInfo: privateInfoData });
+              let objData = { status: 'checked' };
+              let alertVar = this.alertCtrl.create({
+                title: 'Error!',
+                subTitle: 'Invalid Details!',
+                buttons: ['OK']
+              });
+
+              this.nativeStorage.getItem('user_auth').then(
+                accessToken => {
+
+                  if (this.commonMethod.checkNetwork() && mention_id != undefined) {
+
+                    this.commonMethod.putData(deleteMentionUrl + "/" + mention_id, objData, accessToken).subscribe(
+                      data => {
+                        this.commonMethod.hideLoader();
+                        this.nav.push(GroupChatPage, { groupInfo: privateInfoData });
+                      },
+                      err => {
+                        this.commonMethod.hideLoader();
+                        alertVar.present();
+                        console.error("Error : " + err);
+                      },
+                      () => {
+                        this.commonMethod.hideLoader();
+                        console.log('getData completed');
+                      }
+                    );
+
+                  } else if (mention_id == undefined) {
+                    this.commonMethod.hideLoader();
+                    this.nav.push(GroupChatPage, { groupInfo: privateInfoData });
+                  }
+                  else {
+                    this.commonMethod.hideLoader();
+                    this.commonMethod.showNetworkError();
+                  }
+
+                },
+                error => {
+                  return '';
+                }
+              );
+
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        return '';
+      }
+    );
+
+
+  }
+
+  goToGroupChat(id, message_id, message_date, mention_id, is_acknowledged) {
+    let groupInfoData = {
+      "id": id,
+      "name": "",
+      "image_url": "",
+      "created_at": "",
+      "owner_id": "",
+      "message_date": "",
+      "message_id": "",
+      "highlight_message": true,
+      "call": true,
+      "is_acknowledged": is_acknowledged,
+      "users": []
+    };
+    this.sqlite.create({
+      name: 'data.db',
+      location: 'default'
+    }).then((db: SQLiteObject) => {
+
+      db.executeSql("SELECT chat_groups.*,chat_group_users.user_id FROM chat_groups LEFT JOIN chat_group_users ON chat_group_users.group_id=chat_groups.id WHERE chat_groups.id='" + id + "'", {}).then((allData) => {
+        console.log("SELECT chat_groups.*,chat_group_users.user_id FROM chat_groups LEFT JOIN chat_group_users ON chat_group_users.group_id=chat_groups.id WHERE chat_groups.id='" + id + "'" + JSON.stringify(allData));
+
+        if (allData.rows.length > 0) {
+          for (let i = 0; i < allData.rows.length; i++) {
+            if (i == 0) {
+              groupInfoData = {
+                "id": allData.rows.item(i).id,
+                "name": allData.rows.item(i).name,
+                "image_url": allData.rows.item(i).image_url,
+                "created_at": allData.rows.item(i).created_at,
+                "owner_id": allData.rows.item(i).created_by_id,
+                "message_date": message_date,
+                "message_id": message_id,
+                "highlight_message": true,
+                "call": true,
+                "is_acknowledged": is_acknowledged,
+                "users": []
+              };
+            }
+            groupInfoData.users.push({ "id": allData.rows.item(i).user_id });
+          }
+
+          console.log(JSON.stringify(groupInfoData));
+          let objData = { status: 'checked' };
+          let alertVar = this.alertCtrl.create({
+            title: 'Error!',
+            subTitle: 'Invalid Details!',
+            buttons: ['OK']
+          });
+
+          this.nativeStorage.getItem('user_auth').then(
+            accessToken => {
+
+              if (this.commonMethod.checkNetwork() && mention_id != undefined) {
+
+                this.commonMethod.putData(deleteMentionUrl + "/" + mention_id, objData, accessToken).subscribe(
+                  data => {
+                    // this.foundRepos.splice(index, 1);
+                    this.commonMethod.hideLoader();
+                    this.nav.push(GroupChatPage, { groupInfo: groupInfoData });
+                  },
+                  err => {
+                    this.commonMethod.hideLoader();
+                    alertVar.present();
+                    console.error("Error : " + err);
+                  },
+                  () => {
+                    this.commonMethod.hideLoader();
+                    console.log('getData completed');
+                  }
+                );
+
+              } else if (mention_id == undefined) {
+                this.commonMethod.hideLoader();
+                this.nav.push(GroupChatPage, { groupInfo: groupInfoData });
+              }
+              else {
+                this.commonMethod.showNetworkError();
+              }
+
+            },
+            error => {
+              return '';
+            }
+          );
+
+
+
+          //   this.nav.push(GroupChatPage, { groupInfo: groupInfoData });
+
+        }
+        else {
+          this.commonMethod.hideLoader();
+          alert("Group data not available!");
+        }
+      }, (error1) => {
+        console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
+      });
+
+    }).catch(e => console.log(e));
+  }
+
+  showHideHotel() {
+    this.showHotelMenu = this.showHotelMenu == true ? false : true;
+  }
+
+  logoutUser() {
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        // alert(accessToken.db_version);
+        // console.log(accessToken.db_version);
+        let dbver;
+        if (accessToken.db_version == undefined) {
+          dbver = null;
+        } else {
+          dbver = accessToken.db_version;
+        }
+        this.nativeStorage.setItem('prev_db_version', dbver).then(() => {
+          console.log('Stored item! dbversion');
+          this.nativeStorage.setItem('prev_user_id', accessToken.user_id)
+            .then(
+            () => {
+
+              if (this.cable == undefined) {
+              } else {
+                this.cable.disconnect();
+              }
+
+              this.nativeStorage.setItem('prev_user_property_id',accessToken.property_token)
+              .then(
+              () => console.log('Stored prev_user_property_id!'),
+              error => console.error('Error storing prev_user_property_id', error)
+              );
+              
+              console.log('Stored item!');
+              this.nativeStorage.remove('user_auth')
+                .then(
+                () => {
+                  console.log('Removed item!');
+                  this.nativeStorage.remove('lastPage');
+                  this.nativeStorage.remove('groupInfo');
+                  this.nativeStorage.remove('user_properties');
+                  this.nativeStorage.remove('user_permissions');
+
+                  this.nativeStorage.remove('feedData')
+                    .then(
+                    () => {
+                      console.log('Removed feedData!');
+                    },
+                    error => console.error('Error storing item', error)
+                    );
+
+                  this.nativeStorage.remove('wo_data').then(() => {
+                    console.log('Removed wo_data!');
+                  },
+                    error => console.error('Error remove wo_data', error)
+                  );
+                  this.nav.setRoot(LoginPage);
+                },
+                error => console.error('Error storing item', error)
+                );
+
+            },
+            error => console.error('Error storing item', error)
+            );
+        },
+
+          error => console.error('Error storing item', error));
+
+      },
+      error => {
+        return '';
+      }
+    );
+  }
+
+
+  subscribeAcNotification() {
+    let propertyToken = '';
+    let authToken = '';
+    let userId = '';
+
+    setTimeout(() => {
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+          propertyToken = accessToken.property_token;
+          authToken = accessToken.access_token;
+          userId = accessToken.user_id;
+
+          let clientUrl = webSocketBaseUrl+"cable?property_token=" + propertyToken + "&auth_token=" + authToken;
+          this.cable = ActionCable.createConsumer(clientUrl);
+          let thisObj = this;
+
+          this.cable.subscriptions.create({ channel: 'InAppNotificationsChannel', user_id: userId }, {
+            connected: function () { console.log("cable: connected =" + 'InAppNotificationsChannel' + userId); },             // onConnect 
+            disconnected: function () { console.log("cable: disconnected =" + 'InAppNotificationsChannel' + userId); },       // onDisconnect
+            received: function (data) {
+              console.log("InAppNotificationsChannel subscriptions =" + JSON.stringify(data)); // or update UI
+              thisObj.updateNotificationCount(data);
+            }
+          });
+
+        },
+        error => {
+          return '';
+        }
+      );
+
+    }, 500);
+  }
+
+  updateNotificationCount(data) {
+    this.nativeStorage.getItem('user_notifications').then(
+      notifications => {
+        let feedCount = notifications.feed_count;
+        let messageCount = notifications.message_count;
+        if (data.notification_type == 'new_feed') {
+          feedCount = feedCount + 1;
+        }
+        if (data.notification_type == 'unread_message') {
+          messageCount = messageCount + 1;
+        }
+
+        this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount })
+          .then(
+          () => console.log('Stored user_notifications!'),
+          error => console.error('Error storing user_notifications', error)
+          );
+      },
+      error => {
+        return '';
+      }
+    );
+  }
+  getWOPermission() {
+    this.commonMethod.getUserPermissions().then(
+      permissions => {
+        this.userPermissions = permissions;
+      },
+      error => {
+        return false;
+      }
+    );
+  }
+}

@@ -1,0 +1,142 @@
+<ion-header>
+    <ion-navbar>
+        <!-- <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button> -->
+        <ion-title>PROFILE</ion-title>
+        <ion-spinner class="update_api_data_loader" *ngIf="updateApiInProgress" name="bubbles"></ion-spinner>
+        <button *ngIf="!updateApiInProgress" ion-button (click)="save()" [disabled]="(!allowEdit || !userData.name.trim() || !userData.title.trim() || !department_ids.length>0 )"
+            class="post-feed">UPDATE</button>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding no-bounce>
+
+    <span *ngIf="spinner" class="api_data_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_data_loader_text">Fetching user data...</span></span>
+
+    <span *ngIf="userData.id">
+        <div class="profile">
+            <!-- <img (click)="allowEdit?showGalleryPrompt():''" src="{{'assets/img/avatar.png'}}"/>
+      <span class="caption_text">Add Image</span> -->
+            <img (click)="allowEdit?showGalleryPrompt():''" src="{{(base64Image=='' && userData.avatar_img_url)?userData.avatar_img_url:'assets/img/avatar.png'}}"
+            />
+            <span *ngIf="base64Image=='' && !userData.avatar_img_url" class="caption_text">Add Image</span>
+            <img (click)="allowEdit?showGalleryPrompt():''" src="{{base64Image!=''?base64Image:userData.avatar_img_url}}" />
+        </div>
+        <br/>
+
+        <ion-list>
+            <ion-item>
+                <ion-label class="change_password">ID: {{userData.id}}</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Name</ion-label>
+                <ion-input type="text" placeholder="Name" (ngModelChange)='edit()' [(ngModel)]="userData.name" maxlength="100"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Title</ion-label>
+                <ion-input type="text" placeholder="Title" (ngModelChange)='edit()' [(ngModel)]="userData.title" maxlength="100"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Email</ion-label>
+                <ion-input type="email" placeholder="Email" (ngModelChange)='edit()' [(ngModel)]="userData.email"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Username</ion-label>
+                <ion-input type="text" readonly placeholder="Username" (ngModelChange)='edit()' [(ngModel)]="userData.username"></ion-input>
+            </ion-item>
+            <ion-item>
+                <h2>Phone Number</h2>
+                <input class="text-box" type="tel" placeholder="Phone Number" [textMask]="{mask: mask}" (ngModelChange)='edit()' [(ngModel)]="userData.phone_number"
+                />
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Role</ion-label>
+                <ion-select [disabled]="!userPermissions.wo_access.team" tappable (ngModelChange)='edit()' [(ngModel)]="userData.role_id"
+                    placeholder="Role" class="request">
+                    <ion-option *ngFor="let role of rolesData" value="{{role.id}}">{{role.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>Departments</ion-label>
+                <ion-select [disabled]="!userPermissions.wo_access.team" tappable (ngModelChange)='edit()' [(ngModel)]="department_ids" placeholder="Departments"
+                    class="request" multiple="true">
+                    <ion-option *ngFor="let dept of departmentsData" value="{{dept.id}}">{{dept.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item tappable (click)="changePassword()">
+                <ion-label class="change_password">Change Password </ion-label>
+            </ion-item>
+            <ion-item tappable (click)="notificationSettings()">
+                <ion-label class="change_password">Notification Settings</ion-label>
+            </ion-item>
+
+        </ion-list>
+    </span>
+
+ <ion-fab bottom center edge #fab class="footer_fab_box" >
+                <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+                <ion-fab-list side="top">
+                  <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+                </ion-fab-list>
+                <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+                  <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+                </ion-fab-list>
+                <ion-fab-list side="right">
+                  <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+                </ion-fab-list>
+              </ion-fab>
+
+</ion-content>
+
+
+<ion-footer>
+    <ion-grid>
+        <ion-row *ngIf="userPermissions.wo_access.view_listing">
+            <ion-col col-2.4 (tap)="openFeedPage()">
+                <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-home-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 (tap)="openChatPage()" class="bottom-menu">
+                <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-chatboxes-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 class="bottom-menu">
+                    <!-- space for fab button -->
+                  </ion-col>
+            <ion-col col-2.4 (tap)="openWOPage()" class="bottom-menu">
+                    <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
+                  <ion-icon name="ios-construct-outline"></ion-icon>
+                </ion-col>
+            <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
+                    <ion-icon name="ios-list-outline"></ion-icon>
+                  </ion-col>
+            <!-- <ion-col col-2.4 (tap)="openMyMentionPage()" class="bottom-menu">
+                <ion-icon name="ios-at"></ion-icon>
+            </ion-col> -->
+                 
+
+        </ion-row>
+        <ion-row *ngIf="!userPermissions.wo_access.view_listing">
+            <ion-col col-2.4 (tap)="openFeedPage()">
+                <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-home-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 (tap)="openChatPage()" class="bottom-menu">
+                <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-chatboxes-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 class="bottom-menu">
+                    <!-- space for fab button -->
+                  </ion-col>
+            <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
+                    <ion-icon name="ios-list-outline"></ion-icon>
+                  </ion-col>
+            <ion-col col-2.4 (tap)="openMyMentionPage()" class="bottom-menu">
+                <ion-icon name="ios-at-outline"></ion-icon>
+            </ion-col>
+            
+
+        </ion-row>
+    </ion-grid>
+</ion-footer>

@@ -1,0 +1,71 @@
+<ion-header id="header_box">
+  <ion-navbar>  
+    <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>GUEST ROOM PM - ROOM {{roomNo}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">
+
+
+    <ion-item-group *ngFor="let res of foundRepos" class="items_list">
+      <ion-item-divider color="light" sticky id="select_btn"> 
+        <ion-grid>
+            <ion-row>
+              <ion-col col-8>
+                <span>{{res.name}}</span> 
+              </ion-col>
+              <ion-col col-4 class="icon_title_box">
+                  <ion-icon name="checkmark" item-end (tap)="confirmMarkAll()"></ion-icon>  
+                  <span class="right_icons count">[ 0 / {{res.checklist_items.length}} ]</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item-divider>
+      <ion-item *ngFor="let item of res.checklist_items" class="sub_item">
+      <div class="row_box">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-8>
+                <span class="left_content">{{item.name}}</span> 
+              </ion-col>
+              <ion-col col-4 class="icon_box">
+                <span>
+                  <ion-icon name="checkmark" item-end (tap)="confirmResetStatus(item.name)"></ion-icon>  
+                  <ion-icon name="color-wand" item-end (tap)="markFixed()"></ion-icon>
+                  <ion-icon name="construct" item-end (tap)="createWorkOrder('','','','','',item.id)"></ion-icon>
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </div>
+    </ion-item>  
+
+    </ion-item-group>
+
+
+  
+</ion-content>
+
+
+<!-- <ion-footer>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-3 (click)="openFeedPage()" class="bottom-menu">
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-home-outline"></ion-icon><br/><span>HOTEL LOG</span></ion-col>
+      <ion-col col-3 (click)="openChatPage()" class="bottom-menu">
+          <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-chatboxes-outline"></ion-icon><br/><span>MESSAGING</span></ion-col>
+      <ion-col col-3 (tap)="openMyMentionPage()" class="bottom-menu">
+        <ion-icon name="ios-at"></ion-icon><br/><span>MENTION</span></ion-col>
+        <ion-col col-3  (click)="openWOPage()" class="bottom-menu">
+          <ion-icon name="ios-construct"></ion-icon><br/><span>WORK ORDERS</span></ion-col> 
+    </ion-row>
+  </ion-grid>
+
+</ion-footer> -->

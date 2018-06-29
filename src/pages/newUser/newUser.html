@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>NEW ACCOUNT</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+
+
+<ion-content padding>
+  <div class="welcome"> Welcome to {{hotelName}}. let's complete your account setup </div>
+    <div class="profile">
+        <!-- <img (tap)="allowEdit?showGalleryPrompt():''" src="{{'assets/img/avatar.png'}}"/>
+      <span class="caption_text">Add Image</span> -->
+        <!-- <img (tap)="allowEdit?showGalleryPrompt():''" src="{{(base64Image=='' && userData.avatar_img_url)?userData.avatar_img_url:'assets/img/avatar.png'}}"
+        /> -->
+        <!-- <span *ngIf="base64Image=='' && !userData.avatar_img_url" class="caption_text">Add Image</span>
+        <img (tap)="allowEdit?showGalleryPrompt():''" src="{{base64Image!=''?base64Image:userData.avatar_img_url}}" /> -->
+        <img (tap)="showGalleryPrompt()" src={{avatar_url}} />
+
+    </div>
+  <form [formGroup]="accountForm" (ngSubmit)="create()">
+    <ion-list>
+
+      <ion-item>
+        <ion-label stacked>NAME</ion-label>
+        <ion-input type="text" [(ngModel)]="formData.name" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>TITLE</ion-label>
+        <ion-input type="text" [(ngModel)]="formData.title" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="title"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>PHONE(OPTIONAL)</ion-label>
+        <ion-input type="tel" [(ngModel)]="formData.phone_number" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="phone_number"></ion-input>
+      </ion-item>
+
+      <!-- <ion-item>
+        <ion-label stacked>Email</ion-label>
+        <ion-input type="text" [(ngModel)]="formData.user.email" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="email"></ion-input>
+      </ion-item>
+      <p class="pcolor" *ngIf="accountForm.controls.email.errors && accountForm.controls.email.dirty ">
+        <small class="up">
+        <strong> <i></i></strong>
+      </small>
+      </p> -->
+
+      <ion-item>
+        <ion-label stacked>PASSWORD</ion-label>
+        <ion-input type="{{type}}" [(ngModel)]="formData.password" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="password"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label stacked>CONFIRM PASSWORD</ion-label>
+        <ion-input type="{{type}}" [(ngModel)]="formData.confirm_password" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="confirm_password"></ion-input>
+      </ion-item>
+      <span class="error" *ngIf="formData.password!='' && formData.confirm_password!='' && formData.password!=formData.confirm_password">The password and confirmation password do not match.</span>
+
+
+
+      <!-- <div *ngIf="!showPass" class="pull-left show-pass" (click)="showPassword()">SHOW</div>
+      <div *ngIf="showPass" class="pull-left show-pass" (click)="showPassword()">HIDE</div> -->
+
+      <div class="clearfix"></div>
+
+      
+
+      <!-- <ion-item>
+        <ion-label stacked>HOTEL CODE</ion-label>
+        <ion-input type="number" [(ngModel)]="formData.user.hotel_code" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="hotel_code"></ion-input>
+      </ion-item>
+
+      <p *ngIf="formData.name.trim()==''" class="text-blue"><ion-checkbox disabled="true" [(ngModel)]="formData.hotel_selected" formControlName="hotel_selected" value="true"></ion-checkbox> <span (click)="createHotel()">Select Hotel.</span></p>
+      <p *ngIf="formData.name.trim()!=''" class="text-blue"><span (click)="createHotel()">{{formData.name}}</span></p> -->
+
+    </ion-list>
+  
+  <div class="form-footer">
+    <p>
+      <ion-checkbox [(ngModel)]="formData.accepted" formControlName="accepted" value="true"></ion-checkbox> By clicking create account, you agree to Lodgistics's User Agreement. Privacy Policy and Cookie Policy.</p>
+
+    <button ion-button [disabled]="!accountForm.valid || !formData.accepted || !formData.password.trim() ||  !formData.confirm_password.trim() || formData.password!=formData.confirm_password" full>CREATE ACCOUNT</button>
+
+    <p class="text-center">Already have an account? <span class="text-blue" (click)="signin()">Sign in</span></p>
+  </div>
+</form>
+</ion-content>

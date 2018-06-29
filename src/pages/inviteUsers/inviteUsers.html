@@ -1,0 +1,64 @@
+<ion-header id="header_box">
+  <ion-navbar>  
+      <button ion-button menuToggle end>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+    <ion-title>INVITE USERS</ion-title>
+    <span class="plus_btn" *ngIf="canInviteUser()" (click)="invite()">Send</span>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">
+  <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Sending invitation to users...</span></span>
+  <span *ngIf="!spinner">
+        
+         
+           <div *ngIf="formData">
+                <ion-grid *ngFor="let row of formData; let i=index" class="items_list" [@enterAnimation]>
+                
+                <ion-row>
+                  <ion-col col-12>
+                      <ion-item>
+                      <ion-label floating>Email</ion-label>
+                      <ion-input [(ngModel)]="formData[i].email" autocapitalize="on" type="text" autocomplete='off'  autocorrect="off" spellcheck="off" autocapitalize='off'></ion-input>                  
+                      </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-12>
+                        <ion-item>
+                        <ion-label floating>Phone</ion-label>
+                        <ion-input mask="(999) 999-9999" [(ngModel)]="formData[i].phone_number" autocapitalize="on" type="tel" autocomplete='off'  autocorrect="off" spellcheck="off" autocapitalize='off' required></ion-input>                  
+                        </ion-item>
+                      </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-6>
+                        <ion-item class="role_dept">
+                          <ion-label [ngClass]="row.department_name?'float_label with_float':'float_label'" floating (click)="selectDepartment(i)">Department</ion-label>
+                          <ion-label *ngIf="row.department_name" (click)="selectDepartment(i)">{{row.department_name?row.department_name:''}}</ion-label>
+                        </ion-item>
+                      </ion-col>
+                    <ion-col col-6>
+                        <ion-item class="role_dept">
+                            <ion-label [ngClass]="row.role_name?'float_label with_float':'float_label'" floating (click)="selectRole(i)">Role</ion-label>
+                          <ion-label *ngIf="row.role_name" (click)="selectRole(i)">{{row.role_name?row.role_name:''}}</ion-label>
+                      </ion-item>
+                      </ion-col>
+                  </ion-row>      
+              </ion-grid>
+            </div>
+            
+            
+  </span>
+
+  <!-- <pre>{{formData | json}}</pre> -->
+  
+</ion-content>
+
+<ion-footer>
+  <button ion-button full [disabled]="!canAddMore() || spinner" (click)="addOtherUser()">Add Another User</button>
+</ion-footer>
+
+

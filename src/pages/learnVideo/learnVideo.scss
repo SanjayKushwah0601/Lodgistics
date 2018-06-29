@@ -1,0 +1,120 @@
+page-learnVideo {
+  
+.content{ background-color: transparent; }
+.reply-box{background-color: transparent;margin-left: 16px; margin-right: 16px;    z-index: 999; }
+.popup-box{ background-color: #fff; opacity: 1; padding: 10px; border-radius: 8px;}
+.popup-buttons{ width: 100%; text-align: center;}
+button{ width: 80%;height: 2.8em !important; box-shadow:none !important; margin-top: 20px !important; }
+ion-scroll .scroll-content{ position: relative;}
+.popup-box .scroll-content { padding: 0px 0px 0px 0px !important; }
+.msg-box{max-height: 56px;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 3;display: -webkit-box;}
+.required{ color: #FF0000;}
+.title{color: #00b1e1 !important; border-bottom: 2px solid #E5E5E5;    padding: 12px 12px !important;}
+.text-box{
+    width: 95%;
+    font-size: 14px;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    width: 90%;
+    overflow: scroll !important;
+    border: 0.4px solid #757575;
+    border-radius: 4px;
+    font-family: 'open-sans';
+    font-weight: 500;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-indent: 0px;
+    color: #757575;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+ion-backdrop{visibility: initial !important;z-index: 0;}
+.close-icon{ font-size: 3.2em; float: right;   margin-top: -8.5%;
+    margin-right: -4.3%; color: red;}
+    .text-input{color: #424242;}
+    .label-ios[floating]{font-family: 'open_sanslight'; color: #BDBDBD;}
+    .error{ color: red; }
+
+
+    //iPhone 5 & 5S in portrait & landscape
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 568px)
+{
+    .close-icon{    margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+//s7
+@media only screen 
+and (min-device-width : 360px) 
+and (max-device-width : 640px){
+  .close-icon{margin-top: -5.3%;
+  margin-right: -2.3%;
+  font-size: 2.2em;
+  }
+}
+//iPhone 6 in portrait & landscape
+@media only screen 
+and (min-device-width : 375px) 
+and (max-device-width : 667px) {
+    .close-icon{    margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+
+//iPhone 6+
+@media only screen 
+and (min-device-width : 414px) 
+and (max-device-width : 736px)
+and (device-width : 414px)
+and (device-height : 736px)
+and (orientation : portrait) 
+and (-webkit-min-device-pixel-ratio : 3) 
+and (-webkit-device-pixel-ratio : 3)
+{ 
+    .close-icon{    margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+
+//iPhone X
+@media only screen 
+and (device-width : 375px) 
+and (device-height : 812px) 
+and (-webkit-device-pixel-ratio : 3) { 
+    .close-icon{     margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+
+//iPhone 8
+@media only screen 
+and (device-width : 375px) 
+and (device-height : 667px) 
+and (-webkit-device-pixel-ratio : 2) { 
+    .close-icon{    margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+
+//iPhone 8 Plus
+@media only screen 
+and (device-width : 414px) 
+and (device-height : 736px) 
+and (-webkit-device-pixel-ratio : 3) { 
+    .close-icon{     margin-top: -8.5%;
+        margin-right: -4.3%;}
+}
+
+@media only screen 
+and (-webkit-min-device-pixel-ratio: 3)
+and (min-device-width : 412px) 
+and (max-device-width : 690px){.close-icon {
+    margin-top: -6%;
+    margin-right: -2.4%;
+    font-size: 3.2em; 
+}
+}
+}
+
+
+

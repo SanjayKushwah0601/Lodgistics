@@ -1,0 +1,36 @@
+<!-- <ion-content padding no-bounce disable-scroll> -->
+<div class="page-wraper-box">
+        
+    <div class="box">
+            <ion-icon class="close-icon" ios="ios-close" md="md-close" (tap)="dismiss()"></ion-icon>
+            <ion-title class="page_title">What did you fix?</ion-title>
+
+        <table>
+            <tr>
+                <td>
+                    <textarea name="Text1" placeholder="Please describe in detail" rows="5" [(ngModel)]="messageText"></textarea>        
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="magic-tags">
+                        <ng-container *ngFor="let tag of tags;let i=index">
+                            <label class="tag" (tap)="selectTag(tag.text,tag.is_selected,i)" [ngClass]="tag.is_selected?'selected':''">{{tag.text}}</label>
+                        </ng-container>    
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="popup-buttons" class="float_right">
+                        <button [disabled]="messageText.trim()==''" tappable full ion-button (tap)="markFixed()">Mark Fixed</button>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+
+    </div>
+</div>
+<!-- </ion-content> -->

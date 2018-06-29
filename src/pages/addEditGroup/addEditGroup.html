@@ -1,0 +1,132 @@
+<ion-header [ngClass]="addClassContent?'relative-header':''">
+
+  <ion-navbar>
+    <!--
+    <ion-icon *ngIf="groupInfo" (click)="openGroupCaht()" class="back-button-icon icon icon-ios back-button-icon-ios ion-ios-arrow-back" role="img" aria-label="arrow back"></ion-icon>
+-->
+
+    <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>{{tempGroupName}}</ion-title>
+
+    <!--<ion-title>{{tempGroupName}} <span style="float:right;margin-right:10px;" (click)="updateGroupInfo(groupForm.value)" *ngIf="groupForm.valid">{{tempGroupName != 'NEW GROUP' ?'UPDATE':'CREATE'}}</span></ion-title>-->
+    <!-- [disabled]="!groupForm.valid" -->
+    <!--<span class="create-update-ios" (click)="updateGroupInfo(groupForm.value)" *ngIf="isUpdateGroup && groupForm.valid && (!groupInfo || groupInfo.owner_id == userId)">{{tempGroupName != 'NEW GROUP' ?'UPDATE':'CREATE'}}</span>-->
+    <button ion-button *ngIf=" selectedTab=='user' && (!groupInfo || groupInfo.owner_id == userId) && showButton" (click)="updateGroupInfo(groupForm.value)"
+      [disabled]="(!isUpdateGroup || !groupForm.valid || membersInGroup()<2) || !buttonEnable " class="update-group-btn">{{groupInfo?'Update':'Create'}}</button>
+      <button ion-button *ngIf="selectedTab!='user' && (!groupInfo || groupInfo.owner_id == userId) && showButton || canCreateGroup()" (click)="updateGroupInfo(groupForm.value)"
+      [disabled]="(!createButton || !createButtonGroup)" class="update-group-btn">{{groupInfo?'Update':'Create'}}</button>
+
+  </ion-navbar>
+
+  <div class="list-header1">
+    <form [formGroup]="groupForm">
+
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2>
+            <ion-avatar item-start>
+              <img class="group-img-avatar" (click)="showGalleryPrompt()" src="{{base64Image?base64Image:'assets/img/default_group_pic.jpg'}}"
+              />
+            </ion-avatar>
+          </ion-col>
+          <ion-col col-10>
+            <ion-list>
+              <ion-item>
+                <ion-label floating class="placeholder-text">GROUP NAME</ion-label>
+                <ion-input autocapitalize="on" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="off" type="text" class="group-text-input"
+                  (keyup)="updateAction($event)" (ngModelChange)="valchange()" autocorrect="on" spellcheck="on" autocapitalize="characters"
+                  formControlName="group" [(ngModel)]="group" [readonly]="!(!groupInfo || groupInfo.owner_id == userId)"></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </form>
+
+  </div>
+
+  <div class="list-header2">{{groupInfo?'UPDATE':'SELECT'}} GROUP MEMBERS (<span [innerHTML]="showSelectedLabel()"></span>)</div>
+
+</ion-header>
+
+
+<ion-content padding [ngClass]="addClassContent?'relative-content':''">
+
+  <!-- <div class="segment_box">
+    <ion-segment [(ngModel)]="selectedTab">
+      <ion-segment-button value="role">
+          ROLE
+        </ion-segment-button>
+      <ion-segment-button value="user">
+        USER
+      </ion-segment-button>
+    </ion-segment>
+  </div> -->
+
+  <div [ngSwitch]="selectedTab">
+  <ion-list class="list2" *ngSwitchCase="'user'">
+
+    <!--  <ion-item>
+    <ion-avatar item-left>
+      <img src="assets/img/pic3.jpg">
+    </ion-avatar>
+    <h2>Amy Shaw</h2>
+   
+	  <p><span class="designation">Hotel Manager</span> <a href="mailto:amyshaw@gmail.com" class="mail">amyshaw@gmail.com</a></p>
+  </ion-item>-->
+    <span *ngFor="let res of users; let i=index">
+    <ion-item *ngIf="res.id==groupOwnerId" [ngClass]="(res.inGroup==true || userId==res.id)?'active admin-box':'admin-box'" (tap)="userId==res.id?'':updateMember(i)">
+  <ion-label>{{res.name}}<p><span class="designation" *ngIf="res.title">{{res.title}}</span></p>
+    <h2 class="admin-text">Admin</h2>
+    </ion-label>
+    <ion-avatar item-left>
+      <img src="{{res.avatar_img_url}}" class="active">
+    </ion-avatar>
+    </ion-item>
+    </span>
+
+    <span *ngFor="let res of users; let i=index">
+<ion-item *ngIf="res.id!=groupOwnerId && res.is_system_user!='1'" [ngClass]="(res.inGroup==true || userId==res.id)?'active':(res.wasInGroup==true?'was-in-group':'')" (tap)="userId==res.id?'':updateMember(i)">
+  <ion-label>{{res.name}}<p><span class="designation" *ngIf="res.title">{{res.title}}</span></p>
+    </ion-label>
+    <ion-avatar item-left>
+      <img src="{{res.avatar_img_url}}" class="active">
+    </ion-avatar>
+    </ion-item>
+    </span>
+
+  </ion-list>
+
+
+  <ion-list *ngSwitchCase="'role'">
+    
+    <div *ngIf="formData">
+    <ion-grid *ngFor="let row of formData; let i=index" class="items_list" [@enterAnimation]>
+      <ion-row>
+        <ion-col col-6>
+            <ion-item class="role_dept">
+              <ion-label (click)="selectDepartment(i)">{{row.department_name?row.department_name:'Department'}}</ion-label>
+            </ion-item>
+          </ion-col>
+        <ion-col col-6>
+            <ion-item class="role_dept">
+              <ion-label (click)="selectRole(i)">{{row.role_name?row.role_name:'Role'}}</ion-label>
+          </ion-item>
+          </ion-col>
+      </ion-row> 
+    </ion-grid>
+  </div>
+  
+    </ion-list>
+
+  </div>
+
+</ion-content>
+
+<ion-footer *ngIf="selectedTab=='role'">
+  <button class="add_other_btn" ion-button full [disabled]="!canAddMore()" (click)="addOther()">Add Another</button>
+</ion-footer>

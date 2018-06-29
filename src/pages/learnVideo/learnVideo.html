@@ -1,0 +1,11 @@
+<ion-backdrop disable-activated="" role="presentation" tappable="" class="backdrop-no-tappable" style="opacity: 0.5;"></ion-backdrop>
+<ion-content padding no-bounce disable-scroll>
+    
+  <div class="reply-box" style="margin-top: 20%;">
+      <ion-icon class="close-icon" ios="ios-close" md="md-close" (click)="dismiss()" ></ion-icon>
+      
+    <div class="popup-box">
+      <iframe width="100%" height="315" [src]="trustedVideoUrl" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</ion-content>

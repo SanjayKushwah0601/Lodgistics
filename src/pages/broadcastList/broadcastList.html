@@ -1,0 +1,42 @@
+<!-- <ion-content padding no-bounce disable-scroll> -->
+<div class="page-wraper-box">
+
+    <div class="box">
+        <ion-icon  class="arrow_tooltip" name="ios-arrow-up-outline"></ion-icon>
+        <ion-title class="wo_title">
+                <span class="page_title">Broadcast List ({{foundRepos.length}}) </span>
+                <ion-icon class="close-icon" ios="ios-close" md="md-close" (click)="dismiss()"></ion-icon>
+        </ion-title>
+
+        <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching records...</span></span>
+
+    <div class="scroll_page_inner">  
+        <ion-card *ngFor="let res of foundRepos"  style="width:100%;margin:0px;" class="card card-ios" id="10386">
+            <ion-item class="item item-block item-ios">
+                <ion-avatar item-left="">
+                    <img src="{{res.created_by.avatar_img_url}}">
+                    <div class="pull-left">
+                            <h2>{{res.created_by.name}}</h2>
+                        </div>
+                </ion-avatar>
+                <ion-card-content class="card-content card-content-ios selectable">
+                    <p>
+                        <span>{{res.body}}</span>
+                    </p>
+                </ion-card-content>
+
+                <div class="pull-right">
+                        <h2>{{res.created_at | date:'MMM dd hh:mm a'}}</h2>
+                    </div>
+
+
+                
+                
+            </ion-item>
+
+        </ion-card>
+    </div>
+
+    </div>
+</div>
+<!-- </ion-content> -->

@@ -1,0 +1,205 @@
+<div id="ListBackdrop" *ngIf="fabButtonOpened"></div> 
+<ion-header>
+  <ion-navbar>
+      <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span (click)="broadcastList()">
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+                <img src="assets/img/broadcost-red-icon.png" />
+              </span>
+            ({{broadcast_count}})</span>
+        </span>   
+    <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>WORK ORDERS</ion-title>  
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+
+      <ion-grid>
+        <ion-row *ngIf="!showFilter" class="search-bar-animate">
+          <ion-col col-10 (click)="userPermissions.wo_access && userPermissions.wo_access.can_create?createWorkOrder():''">
+            <button ion-button small full  style="background-color: #D3D3D3;justify-content:left;" class="create-post" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">Create New WO</button>
+          </ion-col>
+          <ion-col col-2 center (click)="openFilter()">
+            <ion-icon ios="ios-search" class="search-feed" md="md-search"></ion-icon>
+          </ion-col>
+        </ion-row>
+  
+        <ion-row *ngIf="showFilter" class="search-bar-animate" [@enterAnimation]>
+          <ion-col col-10>
+            <form (ngSubmit)="searchData()">
+              <ion-searchbar disabled="true" placeholder="WO #, Request, Location" class="searchbar-style" name="search" [(ngModel)]="searchQuery" cancelButtonText="" (ionCancel)="closeFilter()"
+                (ionClear)="closeFilter()" (ionInput)="searchItems()" autocomplete="off" autocapitalize="on" autocorrect="on" spellcheck="on">
+              </ion-searchbar>
+            </form>
+          </ion-col>
+          <ion-col col-2 center (click)="closeFilter()" class="no-border">
+            <ion-icon ios="ios-close" md="md-close"></ion-icon>
+          </ion-col>
+        </ion-row>
+  
+  
+      </ion-grid>
+  
+  
+    </ion-toolbar>
+
+    <ion-toolbar no-border-top *ngIf="searchQuery==''">
+        
+        <ion-segment [(ngModel)]="selectedTab">
+          <ion-segment-button value="h" (tap)="selectTab('h')">
+            High Priority <span class="segment_badge">{{total.high}}</span>
+          </ion-segment-button>
+          <ion-segment-button value="m" (tap)="selectTab('m')">
+            Medium Priority <span class="segment_badge">{{total.medium}}</span>
+          </ion-segment-button>
+          <ion-segment-button value="l" (tap)="selectTab('l')">
+            Low Priority <span class="segment_badge">{{total.low}}</span>
+            </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+    
+  <ion-refresher *ngIf="!showFilter" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <span *ngIf="showLabels && !showLoaderTodays" class="txt-update">Last updated: {{lastUpdatesAt | amTimeAgo}}  <ion-icon class="icon-refresh" name="refresh" (click)="getWoData()"></ion-icon></span>
+
+  <span *ngIf="showLoaderTodays" class="gif-img"><img src="assets/img/ripple.gif"/></span>
+
+  <div class="clear"></div>
+  <!--<div *ngIf="foundRepos==''" class="no-result" text-center>No Result(s) Found</div>-->
+
+  <span *ngFor="let item of woData; let j=index">
+      <!-- <ng-container *ngIf="userPermissions.wo_access.view_all==true || userId==item.opened_by_user_id"> -->
+          <ng-container *ngIf="userPermissions.wo_access.view_listing==true">
+          
+  <!--
+  <ion-label class="btn-day" *ngIf="i==0 && res.value.length>0" style="text-align:center;">Today</ion-label>    
+  <ion-label class="btn-day" *ngIf="i==1 && res.value.length>0" style="text-align:center;">Yesterday</ion-label>
+  <ion-label class="btn-day" *ngIf="i>1 && res.value.length>0" style="text-align:center;">{{res.date | amDateFormat:'LL'}}</ion-label>
+  -->    
+  
+  <ion-label class="btn-day" *ngIf="showDate(j)" style="text-align:center;">{{(item.created_at | date:'MMM d, yyyy') | uppercase}}</ion-label>
+  
+  <ion-grid class="option-row close_wo"  *ngIf="item.showOption">
+    <ion-row class="speech-bubble">
+    <ion-col col-10 *ngIf="!item.closeInProgress" class="option-col align-center" (tap)="closeWoCall(item.id,j)">
+      <ion-icon ios="ios-construct-outline" md="md-construct-outline" class="option-icon"></ion-icon> CLOSE WO 
+    </ion-col>
+    <ion-icon *ngIf="!item.closeInProgress" col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeWo(j)"></ion-icon>
+    <ion-spinner *ngIf="item.closeInProgress" name="bubbles"></ion-spinner>
+  </ion-row>
+  </ion-grid>
+
+   <ion-card class="item_sub2" style="width:100%;margin:0px;" (click)="editWorkOrder(item.id)" (press)="userPermissions.wo_access.can_close?openOptions(j):''">
+      <ion-row class="card-header">
+      <ion-col class="left_text middel_text col_middel">
+          <span *ngIf="item.due_days>0">  <span class="text-muted">{{item.status}} for</span> {{item.due_days}} days</span>
+          <span *ngIf="item.due_days==0">  <span class="text-muted">Opened Today</span></span>
+          <span *ngIf="item.due_days<0">  <span class="text-muted">Closed</span></span>
+      </ion-col>
+    
+      <ion-col class="middel_text">
+
+          <div class="inline-block">
+              <span class="text-center">#{{item.id}}</span>
+              <br/>
+              <span *ngIf="item.priority=='l'" class="work-order-priority text-low">Low Priority</span>
+              <span *ngIf="item.priority=='m'" class="work-order-priority text-medium">Medium Priority</span>
+              <span *ngIf="item.priority=='h'" class="work-order-priority text-danger">High Priority</span>
+          </div>
+
+        
+      </ion-col>
+
+      <ion-col class="right_text">
+          <div><ion-icon class="icon_comment" name="chatbubbles-outline"></ion-icon></div>
+      </ion-col>
+
+    </ion-row>
+
+    <ion-card-content [ngClass]="selectable">
+      <!-- <p [innerHTML]="updateHtml(item.content.content_data,item.mentioned_user_ids?item.mentioned_user_ids:'') | safeHtml" style="font-size:15px !important;color:#000000;"></p> -->
+
+      <div class="panel-body pt10 pb5">
+        <div class="row mb5">
+            <span class="text-muted">Location: </span><span class="location-name">{{item.location_detail}}</span>
+        </div>
+        <div class="row mb5">
+            <span class="text-muted">Request: 
+             <span class="description"> {{item.description}}</span>
+            </span>
+        </div>
+      </div>
+
+
+    </ion-card-content>
+
+    <ion-row class="card-footer">
+      <ion-col class="left_text">
+          <span class="text-muted">Created By: </span><br>{{userId==item.opened_by_user_id?'You':item.created_by_name}}
+      </ion-col>
+    
+      <ion-col class="right_text">
+          <span class="text-muted">Assigned To: </span><br><span> {{userId==item.assigned_to_id?'You':item.assign_to_name}}</span>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+  
+  </ng-container>
+  </span>
+
+  <!-- this fab is placed at bottom center -->
+  <ion-fab bottom center edge #fab class="footer_fab_box" >
+      <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+      <ion-fab-list side="top">
+        <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+      </ion-fab-list>
+      <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+        <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+      </ion-fab-list>
+      <ion-fab-list side="right">
+        <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+      </ion-fab-list>
+    </ion-fab>
+
+</ion-content>
+
+
+<ion-footer>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-2.4 (click)="openFeedPage()" class="bottom-menu">
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-home-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 (click)="openChatPage()" class="bottom-menu">
+          <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-chatboxes-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 class="bottom-menu">
+          <!-- space for fab button -->
+        </ion-col>
+        <ion-col col-2.4  class="active">
+            <span *ngIf="woNotificationCount>0" class="footer_badge"></span>  
+          <ion-icon name="ios-construct-outline"></ion-icon>
+        </ion-col>
+        <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
+            <ion-icon name="ios-list-outline"></ion-icon>
+          </ion-col>
+      <!-- <ion-col col-2.4 (tap)="openMyMentionPage()" class="bottom-menu">
+        <ion-icon name="ios-at"></ion-icon>
+      </ion-col> -->
+         
+    </ion-row>
+  </ion-grid>
+
+</ion-footer>

@@ -1,0 +1,16 @@
+<!-- <ion-content padding no-bounce disable-scroll> -->
+<div class="reply-box" style="height: 100%;padding-top: 20%;">
+  <div class="popup-box">
+
+      <div class="msg-box">Add Comment</div>
+
+    <textarea name="Text1" placeholder="Your comment" rows="4" [(ngModel)]="commentText" (ngModelChange)="changeModelValue()"></textarea>
+
+    <div class="popup-buttons">
+      <button ion-button (tap)="dismiss()">CANCEL</button>
+      <button ion-button [disabled]="!commentText.trim()" (tap)="send()">SAVE</button>
+    </div>
+
+  </div>
+</div>
+<!-- </ion-content> -->

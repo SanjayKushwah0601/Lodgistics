@@ -1,0 +1,103 @@
+<div id="ListBackdrop" *ngIf="fabButtonOpened"></div> 
+<ion-header>
+    <ion-navbar>
+            <span start class="broadcast" *ngIf="broadcast_count>0">
+                    <span (tap)="broadcastList()">
+                      <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+                      <span class="broadcast_btn">
+                          <img src="assets/img/broadcost-red-icon.png" />
+                        </span>
+                      ({{broadcast_count}})</span>
+                  </span>  
+        <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>LEARNING CENTER</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding no-bounce>
+        <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching records...</span></span>
+        <ion-grid class="video_list">
+                <!-- justify-content-center align-items-center -->
+            <ion-row justify-content-center align-items-center *ngFor="let res of userVideoData; let i=index" (click)="payVideo(res.id)">
+                <ion-col col-1>{{i+1}}.</ion-col>
+                <ion-col col-3>
+                        <ion-thumbnail item-start>
+                            <img src="{{res.path}}">
+                        </ion-thumbnail>
+                </ion-col>
+                <ion-col col-8>
+                    <h2>{{res.name}}</h2>
+                    <p>{{res.description}}</p>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+
+        <ion-fab bottom center edge #fab class="footer_fab_box" >
+                <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+                <ion-fab-list side="top">
+                  <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+                </ion-fab-list>
+                <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+                  <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+                </ion-fab-list>
+                <ion-fab-list side="right">
+                  <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+                </ion-fab-list>
+              </ion-fab>
+
+</ion-content>
+
+
+<ion-footer>
+    <ion-grid>
+        <ion-row *ngIf="userPermissions.wo_access.view_listing">
+            <ion-col col-2.4 (tap)="openFeedPage()">
+                <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-home-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 (tap)="openChatPage()" class="bottom-menu">
+                <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-chatboxes-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 class="bottom-menu">
+                    <!-- space for fab button -->
+                  </ion-col>
+                  <ion-col col-2.4 (tap)="openWOPage()" class="bottom-menu">
+                        <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
+                      <ion-icon name="ios-construct-outline"></ion-icon>
+                    </ion-col>
+            <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
+                    <ion-icon name="ios-list-outline"></ion-icon>
+                  </ion-col>
+            <!-- <ion-col col-2.4 (tap)="openMyMentionPage()" class="bottom-menu">
+                <ion-icon name="ios-at"></ion-icon>
+            </ion-col> -->
+                 
+
+        </ion-row>
+        <ion-row *ngIf="!userPermissions.wo_access.view_listing">
+            <ion-col col-2.4 (tap)="openFeedPage()">
+                <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-home-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 (tap)="openChatPage()" class="bottom-menu">
+                <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+                <ion-icon name="ios-chatboxes-outline"></ion-icon>
+            </ion-col>
+            <ion-col col-2.4 class="bottom-menu">
+                    <!-- space for fab button -->
+                  </ion-col>
+            <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
+                    <ion-icon name="ios-list-outline"></ion-icon>
+                  </ion-col>
+            <ion-col col-2.4 (tap)="openMyMentionPage()" class="bottom-menu">
+                <ion-icon name="ios-at-outline"></ion-icon>
+            </ion-col>
+            
+
+        </ion-row>
+    </ion-grid>
+</ion-footer>

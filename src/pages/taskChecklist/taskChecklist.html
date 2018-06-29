@@ -1,0 +1,214 @@
+<div id="ListBackdrop" *ngIf="fabButtonOpened"></div> 
+<ion-fab bottom center edge #fab class="footer_fab_box" >
+    <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+    <ion-fab-list side="top">
+      <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+    </ion-fab-list>
+    <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+      <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+    </ion-fab-list>
+    <ion-fab-list side="right">
+      <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+    </ion-fab-list>
+  </ion-fab>
+<ion-header>
+  <ion-navbar>
+      <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span (tap)="broadcastList()">
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+                <img src="assets/img/broadcost-red-icon.png" />
+              </span>
+            ({{broadcast_count}})</span>
+        </span> 
+    <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{(tempFoundRepos.length>0)?'CHECKLISTS':isChecklistDataLoaded?'CHECKLIST ACTIVITY':''}}</ion-title>  
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding [ngClass]="isPopupOpen?'open-popup':''"   no-bounce style="overflow-y: hidden !important;">
+
+
+<ion-scroll *ngIf="foundRepos.length>0 || foundRepos!=''" scrollY="true" id="firstScroll"  class="{{scrollHeightClass}}" >
+  <ion-card [@enterAnimation] style="width:100%;margin:0px;" *ngFor="let item of foundRepos; let j=index">
+      <ion-row class="card-footer">
+          <ion-col class="bottom-buttons" col-12>
+              <ion-item class="item_sub1">
+                  <div class="pull-left">
+                    <h2 class="text_capital">{{item.name}}</h2>
+                    <p *ngIf="item.description">{{item.description}}</p>
+                    <p *ngIf="item.notes" class="imp_note">{{item.notes}}</p>
+                  </div>
+                </ion-item>
+          </ion-col>
+          <!-- <ion-col class="bottom-buttons start_btn" col-2 (click)="start(item.id,item.task_list_record_id,item.name)">
+              <button ion-button icon-left clear>
+                  <span>{{(item.task_list_record_id || item.task_list_record_id>0)?'RESUME':'START'}}</span>
+                </button>
+          </ion-col> -->
+        </ion-row>
+        <ion-row class="card-footer">
+          <ion-col class="btn_center" col-12 (click)="start(item.id,item.task_list_record_id,item.name)">
+            <button ion-button icon-left clear>
+              <span>{{(item.task_list_record_id || item.task_list_record_id>0)?'RESUME':'START'}}</span>
+            </button>
+          </ion-col>
+        </ion-row>
+  </ion-card>
+  <span class="txt-update msg" *ngIf="showLabels && foundRepos.length==0">You have no pending checklist item to take action on.</span>
+  </ion-scroll> 
+  
+  <ng-container *ngIf="(foundRepos.length>0 || foundRepos!='')">
+    <button [@upenterAnimation] ion-button id="centerButton" *ngIf="cdTimeline" class="btn-down" (click)="goToContainer(false)" >CHECKLIST ACTIVITY <ion-icon name="ios-arrow-down" 
+      class="downAndUpIcon"></ion-icon></button>
+  </ng-container>
+      
+      
+    <ng-container *ngIf="cdTimeline">
+     <ion-scroll id="secondScroll" scrollY="true" [ngClass]="!(foundRepos.length>0 || foundRepos!='')?'full_page':''"> 
+    
+        <span *ngIf="spinner" class="timeline_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="timeline_loader_text">Fetching Checklist records...</span></span>
+        <div id="timelineContent">
+            <span class="txt-update msg" *ngIf="taskListData.length<=0 && !spinner && showEmptyMsgForActivity">You have no pending checklist item to take action on.</span>
+    
+            
+           <ng-container *ngFor="let item of taskListData; let j=index">
+            <section [@activityAnimation] id="cd-timeline" [ngClass]="item.status=='reviewed'?'blue_line cd-container':'cd-container'">
+              <div>
+                <div class="cd-timeline-block" (click)="review(item.task_list.id,item.id,item.task_list.name,item.finished_by.name,item.permission_to)">
+                  <div class="cd-timeline-icon royal">
+                    <i class="ion-image timelineIcon"></i>
+                  </div>
+                  <div class="cd-timeline-content royal">
+                    <h5 class="marginBottom0 marginTop0 task_name">{{item.task_list.name}}</h5>
+                    <p class="marginTop5 timelineText completed_text">Finished by <span class="user_name">{{item.finished_by.name}} </span>
+                    <span class="date_time" *ngIf="item.dateType=='today'">{{item.finished_at | amTimeAgo}}</span>
+                    <span class="date_time" *ngIf="item.dateType=='yesterday'">Yesterday at {{item.finished_at | date:"shortTime"}}</span>
+                    <span class="date_time" *ngIf="item.dateType==''" >on {{item.finished_at |  date : "MMM d, y"}} at {{item.finished_at | date:'shortTime'}}</span>
+                    </p>
+
+                    <p class="marginTop5 timelineText completed_text" *ngIf="item.reviewed_at">Reviewed by <span class="user_name">{{item.reviewed_by.name}} </span> 
+                      <span class="date_time" *ngIf="item.dateType1=='today'">{{item.reviewed_at | amTimeAgo}}</span>
+                      <span class="date_time" *ngIf="item.dateType1=='yesterday'">Yesterday at {{item.reviewed_at | date:"shortTime"}}</span>
+                      <span class="date_time" *ngIf="item.dateType1=='fulldate'" >on {{item.reviewed_at |  date : "MMM d, y"}} at {{item.reviewed_at | date:'shortTime'}}</span>
+                    </p>
+                 
+                  </div>
+                </div>
+              </div>
+            </section> 
+            </ng-container>
+
+              <section id="cd-timeline" class="cd-container load_more_section" *ngIf="showLoadMoreLable">
+                <div ng-repeat="activity in timeline">
+                  <div class="cd-timeline-block">
+                    <div class="cd-timeline-icon royal">
+                      <i class="ion-image timelineIcon"></i>
+                    </div>
+                    <div class="cd-timeline-content royal last_circle">
+                      <h5 (click)="doInfinite()" *ngIf="lastDate!=''" class="marginBottom0 marginTop0 task_name load_more">Load next 10 items</h5>
+                      <h5 *ngIf="lastDate==''" class="marginBottom0 marginTop0 task_name">All Checklist history loaded</h5>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              
+      </div>
+  </ion-scroll>
+</ng-container>
+
+  </ion-content>
+
+
+
+
+
+<ion-footer [ngClass]="cdTimeline?'footer_only_for_ios_x':''">
+  
+  <!-- <button [@downenterAnimation] ion-button  *ngIf="!cdTimeline"   class="btn-down" (click)="goToContainer(true); getActivityData()">CHECKLIST ACTIVITY <ion-icon name="ios-arrow-up" class="downAndUpIcon"></ion-icon></button> -->
+  
+  <ng-container *ngIf="(foundRepos.length>0 || foundRepos!='')"> 
+    <button  ion-button  *ngIf="firstbutton"   class="btn-down" (click)="goToContainer(true); getActivityData()">CHECKLIST ACTIVITY <ion-icon name="ios-arrow-up" class="downAndUpIcon"></ion-icon></button>
+ 
+
+  <div *ngIf="!firstbutton">
+  <button  [@downenterAnimation] ion-button  *ngIf="!cdTimeline"   class="btn-down" (click)="goToContainer(true); getActivityData()">CHECKLIST ACTIVITY <ion-icon name="ios-arrow-up" class="downAndUpIcon"></ion-icon></button>
+  </div>
+</ng-container>
+
+  <ion-grid>
+    <ion-row *ngIf="userPermissions.wo_access.view_listing" >
+      <ion-col col-2.5 (click)="openFeedPage()" class="bottom-menu">
+        <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-home-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 (click)="openChatPage()" class="bottom-menu">
+        <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-chatboxes-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 class="bottom-menu">
+          <!-- space for fab button -->
+          <!-- <ion-fab bottom center edge #fab class="footer_fab_box" >
+            <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+            <ion-fab-list side="top">
+              <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+            </ion-fab-list>
+            <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+              <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+            </ion-fab-list>
+            <ion-fab-list side="right">
+              <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+            </ion-fab-list>
+          </ion-fab> -->
+        </ion-col>
+      <ion-col col-2.4 (click)="openWOPage()" class="bottom-menu">
+        <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-construct-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 class="active list_footer_tab">
+        <ion-icon name="ios-list-outline"></ion-icon>
+      </ion-col>
+      <!-- <ion-col col-2.4 (click)="openMyMentionPage()" class="bottom-menu">
+        <ion-icon name="ios-at"></ion-icon>
+      </ion-col> -->
+      
+    </ion-row>
+    <ion-row *ngIf="!userPermissions.wo_access.view_listing">
+      <ion-col col-2.4 (click)="openFeedPage()" class="bottom-menu">
+        <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-home-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 (click)="openChatPage()" class="bottom-menu">
+        <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-chatboxes-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 class="bottom-menu">
+          <!-- space for fab button -->
+          <!-- <ion-fab bottom center edge #fab class="footer_fab_box" >
+              <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
+              <ion-fab-list side="top">
+                <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
+              </ion-fab-list>
+              <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+                <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
+              </ion-fab-list>
+              <ion-fab-list side="right">
+                <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
+              </ion-fab-list>
+            </ion-fab> -->
+        </ion-col>
+      <ion-col col-2.4 class="active list_footer_tab">
+        <ion-icon name="ios-list-outline"></ion-icon>
+      </ion-col>
+      <ion-col col-2.4 (click)="openMyMentionPage()" class="bottom-menu">
+        <ion-icon name="ios-at-outline"></ion-icon>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+</ion-footer>

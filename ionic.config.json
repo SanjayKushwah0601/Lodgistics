@@ -1,0 +1,8 @@
+{
+  "name": "Lodgistics",
+  "app_id": "9a8ebb8f",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}

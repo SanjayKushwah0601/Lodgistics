@@ -1,0 +1,139 @@
+<ion-header id="header_box">
+  <ion-navbar>  
+    <ion-title [ngClass]="(reviewMode && canUpdateReview)?'title_with_comment_btn':''" >{{pageTitle}}</ion-title>
+    <span *ngIf="reviewMode && canUpdateReview" (click)="addReviewComment(taskListData.id)" class="comment_btn">Comment</span>
+  </ion-navbar>
+  <!-- <span *ngIf="!showDetails"><span (click)="showTaskDetail()" class="show_btn">Show Details</span></span>
+  <span *ngIf="showDetails"><span (click)="hideTaskDetail()" class="show_btn">Hide Details</span></span> -->
+</ion-header>
+
+<ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">
+
+  <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching Checklist records...</span></span>
+
+  <span *ngIf="animateItems">
+
+    <ion-card style="width:100%;margin:0px;" *ngIf="reviewerNotes" class="comment_box">
+      <ion-row class="card-footer">
+          <ion-col class="bottom-buttons" col-12>
+              <ion-item class="item_sub1" (click)="(reviewMode && canUpdateReview)?addReviewComment(taskListData.id):''">
+                  <div class="pull-left">
+                    <span class="text_capital">Review Comments :</span>
+                    <p class="">{{reviewerNotes}}</p>
+                  </div>
+                </ion-item>
+          </ion-col>
+        </ion-row>
+  </ion-card>
+
+  <ion-card style="width:100%;margin:0px;" *ngIf="showDetails">
+      <ion-row class="card-footer">
+          <ion-col class="bottom-buttons" col-12>
+              <ion-item class="item_sub1">
+                  <div class="pull-left">
+                    <h2 class="text_capital">F & B: Breakfast (Closing)</h2>
+                    <p class="imp_note">Remember 10/5 Rule: When you are 10 feet from a guest smile and make direct eye contact. When you are 5 feet from a guest, verbally greet them.</p>
+                  </div>
+                </ion-item>
+          </ion-col>
+        </ion-row>
+  </ion-card>
+  <!-- items_list -->
+    <ion-item-group *ngFor="let res of animateItems;let j=index" class="items_list" [@enterAnimation]>
+      <ion-item-divider color="light" sticky id="select_btn"> 
+
+          <!-- <ion-grid class="option-row comment_ui" *ngIf="res.showOption">
+              <ion-row class="speech-bubble">
+              <ion-col col-10 class="option-col align-center" (tap)="addComment()">
+                <ion-icon name="text-outline" class="option-icon"></ion-icon> COMMENT 
+              </ion-col>
+              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeOptionMain(j)"></ion-icon>
+            </ion-row>
+            </ion-grid> -->
+
+        <ion-grid class="checklist_items">
+            <ion-row class="group_heading">
+              <!-- <ion-col col-10 (press)="!reviewMode?openOptionsMain(res.id,j):''"> -->
+                  <ion-col col-10>
+                <span>{{res.title}}</span> 
+              </ion-col>
+              <ion-col col-2 class="icon_title_box">
+                  <!-- <ion-icon name="checkmark" item-end (click)="confirmMarkAll()"></ion-icon>   -->
+                  <!-- <span class="right_icons count" (press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):confirmResetAll(res.title,j,'',res.id)):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span> -->
+                  <ion-spinner *ngIf="res.inProgress" name="bubbles"></ion-spinner>
+                  <span *ngIf="!res.inProgress" class="right_icons count" (press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):''):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item-divider>
+      <ion-item *ngFor="let item of res.item_records;let k=index" class="sub_item">
+
+          
+
+      <div class="row_box">
+
+          <ion-grid class="option-row comment_ui" *ngIf="item.showOption">
+              <ion-row class="speech-bubble">
+              <ion-col col-10 class="option-col align-center" (tap)="addComment(j,k,item.id,item.comment)">
+                <ion-icon name="text-outline" class="option-icon"></ion-icon> COMMENT 
+              </ion-col>
+              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeOption(j,k)"></ion-icon>
+            </ion-row>
+            </ion-grid>
+            
+          <ion-grid>
+            <ion-row>
+              <ion-col col-10 (press)="!reviewMode?openOptions(item.id,j,k):''" class="sub_items_box">
+                <span class="left_content">{{item.title}}</span> 
+                <span *ngIf="item.comment">
+                  <div class="content_text">{{item.comment}}</div> 
+                </span>
+              </ion-col>
+              <ion-col col-2 class="icon_box">
+                <span>
+                  <!-- <ion-icon [ngClass]="item.completed_at?'completed_btn':''" name="checkmark" item-end (click)="(item.completed_at || reviewMode)?'':completeItem(item.title,j,k,item.id)"></ion-icon>   -->
+                  <ion-spinner *ngIf="!reviewMode && item.inProgress" name="bubbles"></ion-spinner>
+                  <ion-icon *ngIf="item.completed_at && !item.inProgress" (click)="reviewMode?'':resetItem(item.title,j,k,item.id)" class="completed_btn" name="checkmark" item-end></ion-icon> 
+                  <ion-icon *ngIf="!reviewMode && !item.completed_at && !item.inProgress" (click)="completeItem(item.title,j,k,item.id)" class="" name="checkmark" item-end></ion-icon> 
+                  <label *ngIf="!item.completed_at && reviewMode" class="incomplete">Incomplete</label> 
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </div>
+    </ion-item>  
+
+    </ion-item-group>
+  </span>
+  
+</ion-content>
+
+<ion-footer *ngIf="showFooter">
+  <!-- <div class="footer_bar5"></div>
+  <div class="footer_bar4"></div>
+  <div class="footer_bar3"></div>
+  <div class="footer_bar2"></div> -->
+  <!-- <div class="footer_bar1"></div> -->
+  <!-- <div class="gradient_css">.</div>   -->
+<button *ngIf="!reviewMode" ion-button full (click)="taskListData?finish(taskListData.id):''">FINISH</button>
+<button *ngIf="reviewMode && canUpdateReview" ion-button full (click)="taskListData?reviewComplete(taskListData.id):''">COMPLETE REVIEW</button>
+</ion-footer>
+
+<!-- <ion-footer>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-3 (click)="openFeedPage()" class="bottom-menu">
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-home-outline"></ion-icon><br/><span>HOTEL LOG</span></ion-col>
+      <ion-col col-3 (click)="openChatPage()" class="bottom-menu">
+          <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-chatboxes-outline"></ion-icon><br/><span>MESSAGING</span></ion-col>
+      <ion-col col-3 (tap)="openMyMentionPage()" class="bottom-menu">
+        <ion-icon name="ios-at"></ion-icon><br/><span>MENTION</span></ion-col>
+        <ion-col col-3  (click)="openWOPage()" class="bottom-menu">
+          <ion-icon name="ios-construct"></ion-icon><br/><span>WORK ORDERS</span></ion-col> 
+    </ion-row>
+  </ion-grid>
+
+</ion-footer> -->

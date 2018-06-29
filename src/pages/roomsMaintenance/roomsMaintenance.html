@@ -1,0 +1,136 @@
+<ion-header>
+  <ion-navbar>
+      <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span (tap)="broadcastList()">
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+                <img src="assets/img/broadcost-red-icon.png" />
+              </span>
+            ({{broadcast_count}})</span>
+        </span>   
+    <button ion-button menuToggle end>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>ROOM MAINTENANCE</ion-title>
+  </ion-navbar>
+
+  <ion-grid class="header_box">
+      <ion-row class="row1">
+        <ion-col col-4>
+          <div class="sub_box">
+            <b>1st</b><br/>
+            Cycle
+          </div>
+        </ion-col>
+        <ion-col col-4>
+          <div class="sub_box">
+            <b>11</b><br/>
+            Guest Rooms Remaining
+          </div>
+        </ion-col>
+        <ion-col col-4>
+          <div class="sub_box">
+            <b>108</b><br/>
+            Days Remaining
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row class="row2" id="select_btn" [ngClass]="roomNo!=''?'start_pm':''">
+        <ion-col col-12  *ngIf="roomNo==''">Select Room to Maintain</ion-col>
+        <ion-col col-12  *ngIf="roomNo!=''" (tap)="startPm()">Start PM</ion-col>
+      </ion-row>
+      <ion-row class="row3">
+        <ion-col col-12>
+            <span class="scroll-ion">
+                <ion-scroll scrollX="true">
+                  <ul class="results">
+                    <li class="selected"><label>Floor 1</label></li>
+                    <li><label>Floor 1</label></li>
+                    <li><label>Floor 2</label></li>
+                    <li><label>Floor 3</label></li>
+                    <li><label>Floor 4</label></li>
+                    <li><label>Floor 5</label></li>
+                    <li><label>Floor 6</label></li>
+                    <li><label>Floor 7</label></li>
+                    <li><label>Floor 8</label></li>
+                    <li><label>Floor 9</label></li>
+                    <li><label>Floor 10</label></li>
+                    <li><label>Floor 11</label></li>
+                    <li><label>Floor 12</label></li>
+                  </ul>
+                </ion-scroll>
+                </span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+</ion-header>
+
+<ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">
+
+  <ion-list class="room_no">
+    <ng-container *ngFor="let res of room; let i=index;">
+      <ion-item [ngClass]="roomNo==res.room_number?'room_selected':''" (tap)="roomNo==res.room_number?deSelectRoom():selectRoom(res.room_number,res.id)">
+        {{res.room_number}} 
+        <span *ngIf="i%5==0"><span class="badge badge-danger">30% done</span></span>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+
+  
+</ion-content>
+
+
+<ion-footer>
+
+  <ion-grid>
+      <ion-row *ngIf="userPermissions.wo_access.view_listing">
+        <ion-col col-3 (click)="openFeedPage()" class="bottom-menu">
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+          <ion-icon name="ios-home-outline"></ion-icon>
+          <br/>
+          <span>HOTEL LOG</span>
+        </ion-col>
+        <ion-col col-3 (click)="openChatPage()" class="bottom-menu">
+          <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+          <ion-icon name="ios-chatboxes-outline"></ion-icon>
+          <br/>
+          <span>MESSAGING</span>
+        </ion-col>
+        <ion-col col-3 (tap)="openMyMentionPage()" class="bottom-menu">
+          <ion-icon name="ios-at"></ion-icon>
+          <br/>
+          <span>MENTION</span>
+        </ion-col>
+        <ion-col col-3 (click)="openWOPage()" class="bottom-menu">
+          <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
+          <ion-icon name="ios-construct"></ion-icon>
+          <br/>
+          <span>WORK ORDERS</span>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!userPermissions.wo_access.view_listing">
+        <ion-col col-4 (click)="openFeedPage()" class="bottom-menu">
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+          <ion-icon name="ios-home-outline"></ion-icon>
+          <br/>
+          <span>HOTEL LOG</span>
+        </ion-col>
+        <ion-col col-4 (click)="openChatPage()" class="bottom-menu">
+          <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
+          <ion-icon name="ios-chatboxes-outline"></ion-icon>
+          <br/>
+          <span>MESSAGING</span>
+        </ion-col>
+        <ion-col col-4 (tap)="openMyMentionPage()" class="bottom-menu">
+          <ion-icon name="ios-at"></ion-icon>
+          <br/>
+          <span>MENTION</span>
+        </ion-col>
+  
+      </ion-row>
+    </ion-grid>
+
+
+</ion-footer>

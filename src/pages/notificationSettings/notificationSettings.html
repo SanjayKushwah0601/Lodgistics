@@ -1,0 +1,58 @@
+<ion-backdrop disable-activated="" role="presentation" tappable="" class="backdrop-no-tappable" style="opacity: 0.5;"></ion-backdrop>
+<ion-content padding no-bounce disable-scroll>
+
+  <div class="reply-box" style="margin-top: 20%;">
+
+    <div class="popup-box">
+      <ion-title class="title">Notification Settings</ion-title>
+      <ion-icon class="close-icon" ios="ios-close" md="md-close" (click)="dismiss()"></ion-icon>
+      <!-- <ion-item>
+        <ion-label>Chat Message</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.chat_message_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Feed Post</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.feed_post_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Acknowledged</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.acknowledged_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Work Order Completed</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.work_order_completed_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Work Order Assigned</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.work_order_assigned_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Unread Message</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.unread_message_notification_enabled"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Unread Mention</ion-label>
+        <ion-toggle [(ngModel)]="notificationData.unread_mention_notification_enabled"></ion-toggle>
+      </ion-item>
+      <div class="popup-buttons">
+        <button ion-button (tap)="update()" class="save_button">SAVE</button>
+      </div> -->
+
+      <span *ngIf="spinner" class="api_data_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_data_loader_text">Fetching notifications data...</span></span>
+
+
+      <span *ngIf="allKeys.length>0">
+      <ion-item *ngFor="let res of allKeys;let j=index">
+        <ion-label>{{res.name}}</ion-label>
+        <ion-toggle [(ngModel)]="res.key.prop"></ion-toggle>
+      </ion-item>
+    </span>
+
+    <div class="popup-buttons">
+      <button ion-button [disabled]="showLoader" (tap)="showLoader?'':update()" class="save_button">{{showLoader?'':'SAVE'}}<ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner></button>
+    </div>
+
+
+    </div>
+  </div>
+</ion-content>

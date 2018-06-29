@@ -1,0 +1,27 @@
+<ion-header id="header_box">
+  <ion-navbar>  
+      <button ion-button menuToggle end>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+    <ion-title>TEAM LISTING</ion-title>
+    <span class="plus_btn" (click)="add()"><ion-icon ios="ios-add"></ion-icon></span>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">
+  <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching Team records...</span></span>
+  <span *ngIf="foundRepos">
+        <ion-list *ngFor="let res of foundRepos;let j=index" class="items_list">
+            <ion-item>
+                <ion-label>{{res.name}}<p><span class="designation" *ngIf="res.title">{{res.title}}</span></p>
+                  </ion-label>
+                  <ion-avatar item-left>
+                    <img src="{{res.avatar_img_url}}" class="active">
+                  </ion-avatar>
+                  </ion-item>
+          </ion-list>
+  </span>
+</ion-content>
+
+

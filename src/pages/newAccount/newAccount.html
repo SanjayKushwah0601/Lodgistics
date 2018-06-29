@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>NEW ACCOUNT</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+
+
+<ion-content padding>
+  <form [formGroup]="accountForm" (ngSubmit)="create()">
+    <ion-list>
+
+      <ion-item>
+        <ion-label stacked>NAME</ion-label>
+        <ion-input type="text" [(ngModel)]="formData.user.name" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Email</ion-label>
+        <ion-input type="text" [(ngModel)]="formData.user.email" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="email"></ion-input>
+      </ion-item>
+      <p class="pcolor" *ngIf="accountForm.controls.email.errors && accountForm.controls.email.dirty ">
+        <small class="up">
+        <strong> <i></i></strong>
+      </small>
+      </p>
+
+      <ion-item>
+        <ion-label stacked>PASSWORD</ion-label>
+
+        <ion-input type="{{type}}" [(ngModel)]="formData.user.password" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="password" show-hide-input></ion-input>
+
+      </ion-item>
+      <p class="pcolor" *ngIf="accountForm.controls.password.errors && accountForm.controls.password.dirty ">
+        <small class="up">
+        <strong> <i></i></strong>
+      </small>
+      </p>
+      <div *ngIf="!showPass" class="pull-left show-pass" (click)="showPassword()">SHOW</div>
+      <div *ngIf="showPass" class="pull-left show-pass" (click)="showPassword()">HIDE</div>
+
+      <div class="clearfix"></div>
+
+      <ion-item>
+        <ion-label stacked>PHONE(OPTIONAL)</ion-label>
+        <ion-input type="tel" [(ngModel)]="formData.user.phone_number" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="phone_number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>HOTEL CODE</ion-label>
+        <ion-input type="number" [(ngModel)]="formData.user.hotel_code" autocomplete='off' autocorrect='off' autocapitalize="on" formControlName="hotel_code"></ion-input>
+      </ion-item>
+
+      <p *ngIf="formData.name.trim()==''" class="text-blue"><ion-checkbox disabled="true" [(ngModel)]="formData.hotel_selected" formControlName="hotel_selected" value="true"></ion-checkbox> <span (click)="createHotel()">Select Hotel.</span></p>
+      <p *ngIf="formData.name.trim()!=''" class="text-blue"><span (click)="createHotel()">{{formData.name}}</span></p>
+
+    </ion-list>
+  
+  <div class="form-footer">
+    <p>
+      <ion-checkbox [(ngModel)]="formData.accepted" formControlName="accepted" value="true"></ion-checkbox> By clicking create account, you agree to Lodgistics's User Agreement. Privacy Policy and Cookie Policy.</p>
+
+    <button ion-button [disabled]="!accountForm.valid || !formData.accepted || !formData.hotel_selected" full>CREATE ACCOUNT</button>
+
+    <p class="text-center">Already have an account? <span class="text-blue" (click)="signin()">Sign in</span></p>
+  </div>
+</form>
+</ion-content>
