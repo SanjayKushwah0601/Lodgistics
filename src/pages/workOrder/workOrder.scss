@@ -38,7 +38,7 @@ ion-infinite-scroll-content{ min-height: 40px !important; }
 ion-toolbar .button-inner{ justify-content: left;}
 ion-footer{border-top: 1px solid #E5E5E5;}
 .tabs-ios .tab-button[aria-selected="true"] .tab-button-icon,.tabs-md .tab-button[aria-selected="true"] .tab-button-icon{color: #02B9E7;}
-
+ion-fab[bottom].footer_fab_box{ bottom: -10%; }
 
 
 

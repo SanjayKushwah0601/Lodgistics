@@ -47,24 +47,6 @@
     <plugin name="cordova-plugin-advanced-http" spec="^1.9.0" />
     <plugin name="cordova-plugin-badge" spec="^0.8.5" />
     <plugin name="cordova-plugin-youtube-video-player" spec="^1.0.6" />
-    <plugin name="ionic-plugin-deeplinks" spec="^1.0.15">
-        <variable name="URL_SCHEME" value="lodgistics" />
-        <variable name="DEEPLINK_SCHEME" value="https" />
-        <variable name="DEEPLINK_HOST" value="app.lodgistics.com" />
-        <variable name="ANDROID_PATH_PREFIX" value="/" />
-        <variable name="ANDROID_2_PATH_PREFIX" value="/" />
-        <variable name="ANDROID_3_PATH_PREFIX" value="/" />
-        <variable name="ANDROID_4_PATH_PREFIX" value="/" />
-        <variable name="ANDROID_5_PATH_PREFIX" value="/" />
-        <variable name="DEEPLINK_2_SCHEME" value=" " />
-        <variable name="DEEPLINK_2_HOST" value=" " />
-        <variable name="DEEPLINK_3_SCHEME" value=" " />
-        <variable name="DEEPLINK_3_HOST" value=" " />
-        <variable name="DEEPLINK_4_SCHEME" value=" " />
-        <variable name="DEEPLINK_4_HOST" value=" " />
-        <variable name="DEEPLINK_5_SCHEME" value=" " />
-        <variable name="DEEPLINK_5_HOST" value=" " />
-    </plugin>
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
     <plugin name="cordova-plugin-email-composer" spec="^0.8.15" />
     <plugin name="cordova-plugin-device" spec="1.1.4" />

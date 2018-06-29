@@ -50,7 +50,7 @@
 
 </ion-header>
 
-<ion-content padding (click)="closekeyboard()">
+<ion-content overflow-scroll="true" padding (click)="closekeyboard()">
 
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingText="Pull to refresh"></ion-refresher-content>
