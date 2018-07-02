@@ -1,5 +1,5 @@
 import { Component, ViewChild, trigger, transition, style, animate, state, NgZone } from '@angular/core';
-import { NavController, AlertController, Platform, Content, NavParams, ModalController, ViewController,Events, FabContainer,Slides ,ActionSheetController} from 'ionic-angular';
+import { NavController, AlertController, Platform, Content, NavParams, ModalController, ViewController, Events, FabContainer, Slides, ActionSheetController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { getFeedsUrl } from '../../services/configURLs';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -86,14 +86,14 @@ export class FeedsPage {
   public timeZoneOffset: any;
   public textLengthValue: any;
   public alert: any;
-  public broadcast_count=0;
-  public fabButtonOpened=false;
-  public followUpFeeds:any;
+  public broadcast_count = 0;
+  public fabButtonOpened = false;
+  public followUpFeeds: any;
   public actionSheet: any;
   //public currentDate = "";
- // public currentDate : any;
-// public totalFeeds=0;
-  constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public navParams: NavParams, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, private iab: InAppBrowser, public viewCtrl: ViewController, public events: Events, public fabContainer:FabContainer,public actionSheetCtrl: ActionSheetController ) {
+  // public currentDate : any;
+  // public totalFeeds=0;
+  constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public navParams: NavParams, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, private iab: InAppBrowser, public viewCtrl: ViewController, public events: Events, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController) {
 
     this.viewWOUrl = viewWorkOrderUrl;
     this.textLengthValue = textLength;
@@ -122,7 +122,7 @@ export class FeedsPage {
         }
       );
 
-      
+
       this.interval = window.setInterval(function () {
         /// call your function here
         console.log("update notification count");
@@ -130,7 +130,7 @@ export class FeedsPage {
           count => {
             thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
             thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-            thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+            thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
           },
           error => {
             return false;
@@ -192,13 +192,12 @@ export class FeedsPage {
             }
           }
         }
+        console.log('Sanjay: Feed fetched from db and now fetching from server.....')
         this.callTodaysFeedInBackground();
-      },
-      error => {
-        let lastPage=this.navCtrl.last();
-        console.log("VAL" +lastPage.component.name);
-        if(lastPage.component.name=="LoginPage")
-        {
+      }, error => {
+        let lastPage = this.navCtrl.last();
+        console.log("VAL" + lastPage.component.name);
+        if (lastPage.component.name == "LoginPage") {
           console.log("show:LoaderPage");
           this.events.publish('show:LoaderPage');
         }
@@ -220,12 +219,12 @@ export class FeedsPage {
       notifications => {
         let feedCount = 0;
         let messageCount = notifications.message_count;
-        let woCount = notifications.wo_count?notifications.wo_count:0;
-        
+        let woCount = notifications.wo_count ? notifications.wo_count : 0;
+
         this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount, wo_count: woCount })
           .then(
-          () => console.log('Stored user_notifications!'),
-          error => console.error('Error storing user_notifications', error)
+            () => console.log('Stored user_notifications!'),
+            error => console.error('Error storing user_notifications', error)
           );
       },
       error => {
@@ -465,7 +464,7 @@ export class FeedsPage {
 
               this.foundRepos = [{ date: today, value: tempArray1 }];
               this.foundRepos.push({ date: yesterday, value: tempArray2 });
-             // this.findTotalFeed();
+              // this.findTotalFeed();
               this.nativeStorage.setItem('feedData', { data: this.foundRepos, lastDate: yesterday, updateAfter: this.updateAfter.toString(), lastFeedDate: this.lastFeedDate }).then(
                 () => console.log('feedData Stored!'),
                 error => console.error('Error storing feedData', error)
@@ -555,7 +554,7 @@ export class FeedsPage {
             },
             err => {
               alertVar.present();
-            //  this.findTotalFeed();
+              //  this.findTotalFeed();
               this.callDateFilter = true;
               this.showLoader = false;
               infiniteScroll.complete();
@@ -563,7 +562,7 @@ export class FeedsPage {
             },
             () => {
               console.log('getData completed');
-          //    this.findTotalFeed();
+              //    this.findTotalFeed();
 
             }
           );
@@ -571,7 +570,7 @@ export class FeedsPage {
         }
         else {
           this.commonMethod.showNetworkError();
-        //  this.findTotalFeed();
+          //  this.findTotalFeed();
 
         }
 
@@ -590,7 +589,7 @@ export class FeedsPage {
       this.filterDate.setDate(this.filterDate.getDate() - 1);
       this.callDateFilter = false;
       //if (this.totalFeeds <= 8) {
-        //this.totalFeeds = 10;
+      //this.totalFeeds = 10;
       //}
       this.updateFilter(infiniteScroll);
     }
@@ -724,7 +723,7 @@ export class FeedsPage {
       val = newValue.text.substring(0, this.textLengthValue);
       var newValueWrap = this.commonMethod.getTextValue(allChatMentions, this.members, val);
       if (newValueWrap != "") {
-        val = newValueWrap+"....";
+        val = newValueWrap + "....";
       }
     } else if (newValue.html != "") {
       if (newValue.html != "") {
@@ -788,24 +787,24 @@ export class FeedsPage {
   }
 
 
-  translate(title,sourceText, langCode, i, j,mentioned_user_ids) {
+  translate(title, sourceText, langCode, i, j, mentioned_user_ids) {
 
     let allChatMentions = [];
     if (mentioned_user_ids != '' && mentioned_user_ids != null) {
       allChatMentions = mentioned_user_ids;
     }
 
-     sourceText = sourceText.replace(/\n/g, "<br/>");
+    sourceText = sourceText.replace(/\n/g, "<br/>");
     // let sourceText2 = this.commonMethod.removeMentionsFromName(allChatMentions, this.members, sourceText);
     // sourceText=sourceText2;
     // let firstPos = sourceText.indexOf("<span");
     // let lastPos = sourceText.indexOf("</span>");
-     let tempStr = "";
+    let tempStr = "";
     // if (firstPos == 0) {
     //   tempStr = sourceText.substring(firstPos, lastPos + 7);
     //   sourceText = sourceText.substring(lastPos + 7);
     // }
-    console.log("sourceText="+sourceText);
+    console.log("sourceText=" + sourceText);
     //alert(i);
     //alert(j);
     //alert(this.foundRepos[i].value[j].id);
@@ -872,38 +871,28 @@ export class FeedsPage {
 
 
   translateTitle(sourceText, langCode, i, j) {
-     sourceText = sourceText.replace(/\n/g, "<br/>");
-     let tempStr = "";
-    console.log("sourceText="+sourceText);
+    sourceText = sourceText.replace(/\n/g, "<br/>");
+    let tempStr = "";
+    console.log("sourceText=" + sourceText);
 
-        if (this.foundRepos[i].value[j].temp_title_data != undefined && this.foundRepos[i].value[j].temp_title_data != "") {
-          this.foundRepos[i].value[j].title = this.foundRepos[i].value[j].temp_title_data;
-          this.foundRepos[i].value[j].temp_title_data = "";
+    if (this.foundRepos[i].value[j].temp_title_data != undefined && this.foundRepos[i].value[j].temp_title_data != "") {
+      this.foundRepos[i].value[j].title = this.foundRepos[i].value[j].temp_title_data;
+      this.foundRepos[i].value[j].temp_title_data = "";
+    }
+    else {
+      //this.commonMethod.showLoader();
+      this.translationservice.translateText(sourceText, langCode).subscribe(data => {
+
+        if (data.detectedSourceLanguage == "en") {
+          this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
+          this.foundRepos[i].value[j].title = tempStr + data.translatedText;
+          //this.commonMethod.hideLoader();
         }
         else {
-          //this.commonMethod.showLoader();
-          this.translationservice.translateText(sourceText, langCode).subscribe(data => {
-
-            if (data.detectedSourceLanguage == "en") {
-              this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
-              this.foundRepos[i].value[j].title = tempStr + data.translatedText;
-              //this.commonMethod.hideLoader();
-            }
-            else {
-              this.translationservice.translateText(sourceText, 'en').subscribe(data => {
-                this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
-                this.foundRepos[i].value[j].title = tempStr + data.translatedText;
-                //this.commonMethod.hideLoader();
-              }, error => {
-                //this.commonMethod.hideLoader();
-                let alert = this.alertCtrl.create({
-                  subTitle: 'Error:' + '<br>' + error,
-                  buttons: ['OK']
-                });
-                alert.present();
-              });
-            }
-
+          this.translationservice.translateText(sourceText, 'en').subscribe(data => {
+            this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
+            this.foundRepos[i].value[j].title = tempStr + data.translatedText;
+            //this.commonMethod.hideLoader();
           }, error => {
             //this.commonMethod.hideLoader();
             let alert = this.alertCtrl.create({
@@ -913,6 +902,16 @@ export class FeedsPage {
             alert.present();
           });
         }
+
+      }, error => {
+        //this.commonMethod.hideLoader();
+        let alert = this.alertCtrl.create({
+          subTitle: 'Error:' + '<br>' + error,
+          buttons: ['OK']
+        });
+        alert.present();
+      });
+    }
   }
 
 
@@ -1015,7 +1014,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.createWorkOrder(id, value, image_url, mentioned_user_ids,room_id);
+            this.createWorkOrder(id, value, image_url, mentioned_user_ids, room_id);
           }
         }
       ]
@@ -1023,8 +1022,8 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  createWorkOrder(id, value, image_url, mentioned_user_ids,room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids,room_id: room_id });
+  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.callTodaysFeedInBackground();
@@ -1052,7 +1051,7 @@ export class FeedsPage {
     });
     modal.present();
   }
-  
+
 
   openWorkOrderPage(id, url) {
     this.nativeStorage.getItem('user_auth').then(
@@ -1090,23 +1089,23 @@ export class FeedsPage {
     window.clearInterval(this.interval);
   }
 
- // findTotalFeed() {
+  // findTotalFeed() {
   //  this.totalFeeds = this.lastfeedcount;
-   // if (this.totalFeeds <= 8) {
-    //  let count = 0;
-     // if (this.foundRepos != '' && this.foundRepos.length > 0) {
-      //  for (let i = 0; i < this.foundRepos.length; i++) {
-       //   if (this.foundRepos[i].value != undefined && this.foundRepos[i].value != null) {
-        //    count = count + this.foundRepos[i].value.length;
-        //  }
-       // }
-     // }
-      // this.zone.run(() => {
-      //  this.totalFeeds = count;
-      //  this.lastfeedcount = count;
-    //  });
-   // }
-//  }
+  // if (this.totalFeeds <= 8) {
+  //  let count = 0;
+  // if (this.foundRepos != '' && this.foundRepos.length > 0) {
+  //  for (let i = 0; i < this.foundRepos.length; i++) {
+  //   if (this.foundRepos[i].value != undefined && this.foundRepos[i].value != null) {
+  //    count = count + this.foundRepos[i].value.length;
+  //  }
+  // }
+  // }
+  // this.zone.run(() => {
+  //  this.totalFeeds = count;
+  //  this.lastfeedcount = count;
+  //  });
+  // }
+  //  }
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {
@@ -1153,10 +1152,9 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  createBroadcast(id)
-  {
+  createBroadcast(id) {
     this.isPopupOpen = true;
-    let modal = this.modalCtrl.create(createBroadcastPage,{ id: id});
+    let modal = this.modalCtrl.create(createBroadcastPage, { id: id });
     modal.onDidDismiss(data => {
       this.isPopupOpen = false;
       this.closekeyboard();
@@ -1166,33 +1164,32 @@ export class FeedsPage {
     modal.present();
   }
 
-  updateBroadcastCount()
-  {
+  updateBroadcastCount() {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         /* strat api call get Broadcast List */
-    if (this.commonMethod.checkNetwork()) {
-      this.commonMethod.getDataWithoutLoder(getBroadcastListUrl, accessToken).subscribe(
-        data => {
-          let res = data.json();
-          this.nativeStorage.setItem('broadcast_count', res.length)
-            .then(
-            () => {console.log('Stored broadcast_count!'); this.broadcast_count = res.length;},
-            error => console.error('Error storing broadcast_count', error)
-            );
-        },
-        err => {
-          
-        },
-        () => {
-          console.log('getData completed');
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(getBroadcastListUrl, accessToken).subscribe(
+            data => {
+              let res = data.json();
+              this.nativeStorage.setItem('broadcast_count', res.length)
+                .then(
+                  () => { console.log('Stored broadcast_count!'); this.broadcast_count = res.length; },
+                  error => console.error('Error storing broadcast_count', error)
+                );
+            },
+            err => {
+
+            },
+            () => {
+              console.log('getData completed');
+            }
+          );
         }
-      );
-    }
-    else {
-      this.commonMethod.showNetworkError();
-    }
-    /* end api call to get Broadcast List */
+        else {
+          this.commonMethod.showNetworkError();
+        }
+        /* end api call to get Broadcast List */
 
       },
       error => {
@@ -1202,7 +1199,7 @@ export class FeedsPage {
   }
 
   editWorkOrder(wo_no) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, {wo_no:wo_no});
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.callTodaysFeedInBackground();
@@ -1210,8 +1207,7 @@ export class FeedsPage {
     modal.present();
   }
 
-  compareBroadcastDate(date)
-  {
+  compareBroadcastDate(date) {
     let currentDate = new Date();
     let broadcast_date = new Date(date);
 
@@ -1226,17 +1222,15 @@ export class FeedsPage {
     currentDate = new Date(yyyy1 + '-' + mm1 + '-' + dd1);
     broadcast_date = new Date(yyyy2 + '-' + mm2 + '-' + dd2);
 
-    if(currentDate>broadcast_date)
-    {
+    if (currentDate > broadcast_date) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
 
-  confirmCancelBroadcast(id,i,j)
-  {
+  confirmCancelBroadcast(id, i, j) {
     this.alert = this.alertCtrl.create({
       message: cancelBroadcastConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1252,7 +1246,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.cancelBroadcast(id,i,j);
+            this.cancelBroadcast(id, i, j);
           }
         }
       ]
@@ -1260,7 +1254,7 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  cancelBroadcast(id,i,j){
+  cancelBroadcast(id, i, j) {
     /* create WO api call */
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -1273,11 +1267,11 @@ export class FeedsPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           let url = "";
-          let objData = {"feed":{ 'broadcast_start': "", 'broadcast_end': "" }};
+          let objData = { "feed": { 'broadcast_start': "", 'broadcast_end': "" } };
           url = createBroadcastUrl + "/" + id;
-          console.log("dates="+JSON.stringify(objData));
-        
-          this.foundRepos[i].value[j].cancelInProgress=true;
+          console.log("dates=" + JSON.stringify(objData));
+
+          this.foundRepos[i].value[j].cancelInProgress = true;
           this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
@@ -1290,7 +1284,7 @@ export class FeedsPage {
 
             },
             err => {
-              this.foundRepos[i].value[j].cancelInProgress=false;
+              this.foundRepos[i].value[j].cancelInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -1310,27 +1304,27 @@ export class FeedsPage {
     );
 
   }
-  createFeedQuick(fab?: FabContainer){
+  createFeedQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     this.createFeed();
   }
 
-  createWorkOrderQuick(fab?: FabContainer){
+  createWorkOrderQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
-    this.createWorkOrder('','','','','');
+    this.fabButtonOpened = false;
+    this.createWorkOrder('', '', '', '', '');
   }
 
-  sendMessage(fab?: FabContainer){
+  sendMessage(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -1338,16 +1332,15 @@ export class FeedsPage {
     modal.present();
   }
 
-  openFabButton(){
-    if(this.fabButtonOpened==false){
-        this.fabButtonOpened=true;
-    }else{
-        this.fabButtonOpened=false;
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
     }
   }
 
-  confirmMarkComplete(id,i,j)
-  {
+  confirmMarkComplete(id, i, j) {
     this.alert = this.alertCtrl.create({
       message: makrCompleteFeedConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1363,7 +1356,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.updateFeedStatus(id,i,j,'true');
+            this.updateFeedStatus(id, i, j, 'true');
           }
         }
       ]
@@ -1371,7 +1364,7 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  updateFeedStatus(id,i,j,status){
+  updateFeedStatus(id, i, j, status) {
     /* create WO api call */
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -1383,24 +1376,24 @@ export class FeedsPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           let url = "";
-          let objData = {"feed":{ 'complete': status}};
+          let objData = { "feed": { 'complete': status } };
           url = updateFeedStatusUrl + "/" + id;
-          console.log("dates="+JSON.stringify(objData));
-        
-          this.foundRepos[i].value[j].markCompleteInProgress=true;
+          console.log("dates=" + JSON.stringify(objData));
+
+          this.foundRepos[i].value[j].markCompleteInProgress = true;
           this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
               console.log(foundRepos);
               /* below line commented because we are calling api in background to update page */
-              this.foundRepos[i].value[j].markCompleteInProgress=false;
+              this.foundRepos[i].value[j].markCompleteInProgress = false;
               this.closekeyboard();
               this.callTodaysFeedInBackground();
               this.updateBroadcastCount();
 
             },
             err => {
-              this.foundRepos[i].value[j].markCompleteInProgress=false;
+              this.foundRepos[i].value[j].markCompleteInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -1421,8 +1414,7 @@ export class FeedsPage {
 
   }
 
-  confirmReopenMarkComplete(id,i,j)
-  {
+  confirmReopenMarkComplete(id, i, j) {
     this.alert = this.alertCtrl.create({
       message: reopenMarkCompleteFeedConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1438,7 +1430,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.updateFeedStatus(id,i,j,'false');
+            this.updateFeedStatus(id, i, j, 'false');
           }
         }
       ]
@@ -1446,16 +1438,15 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  closeOptions(i,j) {
+  closeOptions(i, j) {
     this.foundRepos[i].value[j].showSeelected = false;
   }
 
-  openOptions(i,j) {
+  openOptions(i, j) {
     this.foundRepos[i].value[j].showSeelected = true;
   }
 
-  confirmCancelFollowUp(id,i,j)
-  {
+  confirmCancelFollowUp(id, i, j) {
     this.alert = this.alertCtrl.create({
       message: cancelFollowUpConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1471,7 +1462,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.cancelFollowUp(id,i,j);
+            this.cancelFollowUp(id, i, j);
           }
         }
       ]
@@ -1504,10 +1495,9 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  updateFollowUp(id)
-  {
+  updateFollowUp(id) {
     this.isPopupOpen = true;
-    let modal = this.modalCtrl.create(createFollowUpPage,{ id: id});
+    let modal = this.modalCtrl.create(createFollowUpPage, { id: id });
     modal.onDidDismiss(data => {
       this.isPopupOpen = false;
       this.closekeyboard();
@@ -1517,7 +1507,7 @@ export class FeedsPage {
     modal.present();
   }
 
-  cancelFollowUp(id,i,j){
+  cancelFollowUp(id, i, j) {
     /* create WO api call */
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -1530,24 +1520,24 @@ export class FeedsPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           let url = "";
-          let objData = {"feed":{ 'follow_up_start': "", 'follow_up_end': "" }};
+          let objData = { "feed": { 'follow_up_start': "", 'follow_up_end': "" } };
           url = createFollowUpUrl + "/" + id;
-          console.log("dates="+JSON.stringify(objData));
-        
-          this.foundRepos[i].value[j].cancelFollowUpInProgress=true;
+          console.log("dates=" + JSON.stringify(objData));
+
+          this.foundRepos[i].value[j].cancelFollowUpInProgress = true;
           this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
               console.log(foundRepos);
               /* below line commented because we are calling api in background to update page */
-              this.foundRepos[i].value[j].cancelFollowUpInProgress=false;
+              this.foundRepos[i].value[j].cancelFollowUpInProgress = false;
               this.closekeyboard();
               this.callTodaysFeedInBackground();
               this.updateBroadcastCount();
 
             },
             err => {
-              this.foundRepos[i].value[j].cancelFollowUpInProgress=false;
+              this.foundRepos[i].value[j].cancelFollowUpInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -1577,7 +1567,7 @@ export class FeedsPage {
 
     // this.nativeStorage.getItem('user_auth').then(
     //   accessToken => {
-       
+
     //     if (this.commonMethod.checkNetwork()) {
 
     //       this.commonMethod.getDataWithoutLoder(getFollowUpUrl, accessToken).subscribe(
@@ -1615,16 +1605,16 @@ export class FeedsPage {
     this.slides.slidePrev();
   }
 
-  showContextOptions(feed_id,i,j,broadcast_start,follow_up_start) {
+  showContextOptions(feed_id, i, j, broadcast_start, follow_up_start) {
 
     this.foundRepos[i].value[j].showSeelected = true;
-    let followUpLabel="Follow Up";
-    if(follow_up_start!='' && follow_up_start!=null){
-      followUpLabel="Cancel Follow Up";
+    let followUpLabel = "Follow Up";
+    if (follow_up_start != '' && follow_up_start != null) {
+      followUpLabel = "Cancel Follow Up";
     }
-    let broadcastLabel="Broadcast";
-    if(broadcast_start!='' && broadcast_start!=null){
-      broadcastLabel="Cancel Broadcast";
+    let broadcastLabel = "Broadcast";
+    if (broadcast_start != '' && broadcast_start != null) {
+      broadcastLabel = "Cancel Broadcast";
     }
 
     this.actionSheet = this.actionSheetCtrl.create({
@@ -1637,9 +1627,9 @@ export class FeedsPage {
           handler: () => {
             console.log('Broadcast clicked');
             this.foundRepos[i].value[j].showSeelected = false;
-            if(broadcast_start!='' && broadcast_start!=null){
-              this.confirmCancelBroadcast(feed_id,i,j);
-            }else{
+            if (broadcast_start != '' && broadcast_start != null) {
+              this.confirmCancelBroadcast(feed_id, i, j);
+            } else {
               this.createBroadCastConfirm(feed_id);
             }
           }
@@ -1649,12 +1639,12 @@ export class FeedsPage {
           handler: () => {
             console.log('calendar clicked');
             this.foundRepos[i].value[j].showSeelected = false;
-            if(follow_up_start!='' && follow_up_start!=null){
-              this.confirmCancelFollowUp(feed_id,i,j);
-          }else{
-            this.createFollowUpConfirm(feed_id);
+            if (follow_up_start != '' && follow_up_start != null) {
+              this.confirmCancelFollowUp(feed_id, i, j);
+            } else {
+              this.createFollowUpConfirm(feed_id);
+            }
           }
-         }
         }, {
           text: 'Cancel',
           role: 'cancel',
@@ -1667,9 +1657,4 @@ export class FeedsPage {
     });
     this.actionSheet.present();
   }
-  
-
-  
-  
-
 }

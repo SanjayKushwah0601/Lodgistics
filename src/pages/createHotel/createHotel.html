@@ -10,21 +10,23 @@
     <ion-list>
       <ion-item>
         <ion-label stacked>HOTEL NAME</ion-label>
-        <ion-input type="text" placeholder="Hotel name" (input)="getHotels()" [(ngModel)]="formData.name" name="name" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on"></ion-input>
+        <ion-input type="text" placeholder="Hotel name" (input)="getHotels()" [(ngModel)]="formData.name" name="name" autocomplete="off"
+          autocorrect="on" spellcheck="on" autocapitalize="on"></ion-input>
       </ion-item>
 
-      <ng-container *ngIf="showList && hotelsData">
+      <ion-list scrollY="true" *ngIf="showList && hotelsData">
         <span class="autosuggestion_list">
-        <ion-item *ngFor="let row of hotelsData" (tap)="selectHotel(row)">
-          <p>{{row.name}}</p>
-          <span>{{row.formatted_address}}</span>
-        </ion-item>
+          <ion-item *ngFor="let row of hotelsData" (tap)="selectHotel(row)">
+            <p>{{row.name}}</p>
+            <span>{{row.formatted_address}}</span>
+          </ion-item>
         </span>
-      </ng-container>
+      </ion-list>
 
       <ion-item class="hotels_list">
         <ion-label stacked>HOTEL ADDRESS</ion-label>
-        <ion-input type="text" placeholder="Street and number" [(ngModel)]="formData.address" name="address" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on"></ion-input>
+        <ion-input type="text" placeholder="Street and number" [(ngModel)]="formData.address" name="address" autocomplete="off" autocorrect="on"
+          spellcheck="on" autocapitalize="on"></ion-input>
       </ion-item>
 
 
@@ -35,7 +37,8 @@
             <div>
               <ion-item>
                 <ion-label stacked></ion-label>
-                <ion-input type="text" placeholder="City" [(ngModel)]="formData.city" name="city" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on"></ion-input>
+                <ion-input type="text" placeholder="City" [(ngModel)]="formData.city" name="city" autocomplete="off" autocorrect="on" spellcheck="on"
+                  autocapitalize="on"></ion-input>
               </ion-item>
 
             </div>
@@ -44,7 +47,8 @@
             <div>
               <ion-item>
                 <ion-label stacked></ion-label>
-                <ion-input type="text" placeholder="State" [(ngModel)]="formData.state" name="state" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on"></ion-input>
+                <ion-input type="text" placeholder="State" [(ngModel)]="formData.state" name="state" autocomplete="off" autocorrect="on"
+                  spellcheck="on" autocapitalize="on"></ion-input>
               </ion-item>
             </div>
           </td>
@@ -64,7 +68,8 @@
   </form>
 
   <div class="form-footer">
-    <button ion-button full [disabled]="( !formData.name.trim() || !formData.address.trim() || !formData.city.trim() || !formData.state.trim() || !formData.zip_code.trim() )" (click)="create()">SELECT HOTEL</button>
+    <button ion-button full [disabled]="( !formData.name.trim() || !formData.address.trim() || !formData.city.trim() || !formData.state.trim() || !formData.zip_code.trim() )"
+      (click)="create()">SELECT HOTEL</button>
 
     <!-- <p>Already have an account? <span class="text-blue" (click)="signin()">Sign in</span></p>-->
   </div>

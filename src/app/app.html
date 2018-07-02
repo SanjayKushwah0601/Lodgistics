@@ -7,21 +7,22 @@
 
   <ion-content no-bounce class="side_menu_content">
     <ion-list>
-        <button *ngIf="hotelMenu.length>0" (click)="showHideHotel()" class="selected_hotel_label">
-          {{currentHotelName}}   
-          <ion-icon *ngIf="!showHotelMenu && hotelMenu.length>1" class="menu_float_right" ios="ios-add" md="md-add"></ion-icon>
-          <ion-icon *ngIf="showHotelMenu && hotelMenu.length>1" class="menu_float_right" ios="ios-remove" md="md-remove"></ion-icon>
-        </button>
+      <button *ngIf="hotelMenu.length>0" (click)="showHideHotel()" class="selected_hotel_label">
+        {{currentHotelName}}
+        <ion-icon *ngIf="!showHotelMenu && hotelMenu.length>1" class="menu_float_right" ios="ios-add" md="md-add"></ion-icon>
+        <ion-icon *ngIf="showHotelMenu && hotelMenu.length>1" class="menu_float_right" ios="ios-remove" md="md-remove"></ion-icon>
+      </button>
 
-        <ng-container *ngIf="showHotelMenu && hotelMenu.length>0">
-            <ng-container *ngFor="let hotel of hotelMenu">
-              <button *ngIf="hotel.name!=currentHotelName" justify-content-center align-items-center class="menu_hotel_options side_menu_options" menuClose  (click)="changeHotel(hotel.token,hotel.name,hotel.created_at,undefined)">
-                {{hotel.name}}
-              </button>
-          </ng-container>
+      <ng-container *ngIf="showHotelMenu && hotelMenu.length>0">
+        <ng-container *ngFor="let hotel of hotelMenu">
+          <button *ngIf="hotel.name!=currentHotelName" justify-content-center align-items-center class="menu_hotel_options side_menu_options"
+            menuClose (click)="changeHotel(hotel.token,hotel.name,hotel.created_at,undefined)">
+            {{hotel.name}}
+          </button>
         </ng-container>
-        <hr class="menu_line"/>
-      
+      </ng-container>
+      <hr class="menu_line" />
+
       <!-- <ng-container *ngFor="let p of pages">  
       <button class="menu_icons_btn" justify-content-center align-items-center *ngIf="(userPermissions.wo_access.view_listing && p.title=='Work Orders') || p.title!='Work Orders'" menuClose ion-item (click)="openPage(p)">
           <ion-icon class="menu_icons" name="ios-{{p.icon}}"></ion-icon>
@@ -29,63 +30,73 @@
       </button>
     </ng-container> -->
 
-    <button (tap)="openSideMenu()" class="menu_icons_btn" justify-content-center align-items-center ion-item>
-      <ion-icon class="menu_icons" name="ios-construct-outline"></ion-icon>
-      Maintenance
-    </button>
-    
-    <div class="hide_opt" *ngIf="openSideMenuOpt">
+      <button (tap)="openSideMenu()" class="menu_icons_btn" justify-content-center align-items-center ion-item>
+        <ion-icon class="menu_icons" name="ios-construct-outline"></ion-icon>
+        Maintenance
+      </button>
+
+      <div class="hide_opt" *ngIf="openSideMenuOpt">
         <!-- <button class="menu_icons_btn" (click)="openPM()" justify-content-center align-items-center menuClose ion-item>
           Room PM
         </button> -->
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/rooms')" justify-content-center align-items-center menuClose ion-item>
-        Guest Room PM
-      </button>
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/public_areas')" justify-content-center align-items-center menuClose ion-item>
-        Public Areas PM
-      </button>
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/equipments')" justify-content-center align-items-center menuClose ion-item>
-        Equipment PM
-      </button>
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/rooms/inspection')" justify-content-center align-items-center menuClose ion-item>
-        Guest Room Inspection
-      </button>
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/public_areas/inspection')" justify-content-center align-items-center menuClose ion-item>
-        Public Areas Inspection
-      </button>
-      <button class="menu_icons_btn" (click)="openWebPage('maintenance/setup')" justify-content-center align-items-center menuClose ion-item>
-        PM Setup
-      </button>
-    </div>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/rooms')" justify-content-center align-items-center menuClose
+          ion-item>
+          Guest Room PM
+        </button>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/public_areas')" justify-content-center align-items-center
+          menuClose ion-item>
+          Public Areas PM
+        </button>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/equipments')" justify-content-center align-items-center
+          menuClose ion-item>
+          Equipment PM
+        </button>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/rooms/inspection')" justify-content-center align-items-center
+          menuClose ion-item>
+          Guest Room Inspection
+        </button>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/public_areas/inspection')" justify-content-center align-items-center
+          menuClose ion-item>
+          Public Areas Inspection
+        </button>
+        <button class="menu_icons_btn" (click)="openWebPage('maintenance/setup')" justify-content-center align-items-center menuClose
+          ion-item>
+          PM Setup
+        </button>
+      </div>
 
-    <button class="menu_icons_btn" justify-content-center align-items-center *ngIf="userPermissions.wo_access.view_listing" menuClose ion-item (click)="openWoPage()">
-      <ion-icon class="menu_icons" name="ios-construct-outline"></ion-icon>
-      Work Orders 
-    </button>
-    
-    <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openTaskChecklistPage()">
-      <ion-icon class="menu_icons" name="ios-list"></ion-icon>
-      Check Lists<!-- Task Lists -->
-    </button>
+      <button class="menu_icons_btn" justify-content-center align-items-center *ngIf="userPermissions.wo_access.view_listing" menuClose
+        ion-item (click)="openWoPage()">
+        <ion-icon class="menu_icons" name="ios-construct-outline"></ion-icon>
+        Work Orders
+      </button>
 
-    <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openMentionsPage()">
-      <ion-icon class="menu_icons menu_at_btn" name="ios-at-outline"></ion-icon>
-      Mentions<!-- Task Lists -->
-    </button>
+      <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openTaskChecklistPage()">
+        <ion-icon class="menu_icons" name="ios-list"></ion-icon>
+        Check Lists
+        <!-- Task Lists -->
+      </button>
 
-    <button class="menu_icons_btn team_menu_icon" justify-content-center align-items-center *ngIf="userPermissions.wo_access.team" menuClose ion-item (click)="openTeamPage()">
+      <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openMentionsPage()">
+        <ion-icon class="menu_icons menu_at_btn" name="ios-at-outline"></ion-icon>
+        Mentions
+        <!-- Task Lists -->
+      </button>
+
+      <button class="menu_icons_btn team_menu_icon" justify-content-center align-items-center *ngIf="userPermissions.wo_access.team"
+        menuClose ion-item (click)="openTeamPage()">
         <ion-icon class="menu_icons" name="ios-people-outline"></ion-icon>
-        Team 
-    </button>
+        Team
+      </button>
 
-    <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openProfilePage()">
+      <button class="menu_icons_btn" justify-content-center align-items-center menuClose ion-item (click)="openProfilePage()">
         <ion-icon class="menu_icons" name="ios-person-outline"></ion-icon>
-        Profile 
-    </button>
+        Profile
+      </button>
 
-    
-    
-  <!-- <span class="notification_btn_wraper">
+
+
+      <!-- <span class="notification_btn_wraper">
   <ion-item class="notification_btn_side_menu">
     <ion-label><ion-icon class="menu_icons menu_notification_btn" name="ios-notifications-outline"></ion-icon>Notifications</ion-label>
     <ion-toggle class="menu_toggle_btn" [(ngModel)]="notificationsStatus" (ionChange)="updateNotifications()">ON</ion-toggle>
@@ -97,15 +108,16 @@
   </span> -->
 
 
-  </ion-list>
+    </ion-list>
 
   </ion-content>
 
   <ion-footer class="side_menu_footer">
-<!-- <div class="logout_btn video_btn menu_icons_btn"> -->
+    <!-- <div class="logout_btn video_btn menu_icons_btn"> -->
     <span class="notification_btn_wraper">
       <ion-item class="notification_btn_side_menu">
-        <ion-label><ion-icon class="menu_icons menu_notification_btn" name="ios-notifications-outline"></ion-icon>Notifications</ion-label>
+        <ion-label>
+          <ion-icon class="menu_icons menu_notification_btn" name="ios-notifications-outline"></ion-icon>Notifications</ion-label>
         <ion-toggle class="menu_toggle_btn" [(ngModel)]="notificationsStatus" (ionChange)="updateNotifications()">ON</ion-toggle>
       </ion-item>
       <hr>
@@ -113,25 +125,27 @@
         <span class="hint_text_label" *ngIf="!notificationsStatus">Enable to receive notifications.</span>
         <span class="hint_text_label" *ngIf="notificationsStatus">Disable to stop receiving any notifications.</span>
       </div>
-      </span>
-      <!-- </div> -->
+    </span>
+    <!-- </div> -->
 
-      <button class="video_btn menu_icons_btn email_support_btn" menuClose ion-button justify-content-center align-items-center (click)="sendEmail()">
-        <ion-icon class="menu_icons email_support_icon" name="ios-mail-outline"></ion-icon>
-        Email Support 
+    <button class="video_btn menu_icons_btn email_support_btn" menuClose ion-button justify-content-center align-items-center
+      (click)="sendEmail()">
+      <ion-icon class="menu_icons email_support_icon" name="ios-mail-outline"></ion-icon>
+      Email Support
     </button>
 
-    <button class="logout_btn video_btn menu_icons_btn learn_btn" menuClose ion-button justify-content-center align-items-center (click)="openLearningCenter()">
+    <button class="logout_btn video_btn menu_icons_btn learn_btn" menuClose ion-button justify-content-center align-items-center
+      (click)="openLearningCenter()">
       <ion-icon class="menu_icons" name="ios-school-outline"></ion-icon>
-    Learning Center
-    <!-- <ion-icon ios="logo-youtube" md="logo-youtube"></ion-icon> -->
-  </button>
+      Learning Center
+      <!-- <ion-icon ios="logo-youtube" md="logo-youtube"></ion-icon> -->
+    </button>
 
-      <button class="logout_btn menu_icons_btn" menuClose ion-button full justify-content-center align-items-center (click)="logoutUser()">
-          <ion-icon name="ios-power-outline"></ion-icon>
-        Logout
-      </button>
-    </ion-footer>
+    <button class="logout_btn menu_icons_btn" menuClose ion-button full justify-content-center align-items-center (click)="logoutUser()">
+      <ion-icon name="ios-power-outline"></ion-icon>
+      Logout
+    </button>
+  </ion-footer>
 
 </ion-menu>
 
@@ -139,8 +153,8 @@
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false" [style.height.px]="fullAppHeight">
   <ion-buttons left>
     <button ion-button>
-            <ion-icon class="customIcon" name="arrow-back"></ion-icon>
-        </button>
+      <ion-icon class="customIcon" name="arrow-back"></ion-icon>
+    </button>
   </ion-buttons>
 </ion-nav>
 <!-- <ion-content class="notify-alert" *ngIf="showNotifyAlert"  (tap)="manageNotification(notificationData)"><div>Test 1 content</div></ion-content> -->
@@ -149,10 +163,10 @@
     <ion-card style="height:100% !important;">
       <ion-item-sliding style="height:80% !important;">
         <ion-item style="height:100% !important;">
-        <p class="notify-alert-message" [innerHTML]="updateHtml(notificationData.message)"></p>
-      </ion-item>
+          <p class="notify-alert-message" [innerHTML]="updateHtml(notificationData.message)"></p>
+        </ion-item>
         <ion-item-options side="right" (ionSwipe)="logSwipe()">
-       
+
         </ion-item-options>
 
       </ion-item-sliding>
@@ -163,13 +177,20 @@
 </ion-content>
 
 <ion-content *ngIf="!showPage" class="showpage-content">
-<span>
-  <br/><br/><br/><br/><br/><br/><br/>
+  <span>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
     <div class="loading_page">
       <div class="loader_name">
-        <span *ngIf="showChar.first">{{displayText1}}</span> 
-        <span *ngIf="showChar.first && !showChar.secound" class="hiddenText">{{displayText2}}</span> 
-        <span *ngIf="showChar.secound">{{displayText2}}</span> <br/>
+        <span *ngIf="showChar.first">{{displayText1}}</span>
+        <span *ngIf="showChar.first && !showChar.secound" class="hiddenText">{{displayText2}}</span>
+        <span *ngIf="showChar.secound">{{displayText2}}</span>
+        <br/>
         <span *ngIf="showChar.third" class="secound_text">{{userName}}</span>
       </div>
       <div *ngIf="showChar.fourth" class="loader">
@@ -177,5 +198,5 @@
         <ion-spinner name="bubbles"></ion-spinner>
       </div>
     </div>
-</span> 
+  </span>
 </ion-content>

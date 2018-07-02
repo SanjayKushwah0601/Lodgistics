@@ -34,6 +34,8 @@
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="YouTubeDataApiKey" value="AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ" />
     <preference name="orientation" value="portrait" />
+    <preference name="loadUrlTimeoutValue" value="60000" />
+    <preference name="AutoHideSplashScreen" value="false" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>

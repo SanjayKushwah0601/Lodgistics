@@ -19,10 +19,10 @@ export class CreateHotelPage {
     public hotelsData = {};
     public showList = false;
     public hotelAddress = "";
-    public hotelInfo:any;
-    public prevInfo:any;
+    public hotelInfo: any;
+    public prevInfo: any;
 
-    constructor(public navCtrl: NavController, private http: HTTP, public zone: NgZone, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController,private viewCtrl: ViewController,public navParams: NavParams) {
+    constructor(public navCtrl: NavController, private http: HTTP, public zone: NgZone, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, private viewCtrl: ViewController, public navParams: NavParams) {
 
         this.formData = {
             name: '',
@@ -41,19 +41,25 @@ export class CreateHotelPage {
             "accepted": false,
             "hotel_selected": false,
             "user": {
-              "name": "",
-              "email": "",
-              "password": "",
-              "phone_number": "",
-              "hotel_code": ""
+                "name": "",
+                "email": "",
+                "password": "",
+                "phone_number": "",
+                "hotel_code": ""
             }
-          };
+        };
 
         if (this.navParams.get('formData')) {
             this.prevInfo = this.navParams.get('formData');
+
+            this.formData.name = this.prevInfo.name
+            this.formData.address = this.prevInfo.street_address
+            this.formData.city = this.prevInfo.city
+            this.formData.state = this.prevInfo.state
+            this.formData.zip_code = this.prevInfo.zip_code
         }
 
-        
+
 
     }
 
@@ -64,9 +70,8 @@ export class CreateHotelPage {
 
     getHotels() {
 
-        this.formData.name=this.formData.name.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/]/gi, '');
-        if(this.formData.name.trim()!="")
-        {
+        this.formData.name = this.formData.name.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/]/gi, '');
+        if (this.formData.name.trim() != "") {
             let url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + encodeURI(this.formData.name.trim()) + "+lodging+in+US&key=AIzaSyC-G-qKL13oH9EG6-IqJz-FYCQ6f9r9svs";
             console.log("url =" + url);
             this.http.get(url, {}, {})
@@ -85,11 +90,11 @@ export class CreateHotelPage {
                     console.error(error.headers);
                 });
         }
-        else{
+        else {
             this.hotelsData = {};
             this.showList = false;
         }
-        
+
     }
 
     selectHotel(row) {
@@ -135,15 +140,15 @@ export class CreateHotelPage {
 
         let objData = { 'name': this.formData.name.trim(), 'street_address': this.formData.address.trim(), 'state': this.formData.state.trim(), 'city': this.formData.city.trim(), 'zip_code': this.formData.zip_code };
 
-        this.prevInfo.name=this.formData.name.trim();
-        this.prevInfo.street_address=this.formData.address.trim();
-        this.prevInfo.state=this.formData.state.trim();
-        this.prevInfo.city=this.formData.city.trim();
-        this.prevInfo.zip_code=this.formData.zip_code.trim();
+        this.prevInfo.name = this.formData.name.trim();
+        this.prevInfo.street_address = this.formData.address.trim();
+        this.prevInfo.state = this.formData.state.trim();
+        this.prevInfo.city = this.formData.city.trim();
+        this.prevInfo.zip_code = this.formData.zip_code.trim();
 
         console.log(this.prevInfo);
 
-        this.navCtrl.push(NewAccountPage,{hotelInfo:this.prevInfo}).then(() => {
+        this.navCtrl.push(NewAccountPage, { hotelInfo: this.prevInfo }).then(() => {
             // first we find the index of the current view controller:
             const index = this.viewCtrl.index;
             // then we remove it from the navigation stack
@@ -151,7 +156,7 @@ export class CreateHotelPage {
             //let index1 = this.viewCtrl.index;
             //this.navCtrl.remove(index1);
 
-            });
+        });
 
 
         // //this.allowEdit=false;
