@@ -71,8 +71,7 @@ page-myVideos {
     }
     ion-title {
         margin: 0 60px 0 60px;
-    }
-    //s7
+    } //s7
     @media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
         ion-title {
             margin: 0 40px 0 100px;
@@ -108,5 +107,8 @@ page-myVideos {
     .ion-md-close {
         color: #AEAEAE;
         font-size: 0.5em;
+    }
+    ion-fab[bottom].footer_fab_box {
+        bottom: -7.9%;
     }
 }

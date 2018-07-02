@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild, ElementRef, Input, Injectable } from '@angular/core';
-import { ModalController, ViewController, NavController, AlertController ,Platform, FabContainer} from 'ionic-angular';
+import { ModalController, ViewController, NavController, AlertController, Platform, FabContainer } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -24,19 +24,19 @@ import { CreateFeedsPage } from '../createFeeds/createFeeds';
 })
 export class MyVideosPage {
   public userVideoData: any;
-  public videoObj:any;
-  public modelObj:any;
-  public broadcast_count=0;
-  public userPermissions:any;
+  public videoObj: any;
+  public modelObj: any;
+  public broadcast_count = 0;
+  public userPermissions: any;
   public isPopupOpen = false;
   public feedNotificationCount = 0;
   public messagesNotificationCount = 0;
   public woNotificationCount = 0;
   public interval: any;
-  public spinner=false;
-  public fabButtonOpened=false;
+  public spinner = false;
+  public fabButtonOpened = false;
 
-  constructor(public platform: Platform, public navCtrl: NavController,  public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, private keyboard: Keyboard,  private viewCtrl: ViewController, private youtube: YoutubeVideoPlayer, private modalCtrl: ModalController, public fabContainer:FabContainer) {
+  constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, private keyboard: Keyboard, private viewCtrl: ViewController, private youtube: YoutubeVideoPlayer, private modalCtrl: ModalController, public fabContainer: FabContainer) {
 
     this.userPermissions = {
       "wo_access": {
@@ -45,35 +45,35 @@ export class MyVideosPage {
       }
     };
     this.platform.ready().then(() => {
-      
-            this.commonMethod.getUserPermissions().then(
-              permissions => {
-                this.userPermissions = permissions;
-              },
-              error => {
-                return false;
-              }
-            );
 
-            let thisObj = this;
-            this.interval = window.setInterval(function () {
-              /// call your function here
-              console.log("update notification count");
-              thisObj.nativeStorage.getItem('user_notifications').then(
-                count => {
-                  thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
-                  thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-                  thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
-                },
-                error => {
-                  return false;
-                }
-              );
+      this.commonMethod.getUserPermissions().then(
+        permissions => {
+          this.userPermissions = permissions;
+        },
+        error => {
+          return false;
+        }
+      );
 
-            }, 1000);
+      let thisObj = this;
+      this.interval = window.setInterval(function () {
+        /// call your function here
+        console.log("update notification count");
+        thisObj.nativeStorage.getItem('user_notifications').then(
+          count => {
+            thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
+            thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
+            thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
+          },
+          error => {
+            return false;
+          }
+        );
+
+      }, 1000);
 
 
-          });
+    });
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -147,27 +147,26 @@ export class MyVideosPage {
 
 
 
-  payVideo(id)
-  {
-    
+  payVideo(id) {
+
 
     this.modelObj = this.modalCtrl.create(learnVideoPage, { id: id });
 
     this.modelObj.onDidDismiss(data => {
 
-        
 
-      });
 
-      this.modelObj.present();
+    });
 
-      //let thisObj=this;
-      //setTimeout(function(){  thisObj.modelObj.dismiss();  }, 25000);
+    this.modelObj.present();
+
+    //let thisObj=this;
+    //setTimeout(function(){  thisObj.modelObj.dismiss();  }, 25000);
 
 
     //this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/"+id);
     //console.log("1"+ JSON.stringify(this.youtube));
-   // this.videoObj=this.youtube.openVideo(id); 
+    // this.videoObj=this.youtube.openVideo(id); 
     //console.log(temp);
     //console.log("2"+ JSON.stringify(this.youtube));
     //let thisObj=this;
@@ -199,7 +198,7 @@ export class MyVideosPage {
     this.nativeStorage.setItem('lastPage', { "pageName": MyVideosPage.name, "index": this.navCtrl.getActive().index });
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     console.log("ionViewDidLeave");
   }
 
@@ -211,27 +210,27 @@ export class MyVideosPage {
     modal.present();
   }
 
-  createFeedQuick(fab?: FabContainer){
+  createFeedQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     this.createFeed();
   }
 
-  createWorkOrderQuick(fab?: FabContainer){
+  createWorkOrderQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
-    this.createWorkOrder('','','','','');
+    this.fabButtonOpened = false;
+    this.createWorkOrder('', '', '', '', '');
   }
 
-  sendMessage(fab?: FabContainer){
+  sendMessage(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -239,11 +238,11 @@ export class MyVideosPage {
     modal.present();
   }
 
-  openFabButton(){
-    if(this.fabButtonOpened==false){
-        this.fabButtonOpened=true;
-    }else{
-        this.fabButtonOpened=false;
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
     }
   }
 
