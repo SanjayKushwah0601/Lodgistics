@@ -183,9 +183,6 @@ page-chatting {
         padding-top: 5px;
         padding-bottom: 5px;
     }
-    ion-fab[bottom].footer_fab_box {
-        bottom: -10.5%;
-    }
     .searchbar-style {
         min-height: 48px;
     }
@@ -415,8 +412,7 @@ page-chatting {
     .groups-tab span.active {
         background: #02B9E7;
         color: #fff;
-    }
-    // div.scroll-content{margin-top: 105px !important;}
+    } // div.scroll-content{margin-top: 105px !important;}
     .search_result .item {
         padding-top: 20px;
     }
@@ -674,5 +670,8 @@ page-chatting {
     .ion-md-close {
         color: #AEAEAE;
         font-size: 0.5em;
+    }
+    ion-fab[bottom].footer_fab_box {
+        bottom: -10.7%;
     }
 }

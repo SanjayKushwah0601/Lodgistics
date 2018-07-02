@@ -878,11 +878,11 @@ ion-alert .alert-radio-group [ion-button][disabled] {
 
 .menu_float_right.ion-ios-add:before,
 .menu_float_right.ion-md-add:before {
-    content: "switch hotel";
+    content: "Switch Hotel";
     font-size: 1.1rem;
     vertical-align: middle;
     font-weight: 200;
-    color: #00b1e1;
+    color: #00bdf1;
     margin-bottom: 5px;
 }
 
@@ -1293,9 +1293,9 @@ page-introinviteusers.ion-page.show-page {
     opacity: 0.8;
 }
 
-ion-fab[bottom].footer_fab_box {
-    bottom: -8.5%;
-}
+// ion-fab[bottom].footer_fab_box {
+//     bottom: -8.5%;
+// }
 
 ion-fab[bottom].feb_btn_on_private {
     bottom: -9.2% !important;

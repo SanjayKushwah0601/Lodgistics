@@ -316,8 +316,7 @@ page-feeds {
     }
     .comment_count {
         color: #616161;
-    }
-    //.card-footer:active{background: #EEE; opacity: 0.8;}
+    } //.card-footer:active{background: #EEE; opacity: 0.8;}
     .card-btn:active {
         background: #EEE;
         opacity: 0.8;
@@ -809,9 +808,6 @@ page-feeds {
     ion-card-content.card-content.card-content-md.selectable {
         white-space: pre-line;
     }
-    .footer_fab_box {
-        bottom: 6%;
-    }
     .btn_feb_add {
         // border: 1.5px solid #fff;
         font-size: 3.5em;
@@ -834,5 +830,8 @@ page-feeds {
     .ion-md-close {
         color: #AEAEAE;
         font-size: 0.5em;
+    }
+    ion-fab[bottom].footer_fab_box {
+        bottom: -8.9%;
     }
 }
