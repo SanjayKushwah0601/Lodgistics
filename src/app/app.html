@@ -30,7 +30,7 @@
       </button>
     </ng-container> -->
 
-      <button (tap)="openSideMenu()" class="menu_icons_btn" justify-content-center align-items-center ion-item>
+      <button (click)="openSideMenu()" class="menu_icons_btn" justify-content-center align-items-center ion-item>
         <ion-icon class="menu_icons" name="ios-construct-outline"></ion-icon>
         Maintenance
       </button>
@@ -157,8 +157,8 @@
     </button>
   </ion-buttons>
 </ion-nav>
-<!-- <ion-content class="notify-alert" *ngIf="showNotifyAlert"  (tap)="manageNotification(notificationData)"><div>Test 1 content</div></ion-content> -->
-<ion-content class="notify-alert" *ngIf="showNotifyAlert" (tap)="manageNotification(notificationData)">
+<!-- <ion-content class="notify-alert" *ngIf="showNotifyAlert"  (click)="manageNotification(notificationData)"><div>Test 1 content</div></ion-content> -->
+<ion-content class="notify-alert" *ngIf="showNotifyAlert" (click)="manageNotification(notificationData)">
   <ion-list class="notify-alert-div" style="height:100% !important;">
     <ion-card style="height:100% !important;">
       <ion-item-sliding style="height:80% !important;">

@@ -16,7 +16,7 @@
 
       <ion-list scrollY="true" *ngIf="showList && hotelsData">
         <span class="autosuggestion_list">
-          <ion-item *ngFor="let row of hotelsData" (tap)="selectHotel(row)">
+          <ion-item *ngFor="let row of hotelsData" (click)="selectHotel(row)">
             <p>{{row.name}}</p>
             <span>{{row.formatted_address}}</span>
           </ion-item>

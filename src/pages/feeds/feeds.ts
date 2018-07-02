@@ -635,6 +635,7 @@ export class FeedsPage {
   }
 
   closeFilter() {
+    console.log("sanjay: close")
     this.searchQuery = "";
     this.keyboard.close();
     this.showFilter = false;
@@ -1336,6 +1337,7 @@ export class FeedsPage {
   }
 
   openFabButton() {
+    console.log(this.fabButtonOpened)
     if (this.fabButtonOpened == false) {
       this.fabButtonOpened = true;
     } else {
