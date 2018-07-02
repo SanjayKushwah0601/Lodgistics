@@ -61,6 +61,7 @@ import { Buffer } from 'buffer';
 // import 'intl';
 // import 'intl/locale-data/jsonp/en';
 import { NewUserPage } from '../pages/newUser/newUser';
+import { PressDirective } from '../directives/press/press';
 
 enableProdMode();
 
@@ -76,6 +77,7 @@ export class SafeHtmlPipe implements PipeTransform {
 
 @NgModule({
   declarations: [
+    PressDirective,
     MyApp,
     SafeHtmlPipe,
     RichTextComponent,
@@ -115,7 +117,8 @@ export class SafeHtmlPipe implements PipeTransform {
     InviteUsersPage,
     IntroInviteUsersPage,
     SendMessagePage,NewUserPage,
-    createFollowUpPage
+    createFollowUpPage,
+    PressDirective
   ],
   imports: [
     BrowserModule,

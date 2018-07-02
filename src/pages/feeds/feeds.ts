@@ -93,6 +93,8 @@ export class FeedsPage {
   //public currentDate = "";
   // public currentDate : any;
   // public totalFeeds=0;
+  public totalFeeds = 0;
+  public lastfeedcount = 0;
   constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public navParams: NavParams, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, private iab: InAppBrowser, public viewCtrl: ViewController, public events: Events, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController) {
 
     this.viewWOUrl = viewWorkOrderUrl;
@@ -588,9 +590,9 @@ export class FeedsPage {
     if (this.callDateFilter == true) {
       this.filterDate.setDate(this.filterDate.getDate() - 1);
       this.callDateFilter = false;
-      //if (this.totalFeeds <= 8) {
-      //this.totalFeeds = 10;
-      //}
+      if (this.totalFeeds <= 8) {
+        this.totalFeeds = 10;
+      }
       this.updateFilter(infiniteScroll);
     }
   }
@@ -1089,23 +1091,24 @@ export class FeedsPage {
     window.clearInterval(this.interval);
   }
 
-  // findTotalFeed() {
-  //  this.totalFeeds = this.lastfeedcount;
-  // if (this.totalFeeds <= 8) {
-  //  let count = 0;
-  // if (this.foundRepos != '' && this.foundRepos.length > 0) {
-  //  for (let i = 0; i < this.foundRepos.length; i++) {
-  //   if (this.foundRepos[i].value != undefined && this.foundRepos[i].value != null) {
-  //    count = count + this.foundRepos[i].value.length;
-  //  }
-  // }
-  // }
-  // this.zone.run(() => {
-  //  this.totalFeeds = count;
-  //  this.lastfeedcount = count;
-  //  });
-  // }
-  //  }
+  findTotalFeed() {
+    this.totalFeeds = this.lastfeedcount;
+    if (this.totalFeeds <= 8) {
+      let count = 0;
+      if (this.foundRepos != '' && this.foundRepos.length > 0) {
+        for (let i = 0; i < this.foundRepos.length; i++) {
+          if (this.foundRepos[i].value != undefined && this.foundRepos[i].value != null) {
+            count = count + this.foundRepos[i].value.length;
+          }
+        }
+      }
+      this.zone.run(() => {
+        this.totalFeeds = count;
+        this.lastfeedcount = count;
+      });
+    }
+  }
+  
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {

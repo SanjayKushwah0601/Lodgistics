@@ -6,7 +6,7 @@
     </button>
 
     <span start class="broadcast" *ngIf="broadcast_count>0">
-      <span (tap)="broadcastList()">
+      <span (click)="broadcastList()">
         <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
         <span class="broadcast_btn">
           <img src="assets/img/broadcost-red-icon.png" />
@@ -78,7 +78,7 @@
       <div class="pull-left">
           <h2>{{item.created_by.name}} 
             <span *ngIf="item.room_number && item.room_number>0" class="work-order-badge room_no_badge">Room #{{item.room_number}}</span>
-            <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0" (tap)="editWorkOrder(item.work_order_id)" class="{{(item.work_order && item.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{item.work_order_id}}</span>
+            <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0" (click)="editWorkOrder(item.work_order_id)" class="{{(item.work_order && item.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{item.work_order_id}}</span>
           </h2>
         <p *ngIf="item.created_by.title">{{item.created_by.title}}</p>
         <p *ngIf="!item.created_by.title"><br></p>
@@ -134,7 +134,7 @@
                 </td>
             </tr>
             <tr>
-              <td (tap)="showImage(item.image_url)"><img src="{{item.image_url}}"></td>
+              <td (click)="showImage(item.image_url)"><img src="{{item.image_url}}"></td>
             </tr>
         </table>
           </ion-card-content>
@@ -146,7 +146,7 @@
         <ion-card-content ngClass="selectable">
           <table class="card-table">
             <tr>
-              <td (tap)="showImage(item.image_url)"><img style="width:200px;height:250px;" src="{{item.image_url}}"></td>
+              <td (click)="showImage(item.image_url)"><img style="width:200px;height:250px;" src="{{item.image_url}}"></td>
               <td class="td-box-2">
                
                 <p *ngIf="(item.showMore == undefined || item.showMore)" >
@@ -248,7 +248,8 @@
     <ion-label class="btn-day" *ngIf="i>1 && !showFilterData" style="text-align:center;">{{(res.date | date:'MMM d, yyyy') | uppercase}}</ion-label>
     <ion-label class="btn-day" *ngIf="showFilterData" style="text-align:center;">{{(res.date | date:'MMM d, yyyy') | uppercase}}</ion-label>
 
-    <ion-card *ngFor="let item of res.value; let j=index" (press)="showContextOptions(item.id,i,j,item.broadcast_start,item.follow_up_start)"
+    <!-- Long press here -->
+    <ion-card *ngFor="let item of res.value; let j=index" (long-press)="showContextOptions(item.id,i,j,item.broadcast_start,item.follow_up_start)"
       style="width:100%;margin:0px;" id="{{item.id?item.id:'feed'+j}}" [ngClass]="showLoaderTodays?'gifshow':''">
 
       <ion-item>
@@ -284,15 +285,15 @@
           <p *ngIf="(item.showMore == undefined || item.showMore)">
             <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
             <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-            <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-            <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+            <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+            <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
           </p>
 
           <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
             <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
             <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-            <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-            <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+            <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+            <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
           </p>
 
         </ion-card-content>
@@ -307,14 +308,14 @@
                 <p *ngIf="(item.showMore == undefined || item.showMore)">
                   <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
                   <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
                 <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                   <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
                   <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
 
 
@@ -343,14 +344,14 @@
                 <p *ngIf="(item.showMore == undefined || item.showMore)">
                   <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
                   <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
                 <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                   <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
                   <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
-                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (tap)="showMore(i,j)" class="show_more_less">Show more</a>
-                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (tap)="showLess(i,j)" class="show_more_less">Show Less</a>
+                  <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                  <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
               </td>
             </tr>
@@ -370,7 +371,7 @@
         <ion-icon name="calendar" class="option-icon" (click)="(item.follow_up_start!='' && item.follow_up_start!=null)?confirmCancelFollowUp(item.id,i,j):createFollowUpConfirm(item.id)"></ion-icon>
     </ion-col>
     <ion-col col-2>
-        <ion-icon ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeOptions(i,j)" ></ion-icon>
+        <ion-icon ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (click)="closeOptions(i,j)" ></ion-icon>
     </ion-col>
   </ion-row>
   </ion-grid> -->
