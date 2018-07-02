@@ -190,7 +190,6 @@ ion-app.md [padding], ion-app.md [padding] .scroll-content{padding: 0px 16px;}
 .api_data_loader{ padding-top:0px;position: absolute;width: 100%;margin-left: 20%; }	
 .api_data_loader_text{ margin-top: 5px;position: absolute;width: 100%;}
 .update_api_data_loader{ float: right ;margin-right: 3%; }
-.btn_feb_add .fab-close-icon{margin: -0% 0px 0px 5%;}
 @media(max-width:749px)
 {
   .profile {
@@ -400,5 +399,12 @@ and (max-device-width : 690px){
     .button-md {
       margin: 0.4rem 0.2rem;}
   }
+
+  .btn_feb_add{ border: 1.5px solid #fff; font-size: 3.5em; margin-left: 0%; background-color: #428bca;}
+  .btn_feb_add:active{ background-color: #428bca; font-size: 3.5em;}
+  .btn_feb_add .fab-close-icon{color: #02B9E7;}
+  .btn_feb_add.fab-close-active{ color: #02B9E7; background-color: #fff; font-size: 3.5em; }
+  .ion-ios-close,
+  .ion-md-close{color: #AEAEAE; font-size: 0.5em;}
 
 }

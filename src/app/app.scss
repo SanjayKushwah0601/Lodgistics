@@ -883,13 +883,9 @@ font-size: 1.2em;
     page-introinviteusers.ion-page.show-page{ background: black; opacity: 0.5; }
     .select-drop-down .alert-head{ padding: 0px; }
     .select-drop-down .alert-message{ padding: 0px !important; }
-    .btn_feb_add{ width: 55px;height: 55px; border: 1.5px solid #fff; margin-left: 0%; background-color: #428bca;}
-    .btn_feb_add:active{ background-color: #428bca;}
     .footer_fab_box .fab-in-list{ background-color: #428bca;width: 55px;height: 55px; color: #fff; }  
     .footer_fab_box .fab-in-list button:active{ opacity: 0.8; } 
     .footer_fab_box button:active{ opacity: 0.8; } 
-    .btn_feb_add .fab-close-icon{color: #02B9E7; font-size: 4.5rem;margin: -0% 0px 0px 34%;}
-    .btn_feb_add .fab_btn{margin-top: 2px;font-size: 4.5rem;margin-left: 11%;}
     ion-fab[bottom].footer_fab_box{ bottom: -8.5%; }
     ion-fab[bottom].feb_btn_on_private{ bottom: -9.2% !important; }
     ion-fab[center].footer_fab_box{left: 50.6%;}
@@ -905,8 +901,7 @@ font-size: 1.2em;
    page-sendmessage.ion-page.show-page{background: #fff;}
    .menu_at_btn{ margin-right: 7px; }
    ion-footer ion-col.active{ color: #428bca;background-color: transparent; }  
-   .fab ion-icon{ font-size: 1.8em; }
-   .btn_feb_add.fab-close-active{ color: #02B9E7; background-color: #fff; }
+  //  .fab ion-icon{ font-size: 1.8em; }
    ion-fab-list[side=right]{margin: 0 62px; margin-top: -200%;}
    ion-fab-list[side=left]{margin: 0 62px; margin-top: -200%;} 
    ion-fab-list[side=top]{margin: 152px 0;}
