@@ -1,410 +1,651 @@
 page-profile {
-  .profile {
-    position: relative;
-    overflow: hidden;
-    height: 15vh;
-    margin-bottom: -0.625em;
-
-    img {
-      width: 22.5vw;
-      height: 22.5vw;
-      border-radius: 100%;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
-      object-fit: cover;
+    .profile {
+        position: relative;
+        overflow: hidden;
+        height: 15vh;
+        margin-bottom: -0.625em;
+        img {
+            width: 22.5vw;
+            height: 22.5vw;
+            border-radius: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            object-fit: cover;
+            padding: 1px;
+        }
+        img.activated {
+            opacity: 0.5;
+        }
     }
-
-    img.activated {
-      opacity: 0.5;
+    h4,
+    p {
+        text-align: center;
     }
-  }
-
-  h4,
-  p {
-    text-align: center;
-  }
-
-  h4 {
-    margin: 0;
-    padding: 0;
-    color: #fff;
-  }
-
-  p.username {
-    color: $primary;
-    margin-bottom: -6px !important;
-    margin-top: 6px !important;
-    font-size: 115%;
-  }
-
-  p.description {
-    width: 75vw;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  p {
-    color: #c3c3c3 !important;
-  }
-
-  h4 span.activated,
-  p.activated {
-    opacity: 0.5;
-  }
-
-  .divider {
-    width: 12vw;
-    border-bottom: solid 0.2em $primary;
-    margin-left: auto;
-    margin-right: auto;
-  }
-.profile-icon{
-    color: #fff;
-}
-  ion-icon {
-  
-    font-size: 1.4em;
-  }
-
-  ion-icon.facebook {
-    color: $facebook;
-  }
-
-  ion-icon.google {
-    color: $google;
-  }
-
-  ion-icon.firebase {
-    color: $primary;
-  }
-
-  h2{
-    font-size: 12px !important;
-    color: #BDBDBD;
-    text-transform: uppercase;
-    line-height: inherit;
-  }
-  .right{
-    float: right;
-  }
-  ion-footer{min-height: 35px;border-top: 1px solid #E5E5E5;}
-  ion-footer ion-icon{    font-size: 1.8em;}
-  ion-footer .row{    font-size: 1.0rem !important;}
-  ion-footer .grid{padding: 0px;background: #fff;}
-
-  .action_btn{
-    color: #02B9E7;
-    float: right;
-    font-size: 18px;
-  }
-
-input{
-  font-size: 14px;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
-  width: 100%;
-  overflow: scroll !important;
-  border: 0px solid #757575;
-  border-radius: 4px;
-  font-weight: 200;
-  text-indent: 0px;
-  color: #424242;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: #fff;
-  max-width: 100% !important;
-  padding: 0px !important;
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-  font-family: 'open_sanslight';
-}
-.select-ios,.select-md{font-size: 12px; padding: 0px !important;margin-top: 0px !important;margin-bottom: 0px !important;font-family: 'open_sanslight'; }
-
-.required{ color: #FF0000;}
-// ion-select{margin-left: -11px;}
-
-// .list-ios .item-block .item-inner, .list-md .item-block .item-inner{
-//   border-bottom: 0px solid #c8c7cc;
-// }
-// .item-ios, .item-md{
-//   border-top: 0.55px solid #c8c7cc;
-// }
-
-.list-ios > .item-block:first-child,.list-md > .item-block:first-child{border-top: none;}
-.label-ios[stacked],.label-md[stacked]{text-transform: uppercase;font-size: 12px;color: #BDBDBD;}
-.item-ios,.item-md{ padding-left:0px;color: #424242; font-size: 16px; margin-bottom: 3px;}
-.show-pass{float: right;position: relative;top: -35px;color: #BDBDBD;letter-spacing: 2px;/*text-transform: uppercase;*/font-size: 12px;}
-.text-blue{ color: #02B9E7; text-align: left;letter-spacing: 2px;}
-p{color: #AEAEAE;}
-.text-center{ text-align: center;}
-form {max-width: 272px;margin: 16px auto auto auto;}
-.form-footer{max-width: 272px;margin: 14px auto auto auto;}
-.form-footer p{ letter-spacing: 2px; margin-bottom: 40px;}
-.form-footer p.text-center {letter-spacing: 1px;}
-.item-md{ padding-left:0px;margin-bottom: 30px;}
-.item-label-stacked .text-input-md, .item-label-floating .text-input-md{color: #424242;}
-.button-full-md{box-shadow: none;border-radius: 4px;}
-
-.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner{border-bottom-color:  #dedede !important; box-shadow: none !important;}
-
-::-webkit-input-placeholder { 
-color: #424242;
-}
-::-moz-placeholder { 
-color: #424242;
-}
-:-ms-input-placeholder { 
-color: #424242;
-}
-:-moz-placeholder { 
-color: #424242;
-}
-
-td.padr{ padding-right: 10px;}
-td.padl{ padding-left: 10px;}
-.text-input-ios,.text-input-md{font-family: 'open_sanslight'; font-size: 12px; color: #424242; margin-top: 0px !important; margin-bottom: 0px !important; padding: 0px !important;}
-.scroll-content{ padding-top: 0px !important; }
-.label-ios, .label-md{ font-size: 11px !important;letter-spacing:1px; margin: 5px 5px 5px 0px;}
-.list-ios, .list-md{ margin: -1px 0 10px 0;}
-.button-ios, .button-md{float:right;height:30px;font-size: 14px;letter-spacing: 1px;font-weight: 300 !important; color: #fff !important;}
-.change_password{ font-family: 'open_sanslight';font-size: 14px !important;}
-.select-ios .select-icon .select-icon-inner, .select-md .select-icon .select-icon-inner{ left: 0px;}
-.select-text{ overflow: initial; white-space: initial;}
-.post-feed:active{opacity: 0.5;}
-button[disabled], [ion-button][disabled], [md-button][disabled]{ opacity: 0.6;background: #DEDEDE !important;border: 0.5px solid #666;color: #666!important;}
-.caption_text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);color: #02B9E7;}
-.item-md h2 { margin: 2px 0 !important;}
-.toolbar-title-md{padding: 12px !important;}
-.item-md.item-input.input-has-focus .item-inner{border-bottom-color:  #dedede !important; box-shadow: none !important;}
-.input-has-focus .label-md[stacked]{color: #BDBDBD !important;}
-.item-block{min-height: 2.2rem !important;}
-ion-app.md [padding], ion-app.md [padding] .scroll-content{padding: 0px 16px;}
-
-.api_data_loader{ padding-top:0px;position: absolute;width: 100%;margin-left: 20%; }	
-.api_data_loader_text{ margin-top: 5px;position: absolute;width: 100%;}
-.update_api_data_loader{ float: right ;margin-right: 3%; }
-@media(max-width:749px)
-{
-  .profile {
-    height: 12vh;
-    margin-bottom: -0.625em;
-    img {
-      width: 22.5vw;
-      height: 22.5vw;
+    h4 {
+        margin: 0;
+        padding: 0;
+        color: #fff;
     }
-  }
-.margin-top {    margin-top: 68px;}
-.show-pass{ font-size: 12px;}
-.a1{font-size: 12px; margin-top: 1px;}
-form{max-width: 272px;margin: 46px auto auto auto;}
-
-.form-footer p.text-center{margin-top: 5px;}
-  .item-md{ padding-left:0px;margin-bottom: 5px;}
-  .item-ios{margin-bottom: 3px;}
-  .label-ios, .label-md{ font-size: 11px !important;letter-spacing:1px; margin: 5px 5px 5px 0px;}
-  .text-input-ios{font-size: 14px;}
-  .select-ios{ font-size: 14px;}
-  input{ font-size: 14px; }
-  .change_password{ font-size: 14px; }
-  h2{ font-size: 14px !important;}
-  .scroll-content{ padding-top: 10px !important; }
-
-}
-
-//iPhone 5 & 5S in portrait & landscape
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 568px) {
-  .profile {
-    height: 15vh;
-    margin-bottom: -0.625em;
-    img {
-      width: 17.5vw;
-      height: 17.5vw;
+    p.username {
+        color: $primary;
+        margin-bottom: -6px !important;
+        margin-top: 6px !important;
+        font-size: 115%;
     }
-  }
-  .item-ios{margin-bottom: 0px;}  
-  .label-ios, .label-md{ font-size: 9px !important;letter-spacing:1px; margin: 2px 2px 2px 0px;}
-  .text-input-ios{font-size: 12px;}
-  .select-ios{ font-size: 12px;}
-  input{ font-size: 12px; }
-  .change_password{ font-size: 12px; }
-  h2{ font-size: 9px !important;}
-  .scroll-content{ padding-top: 0px !important; }
-}
-
-//iPhone 6 in portrait & landscape
-@media only screen 
-and (min-device-width : 375px) 
-and (max-device-width : 667px) {
- 
-  .profile {
-    height: 12vh;
-    margin-bottom: -0.625em;
-    img {
-      width: 19vw;
-      height: 19vw;
+    p.description {
+        width: 75vw;
+        margin-left: auto;
+        margin-right: auto;
     }
-  }
-.item-ios{ margin-bottom: 3px;}
-.label-ios, .label-md{ font-size: 11px !important;letter-spacing:1px; margin: 5px 5px 5px 0px;}
-.text-input-ios{font-size: 14px;}
-.select-ios{ font-size: 14px;}
-input{ font-size: 14px; }
-.change_password{ font-size: 14px; }
-h2{ font-size: 11px;}
-.scroll-content{ padding-top: 10px !important; }
-//nexus 4
-.profile {
-  height: 10.9vh;
-  margin-bottom: -0.625em;
-  img {
-    width: 15vw;
-    height: 15vw;
-  }
-}
-.item-block {
-  min-height: 2rem !important;
-}
-.list-md {
-margin: -1px 0 5px 0;
-}
-.item-md {
-padding-left: 0px;
-margin-bottom: 2px;
-}
-.scroll-content{ padding-top: 4px !important; }
-
-}
-
-//iPhone 6+
-@media only screen 
-and (min-device-width : 414px) 
-and (max-device-width : 736px)
-and (device-width : 414px)
-and (device-height : 736px)
-and (orientation : portrait) 
-and (-webkit-min-device-pixel-ratio : 3) 
-and (-webkit-device-pixel-ratio : 3)
-{ 
-  .profile {
-    height: 14vh;
-    margin-bottom: -0.625em;
-    img {
-      width: 22.5vw;
-      height: 22.5vw;
+    p {
+        color: #c3c3c3 !important;
     }
-  }
-  .item-ios{  margin-bottom: 3px;}  
-  .label-ios, .label-md{ font-size: 11px !important;letter-spacing:1px; margin: 5px 5px 5px 0px;}
-  .text-input-ios{font-size: 14px;}
-  .select-ios{ font-size: 14px;}
-  input{ font-size: 14px; }
-  .change_password{ font-size: 14px; }
-  h2{ font-size: 11px !important;}
-  .scroll-content{ padding-top: 10px !important; }
-}
-
-
-// @media only screen 
-// and (device-width: 384px)
-// and (device-height: 592px)
-// and (-webkit-device-pixel-ratio: 2)	{
-//   .profile {
-//     height: 10.9vh;
-//     margin-bottom: -0.625em;
-//     img {
-//       width: 15vw;
-//       height: 15vw;
-//     }
-//   }
-//   .item-block {
-//     min-height: 2rem !important;
-// }
-// .list-md {
-//   margin: -1px 0 5px 0;
-// }
-// .item-md {
-//   padding-left: 0px;
-//   margin-bottom: 2px;
-// }
-// }
-
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 533px) {
-  .item-md{margin-bottom: 1px;}
-   .list-ios, .list-md{ margin: -1px 0 0px 0;}
-}
-
-
-@media only screen 
-and (min-device-width : 360px) 
-and (max-device-width : 640px){
-  h2 {font-size: 13px !important;}
-  .label-ios,  .label-md{font-size: 13px !important;}
-  .profile img{width: 18vw;height: 18vw;}
-  .item-md {margin-bottom: 2px;}
-}
-
-@media only screen
-and (-webkit-min-device-pixel-ratio: 3)
-and (min-device-width : 412px) 
-and (max-device-width : 690px){
-  .profile {
-    height: 15vh;
-    margin-bottom: -0.625em;
-}
- .profile img {
-  width: 21vw;
-  height: 21vw;
-}
-.label-md {
-  font-size: 17px !important;
-}
-.item-md {
-  margin-bottom: 9px;
-}
-.select-md{    font-size: 16px;}
-.text-input-md{ font-size: 16px;}
-.button-md {margin: 0.8rem 0.2rem;font-size: 16px;}
-}
-//s7
-@media only screen 
-and (-webkit-min-device-pixel-ratio: 4)
-and (min-device-width : 360px) 
-and (max-device-width : 640px){
-   .label-md { margin: 6px 2px 6px 0px;}
-} 
-@media only screen 
-and (-webkit-min-device-pixel-ratio: 3.5)
-and (min-device-width : 412px) 
-and (max-device-width : 690px){
-  .profile{height: 12.9vh;  margin-bottom: -0.625em;} 
-    .profile img{width: 18vw;height: 18vw;}
+    h4 span.activated,
+    p.activated {
+        opacity: 0.5;
+    }
+    .divider {
+        width: 12vw;
+        border-bottom: solid 0.2em $primary;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .profile-icon {
+        color: #fff;
+    }
+    ion-icon {
+        font-size: 1.4em;
+    }
+    ion-icon.facebook {
+        color: $facebook;
+    }
+    ion-icon.google {
+        color: $google;
+    }
+    ion-icon.firebase {
+        color: $primary;
+    }
     h2 {
-      font-size: 13px !important;
+        font-size: 12px !important;
+        color: #BDBDBD;
+        text-transform: uppercase;
+        line-height: inherit;
     }
-    .label-ios,  .label-md{font-size: 13px !important;}
-    .text-input-md{ font-size: 13px;}
-    .select-md{font-size: 13px;}
-    .item-md {margin-bottom: 5px;}
+    .right {
+        float: right;
+    }
+    ion-footer {
+        min-height: 35px;
+        border-top: 1px solid #E5E5E5;
+    }
+    ion-footer ion-icon {
+        font-size: 1.8em;
+    }
+    ion-footer .row {
+        font-size: 1.0rem !important;
+    }
+    ion-footer .grid {
+        padding: 0px;
+        background: #fff;
+    }
+    .action_btn {
+        color: #02B9E7;
+        float: right;
+        font-size: 18px;
+    }
+    input {
+        font-size: 14px;
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+        width: 100%;
+        overflow: scroll !important;
+        border: 0px solid #757575;
+        border-radius: 4px;
+        font-weight: 200;
+        text-indent: 0px;
+        color: #424242;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: #fff;
+        max-width: 100% !important;
+        padding: 0px !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+        font-family: 'open_sanslight';
+    }
+    .select-ios,
+    .select-md {
+        font-size: 12px;
+        padding: 0px !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+        font-family: 'open_sanslight';
+    }
+    .required {
+        color: #FF0000;
+    } // ion-select{margin-left: -11px;}
+    // .list-ios .item-block .item-inner, .list-md .item-block .item-inner{
+    //   border-bottom: 0px solid #c8c7cc;
+    // }
+    // .item-ios, .item-md{
+    //   border-top: 0.55px solid #c8c7cc;
+    // }
+    .list-ios>.item-block:first-child,
+    .list-md>.item-block:first-child {
+        border-top: none;
+    }
+    .label-ios[stacked],
+    .label-md[stacked] {
+        text-transform: uppercase;
+        font-size: 12px;
+        color: #BDBDBD;
+    }
+    .item-ios,
+    .item-md {
+        padding-left: 0px;
+        color: #424242;
+        font-size: 16px;
+        margin-bottom: 3px;
+    }
+    .show-pass {
+        float: right;
+        position: relative;
+        top: -35px;
+        color: #BDBDBD;
+        letter-spacing: 2px;
+        /*text-transform: uppercase;*/
+        font-size: 12px;
+    }
+    .text-blue {
+        color: #02B9E7;
+        text-align: left;
+        letter-spacing: 2px;
+    }
+    p {
+        color: #AEAEAE;
+    }
+    .text-center {
+        text-align: center;
+    }
+    form {
+        max-width: 272px;
+        margin: 16px auto auto auto;
+    }
+    .form-footer {
+        max-width: 272px;
+        margin: 14px auto auto auto;
+    }
+    .form-footer p {
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+    }
+    .form-footer p.text-center {
+        letter-spacing: 1px;
+    }
+    .item-md {
+        padding-left: 0px;
+        margin-bottom: 30px;
+    }
+    .item-label-stacked .text-input-md,
+    .item-label-floating .text-input-md {
+        color: #424242;
+    }
+    .button-full-md {
+        box-shadow: none;
+        border-radius: 4px;
+    }
+    .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
+        border-bottom-color: #dedede !important;
+        box-shadow: none !important;
+    }
+    ::-webkit-input-placeholder {
+        color: #424242;
+    }
+    ::-moz-placeholder {
+        color: #424242;
+    }
+    :-ms-input-placeholder {
+        color: #424242;
+    }
+    :-moz-placeholder {
+        color: #424242;
+    }
+    td.padr {
+        padding-right: 10px;
+    }
+    td.padl {
+        padding-left: 10px;
+    }
+    .text-input-ios,
+    .text-input-md {
+        font-family: 'open_sanslight';
+        font-size: 12px;
+        color: #424242;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+        padding: 0px !important;
+    }
+    .scroll-content {
+        padding-top: 0px !important;
+    }
+    .label-ios,
+    .label-md {
+        font-size: 11px !important;
+        letter-spacing: 1px;
+        margin: 5px 5px 5px 0px;
+    }
+    .list-ios,
+    .list-md {
+        margin: -1px 0 10px 0;
+    }
+    .button-ios,
     .button-md {
-      margin: 0.4rem 0.2rem;}
-  }
-
-  .btn_feb_add{ border: 1.5px solid #fff; font-size: 3.5em; margin-left: 0%; background-color: #428bca;}
-  .btn_feb_add:active{ background-color: #428bca; font-size: 3.5em;}
-  .btn_feb_add .fab-close-icon{color: #02B9E7;}
-  .btn_feb_add.fab-close-active{ color: #02B9E7; background-color: #fff; font-size: 3.5em; }
-  .ion-ios-close,
-  .ion-md-close{color: #AEAEAE; font-size: 0.5em;}
-
+        float: right;
+        height: 30px;
+        font-size: 14px;
+        letter-spacing: 1px;
+        font-weight: 300 !important;
+        color: #fff !important;
+    }
+    .change_password {
+        font-family: 'open_sanslight';
+        font-size: 14px !important;
+    }
+    .select-ios .select-icon .select-icon-inner,
+    .select-md .select-icon .select-icon-inner {
+        left: 0px;
+    }
+    .select-text {
+        overflow: initial;
+        white-space: initial;
+    }
+    .post-feed:active {
+        opacity: 0.5;
+    }
+    button[disabled],
+    [ion-button][disabled],
+    [md-button][disabled] {
+        opacity: 0.6;
+        background: #DEDEDE !important;
+        border: 0.5px solid #666;
+        color: #666 !important;
+    }
+    .caption_text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: #02B9E7;
+    }
+    .item-md h2 {
+        margin: 2px 0 !important;
+    }
+    .toolbar-title-md {
+        padding: 12px !important;
+    }
+    .item-md.item-input.input-has-focus .item-inner {
+        border-bottom-color: #dedede !important;
+        box-shadow: none !important;
+    }
+    .input-has-focus .label-md[stacked] {
+        color: #BDBDBD !important;
+    }
+    .item-block {
+        min-height: 2.2rem !important;
+    }
+    ion-app.md [padding],
+    ion-app.md [padding] .scroll-content {
+        padding: 0px 16px;
+    }
+    .api_data_loader {
+        padding-top: 0px;
+        position: absolute;
+        width: 100%;
+        margin-left: 20%;
+    }
+    .api_data_loader_text {
+        margin-top: 5px;
+        position: absolute;
+        width: 100%;
+    }
+    .update_api_data_loader {
+        float: right;
+        margin-right: 3%;
+    }
+    @media(max-width:749px) {
+        .profile {
+            height: 12vh;
+            margin-bottom: -0.625em;
+            img {
+                width: 22.5vw;
+                height: 22.5vw;
+                padding: 1px;
+            }
+        }
+        .margin-top {
+            margin-top: 68px;
+        }
+        .show-pass {
+            font-size: 12px;
+        }
+        .a1 {
+            font-size: 12px;
+            margin-top: 1px;
+        }
+        form {
+            max-width: 272px;
+            margin: 46px auto auto auto;
+        }
+        .form-footer p.text-center {
+            margin-top: 5px;
+        }
+        .item-md {
+            padding-left: 0px;
+            margin-bottom: 5px;
+        }
+        .item-ios {
+            margin-bottom: 3px;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 11px !important;
+            letter-spacing: 1px;
+            margin: 5px 5px 5px 0px;
+        }
+        .text-input-ios {
+            font-size: 14px;
+        }
+        .select-ios {
+            font-size: 14px;
+        }
+        input {
+            font-size: 14px;
+        }
+        .change_password {
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 14px !important;
+        }
+        .scroll-content {
+            padding-top: 10px !important;
+        }
+    } //iPhone 5 & 5S in portrait & landscape
+    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+        .profile {
+            height: 15vh;
+            margin-bottom: -0.625em;
+            img {
+                width: 17.5vw;
+                height: 17.5vw;
+                padding: 1px;
+            }
+        }
+        .item-ios {
+            margin-bottom: 0px;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 9px !important;
+            letter-spacing: 1px;
+            margin: 2px 2px 2px 0px;
+        }
+        .text-input-ios {
+            font-size: 12px;
+        }
+        .select-ios {
+            font-size: 12px;
+        }
+        input {
+            font-size: 12px;
+        }
+        .change_password {
+            font-size: 12px;
+        }
+        h2 {
+            font-size: 9px !important;
+        }
+        .scroll-content {
+            padding-top: 0px !important;
+        }
+    } //iPhone 6 in portrait & landscape
+    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+        .profile {
+            height: 12vh;
+            margin-bottom: -0.625em;
+            img {
+                width: 19vw;
+                height: 19vw;
+                padding: 1px;
+            }
+        }
+        .item-ios {
+            margin-bottom: 3px;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 11px !important;
+            letter-spacing: 1px;
+            margin: 5px 5px 5px 0px;
+        }
+        .text-input-ios {
+            font-size: 14px;
+        }
+        .select-ios {
+            font-size: 14px;
+        }
+        input {
+            font-size: 14px;
+        }
+        .change_password {
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 11px;
+        }
+        .scroll-content {
+            padding-top: 10px !important;
+        } //nexus 4
+        .profile {
+            height: 10.9vh;
+            margin-bottom: -0.625em;
+            img {
+                width: 15vw;
+                height: 15vw;
+                padding: 1px;
+            }
+        }
+        .item-block {
+            min-height: 2rem !important;
+        }
+        .list-md {
+            margin: -1px 0 5px 0;
+        }
+        .item-md {
+            padding-left: 0px;
+            margin-bottom: 2px;
+        }
+        .scroll-content {
+            padding-top: 4px !important;
+        }
+    } //iPhone 6+
+    @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
+        .profile {
+            height: 14vh;
+            margin-bottom: -0.625em;
+            img {
+                width: 22.5vw;
+                height: 22.5vw;
+                padding: 1px;
+            }
+        }
+        .item-ios {
+            margin-bottom: 3px;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 11px !important;
+            letter-spacing: 1px;
+            margin: 5px 5px 5px 0px;
+        }
+        .text-input-ios {
+            font-size: 14px;
+        }
+        .select-ios {
+            font-size: 14px;
+        }
+        input {
+            font-size: 14px;
+        }
+        .change_password {
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 11px !important;
+        }
+        .scroll-content {
+            padding-top: 10px !important;
+        }
+    } // @media only screen 
+    // and (device-width: 384px)
+    // and (device-height: 592px)
+    // and (-webkit-device-pixel-ratio: 2)	{
+    //   .profile {
+    //     height: 10.9vh;
+    //     margin-bottom: -0.625em;
+    //     img {
+    //       width: 15vw;
+    //       height: 15vw;
+    //     }
+    //   }
+    //   .item-block {
+    //     min-height: 2rem !important;
+    // }
+    // .list-md {
+    //   margin: -1px 0 5px 0;
+    // }
+    // .item-md {
+    //   padding-left: 0px;
+    //   margin-bottom: 2px;
+    // }
+    // }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 533px) {
+        .item-md {
+            margin-bottom: 1px;
+        }
+        .list-ios,
+        .list-md {
+            margin: -1px 0 0px 0;
+        }
+    }
+    @media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
+        h2 {
+            font-size: 13px !important;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 13px !important;
+        }
+        .profile img {
+            width: 18vw;
+            height: 18vw;
+            padding: 1px;
+        }
+        .item-md {
+            margin-bottom: 2px;
+        }
+    }
+    @media only screen and (-webkit-min-device-pixel-ratio: 3) and (min-device-width: 412px) and (max-device-width: 690px) {
+        .profile {
+            height: 15vh;
+            margin-bottom: -0.625em;
+        }
+        .profile img {
+            width: 21vw;
+            height: 21vw;
+            padding: 1px;
+        }
+        .label-md {
+            font-size: 17px !important;
+        }
+        .item-md {
+            margin-bottom: 9px;
+        }
+        .select-md {
+            font-size: 16px;
+        }
+        .text-input-md {
+            font-size: 16px;
+        }
+        .button-md {
+            margin: 0.8rem 0.2rem;
+            font-size: 16px;
+        }
+    } //s7
+    @media only screen and (-webkit-min-device-pixel-ratio: 4) and (min-device-width: 360px) and (max-device-width: 640px) {
+        .label-md {
+            margin: 6px 2px 6px 0px;
+        }
+    }
+    @media only screen and (-webkit-min-device-pixel-ratio: 3.5) and (min-device-width: 412px) and (max-device-width: 690px) {
+        .profile {
+            height: 12.9vh;
+            margin-bottom: -0.625em;
+        }
+        .profile img {
+            width: 18vw;
+            height: 18vw;
+            padding: 1px;
+        }
+        h2 {
+            font-size: 13px !important;
+        }
+        .label-ios,
+        .label-md {
+            font-size: 13px !important;
+        }
+        .text-input-md {
+            font-size: 13px;
+        }
+        .select-md {
+            font-size: 13px;
+        }
+        .item-md {
+            margin-bottom: 5px;
+        }
+        .button-md {
+            margin: 0.4rem 0.2rem;
+        }
+    }
+    .btn_feb_add {
+        border: 1.5px solid #fff;
+        font-size: 3.5em;
+        margin-left: 0%;
+        background-color: #428bca;
+    }
+    .btn_feb_add:active {
+        background-color: #428bca;
+        font-size: 3.5em;
+    }
+    .btn_feb_add .fab-close-icon {
+        color: #02B9E7;
+    }
+    .btn_feb_add.fab-close-active {
+        color: #02B9E7;
+        background-color: #fff;
+        font-size: 3.5em;
+    }
+    .ion-ios-close,
+    .ion-md-close {
+        color: #AEAEAE;
+        font-size: 0.5em;
+    }
 }
