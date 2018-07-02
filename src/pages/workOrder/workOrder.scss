@@ -168,9 +168,6 @@ page-workOrder {
     .tabs-md .tab-button[aria-selected="true"] .tab-button-icon {
         color: #02B9E7;
     }
-    ion-fab[bottom].footer_fab_box {
-        bottom: -10%;
-    }
     .searchbar-style {
         min-height: 48px;
     }
@@ -797,8 +794,7 @@ page-workOrder {
         max-width: 100%;
         min-width: 100%;
         margin-top: -4%;
-    }
-    //iPhone 5 & 5S in portrait & landscape
+    } //iPhone 5 & 5S in portrait & landscape
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
         ion-col .button-ios {
             padding: 0 0em;
@@ -810,32 +806,27 @@ page-workOrder {
             max-width: 33%;
             font-size: 10px;
         }
-    }
-    //iPhone 6 in portrait & landscape
+    } //iPhone 6 in portrait & landscape
     @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
         .toolbar-ios .segment-button {
             max-width: 33%;
         }
-    }
-    //iPhone 6+
+    } //iPhone 6+
     @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
         .toolbar-ios .segment-button {
             max-width: 30%;
         }
-    }
-    //iPhone X
+    } //iPhone X
     @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
         .toolbar-ios .segment-button {
             max-width: 30%;
         }
-    }
-    //iPhone 8
+    } //iPhone 8
     @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
         .toolbar-ios .segment-button {
             max-width: 33%;
         }
-    }
-    //iPhone 8 Plus
+    } //iPhone 8 Plus
     @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
         .toolbar-ios .segment-button {
             max-width: 30%;
@@ -848,8 +839,7 @@ page-workOrder {
         segment-md .segment-button {
             font-size: 1rem !important;
         }
-    }
-    //note 6
+    } //note 6
     @media only screen and (-webkit-min-device-pixel-ratio: 3) and (min-device-width: 412px) and (max-device-width: 690px) {
         .segment-md .segment-button {
             font-size: 14px !important;
@@ -887,6 +877,9 @@ page-workOrder {
         color: #AEAEAE;
         font-size: 0.5em;
     }
-    // .ion-ios-close,.ion-md-close{display: table;font-size: 30px;vertical-align: top;line-height: normal;margin-top: -2px;padding-left: 0px;color: #AEAEAE;margin-left: auto;margin-right: auto;}
+    .footer_fab_box {
+        bottom: 0.5% !important;
+        position: fixed;
+    } // .ion-ios-close,.ion-md-close{display: table;font-size: 30px;vertical-align: top;line-height: normal;margin-top: -2px;padding-left: 0px;color: #AEAEAE;margin-left: auto;margin-right: auto;}
     // .no-border{border-left:none !important;}
 }

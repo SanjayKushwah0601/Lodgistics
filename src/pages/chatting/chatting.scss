@@ -671,7 +671,11 @@ page-chatting {
         color: #AEAEAE;
         font-size: 0.5em;
     }
-    ion-fab[bottom].footer_fab_box {
-        bottom: -10.7%;
+    // ion-fab[bottom].footer_fab_box {
+    //     bottom: -10.7%;
+    // }
+    .footer_fab_box {
+        bottom: 0.5% !important;
+        position: fixed;
     }
 }

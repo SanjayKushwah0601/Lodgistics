@@ -108,7 +108,11 @@ page-myVideos {
         color: #AEAEAE;
         font-size: 0.5em;
     }
-    ion-fab[bottom].footer_fab_box {
-        bottom: -7.9%;
+    // ion-fab[bottom].footer_fab_box {
+    //     bottom: -7.9%;
+    // }
+    .footer_fab_box {
+        bottom: 0.5% !important;
+        position: fixed;
     }
 }
