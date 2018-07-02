@@ -943,14 +943,14 @@ ion-fab-list[side=top] div.label{ width: 58px;text-align: center;top: 5px; }
 ion-fab-list[side=left]:active,ion-fab-list[side=right]:active,ion-fab-list[side=top]:active{opacity: 0.5;}
 
 .feed_action_items ion-icon{ margin-right: 10px;}
-.notification_btn_side_menu ion-toggle .toggle-checked{background-color: #32db64;}
+// .notification_btn_side_menu ion-toggle .toggle-checked{background-color: #32db64;}
 ion-menu .hint_text_label{padding: 5px 0px;font-size: 14px;margin: 0px;color: #757575;}
 ion-menu .hint_box{ float:left;margin: 0px 14px 0px 14px; background-color: #fff;}
-.notification_btn_side_menu div.item-inner{ border-bottom: none !important;}
 .menu_notification_btn{ margin-right: 8px;vertical-align: middle; }
 ion-menu div.scroll-content{ margin-bottom: 10% !important; }
 .notification_btn_wraper{ bottom: 0px;border-top: 0.55px solid #c8c7cc;width: 100%;}
 .menu_toggle_btn{ padding: 0px; }  
+.notification_btn_side_menu div.item-inner{ border-bottom: none !important;}
 .notification_btn_side_menu{ letter-spacing: 2px; color: #808080;font-size: 1.7rem;font-family: inherit;font-weight: 600;}
 .email_support_icon{ margin-right: 7px; }
 .side_menu_footer{ height: 215px !important; }
