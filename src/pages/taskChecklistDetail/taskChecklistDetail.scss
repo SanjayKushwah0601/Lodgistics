@@ -212,7 +212,9 @@ page-taskChecklistDetail {
         margin: 0px 0px 0px 0px;
     }
     .group_heading {
-        font-weight: bold;
+        // font-weight: bold;
+        font-weight: 600;
+        font-size: 15px !important;
     }
     .item-ios.item-block .item-inner,
     .item-md.item-block .item-inner {
@@ -241,7 +243,7 @@ page-taskChecklistDetail {
         color: #ed5466;
     }
     .content_text_comment {
-        color: #ed5466;
+        color: #ed5466 !important;
     }
     .footer_bar1 {
         min-height: 50px;
