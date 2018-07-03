@@ -67,5 +67,5 @@ export let requestConfirmsUrl = baseUrl + "api/users/request_confirm";
 export let createUserUrl = baseUrl + "api/users/";
 export let updateFeedStatusUrl = baseUrl + "api/feeds";
 export let createFollowUpUrl = baseUrl + "api/feeds";
-export let getFollowUpUrl = baseUrl + "/api/feeds/follow_ups"
+export let getFollowUpUrl = baseUrl + "api/feeds/follow_ups"
 export let getAssignableUsersUrl = baseUrl + "api/work_orders/assignable_users";

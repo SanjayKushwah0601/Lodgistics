@@ -1,127 +1,186 @@
 page-createFollowUp {
-  
-.content{ background-color: #7F7F7F; }
-.box{background-color: #fff;margin: 5% 2% 0% 2%;border: 1px solid;font-family: 'open_sanssemibold';
-    font-weight: 500;font-size: 14px;color: #757575;padding: 2px; position: absolute; top: calc(50% - (600px/2)); border-radius: 8px;}
-.popup-buttons{ width: auto; text-align: right;padding-right: 5%;}
-button{ width: 40%;height: 2.8em !important;}
-.required{ color: #FF0000;}
-table{ width: 100%; margin-bottom: 5%;} 
-td{ width: 50%; padding-top: 5%; text-align: center;}
-
-.float_left{ float: left; }
-.float_right{ margin-right: 1%; }
-.float_right .button-ios, .float_right .button-md{ padding: 0 1em; }
-
-ion-calendar-month .primary .days .on-selected, ion-calendar-month .primary .startSelection button.days-btn, ion-calendar-month .primary .endSelection button.days-btn{
-    background-color: #ed5466;
+    .content {
+        background-color: #7F7F7F;
+    }
+    .box {
+        background-color: #fff;
+        margin: 5% 2% 0% 2%;
+        border: 1px solid;
+        font-family: 'open_sanssemibold';
+        font-weight: 500;
+        font-size: 14px;
+        color: #757575;
+        padding: 2px;
+        position: absolute;
+        top: calc(50% - (600px/2));
+        border-radius: 8px;
+    }
+    .popup-buttons {
+        width: auto;
+        text-align: right;
+        padding-right: 5%;
+    }
+    button {
+        width: 40%;
+        height: 2.8em !important;
+    }
+    .required {
+        color: #FF0000;
+    }
+    table {
+        width: 100%;
+        margin-bottom: 5%;
+    }
+    td {
+        width: 50%;
+        padding-top: 5%;
+        text-align: center;
+    }
+    .float_left {
+        float: left;
+    }
+    .float_right {
+        margin-right: 1%;
+    }
+    .float_right .button-ios,
+    .float_right .button-md {
+        padding: 0 1em;
+    }
+    ion-calendar-month .primary .days .on-selected,
+    ion-calendar-month .primary .startSelection button.days-btn,
+    ion-calendar-month .primary .endSelection button.days-btn {
+        background-color: #ed5466;
+    }
+    ion-calendar-month .primary .startSelection:after {
+        background-color: #FFF3F0;
+        border-radius: 10px 0px 0px 10px;
+    }
+    ion-calendar-month .primary .days.between {
+        background-color: #FFF3F0;
+    }
+    ion-calendar-month .primary .between button.days-btn {
+        background-color: #FFF3F0;
+    }
+    ion-calendar-month .primary .endSelection:after {
+        background-color: #FFF3F0;
+        border-radius: 0px 10px 10px 0px;
+    }
+    ion-calendar-month .primary .between button.days-btn p {
+        color: #333;
+    }
+    ion-calendar .button-ios {
+        background-color: #fff;
+    }
+    ion-calendar .title {
+        border-width: 1px 1px 0px 1px;
+        border-style: solid;
+    }
+    ion-calendar-week .week-toolbar {
+        border-width: 1px 1px 0px 1px;
+        border-style: solid;
+    }
+    ion-calendar-month {
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+    }
+    .close-icon {
+        font-size: 3.2em;
+        float: right;
+        margin-top: -4.5%;
+        margin-right: -0.6%;
+        color: #757575;
+    }
+    .wo_title.title {
+        margin-top: 2.5%;
+    }
+    div.month-picker.primary {
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+        margin-top: 0px;
+    } //iPhone 5 & 5S in portrait & landscape
+    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+        td {
+            width: 50%;
+            padding-top: 1.2%;
+        }
+        .close-icon {
+            margin-top: -10.5%;
+            margin-right: -3.2%;
+        }
+        .box {
+            top: calc(55% - (600px/2));
+        }
+    } //iPhone 6 in portrait & landscape
+    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+        td {
+            width: 50%;
+            padding-top: 3.1%;
+        }
+        .close-icon {
+            margin-top: -8.8%;
+            margin-right: -2.6%;
+        }
+        .box {
+            top: calc(50% - (600px/2));
+        }
+    } //iPhone 6+
+    @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
+        td {
+            width: 50%;
+            padding-top: 5%;
+        }
+        .close-icon {
+            margin-top: -8.2%;
+            margin-right: -2.4%;
+        }
+        .box {
+            top: calc(50% - (600px/2));
+        }
+    } //iPhone X
+    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+        td {
+            width: 50%;
+            padding-top: 5%;
+        }
+        .close-icon {
+            margin-top: -3.5%;
+            margin-right: 2.4%;
+        }
+        .box {
+            top: calc(50% - (600px/2));
+        }
+    } //iPhone 8
+    @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
+        td {
+            width: 50%;
+            padding-top: 3.1%;
+        }
+        .close-icon {
+            margin-top: -8.8%;
+            margin-right: -2.6%;
+        }
+        .box {
+            top: calc(50% - (600px/2));
+        }
+    } //iPhone 8 Plus
+    @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
+        td {
+            width: 50%;
+            padding-top: 5%;
+        }
+        .close-icon {
+            margin-top: -8.2%;
+            margin-right: -2.4%;
+        }
+        .box {
+            top: calc(50% - (600px/2));
+        }
+    }
+    ion-calendar .title .back,
+    ion-calendar .title .forward {
+        background-color: transparent;
+    }
+    ion-calendar .title .switch-btn {
+        background-color: transparent;
+    }
 }
-ion-calendar-month .primary .startSelection:after{
-    background-color: #FFF3F0;
-    border-radius: 10px 0px 0px 10px;
-}
-ion-calendar-month .primary .days.between{
-    background-color: #FFF3F0;
-}
-ion-calendar-month .primary .between button.days-btn{
-    background-color: #FFF3F0;
-}
-ion-calendar-month .primary .endSelection:after{
-    background-color: #FFF3F0;
-    border-radius: 0px 10px 10px 0px;
-}
-ion-calendar-month .primary .between button.days-btn p{
-    color: #333;
-}
-ion-calendar .button-ios{
-    background-color:#fff;
-}
-ion-calendar .title{
-    border-width: 1px 1px 0px 1px;
-    border-style: solid;
-}
-ion-calendar-week .week-toolbar{
-    border-width: 1px 1px 0px 1px;
-    border-style: solid;
-}
-ion-calendar-month{
-    border-width: 1px 1px 1px 1px;
-    border-style: solid;
-}
-
-.close-icon{ font-size: 3.2em;
-    float: right;
-    margin-top: -7.5%;
-    margin-right: -2%;
-    color: #757575;}
-    .wo_title.title{ margin-top: 2.5%; }
-
-    div.month-picker.primary{ border-width: 1px 1px 1px 1px;border-style: solid; margin-top: 0px; }    
-
-//iPhone 5 & 5S in portrait & landscape
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 568px)
-{
-    td{ width: 50%; padding-top: 1.2%;}        
-    .close-icon{ margin-top: -10.5%;margin-right: -3.2%; }
-    .box{ top: calc(55% - (600px/2)); }
-}
-//iPhone 6 in portrait & landscape
-@media only screen 
-and (min-device-width : 375px) 
-and (max-device-width : 667px) {
-    td{ width: 50%; padding-top: 3.1%;} 
-    .close-icon{ margin-top: -8.8%;margin-right: -2.6%;}
-    .box{ top: calc(50% - (600px/2)); }
-}//iPhone 6+
-@media only screen 
-and (min-device-width : 414px) 
-and (max-device-width : 736px)
-and (device-width : 414px)
-and (device-height : 736px)
-and (orientation : portrait) 
-and (-webkit-min-device-pixel-ratio : 3) 
-and (-webkit-device-pixel-ratio : 3)
-{ 
-    td{ width: 50%; padding-top: 5%;}    
-    .close-icon{margin-top: -8.2%;margin-right: -2.4%;}
-    .box{ top: calc(50% - (600px/2)); }
-}
-
-//iPhone X
-@media only screen 
-and (device-width : 375px) 
-and (device-height : 812px) 
-and (-webkit-device-pixel-ratio : 3) { 
-    td{ width: 50%; padding-top: 5%;}     
-    .close-icon{margin-top: -3.5%;
-        margin-right: 2.4%;}
-    .box{ top: calc(50% - (600px/2)); }
-}
-
-//iPhone 8
-@media only screen 
-and (device-width : 375px) 
-and (device-height : 667px) 
-and (-webkit-device-pixel-ratio : 2) { 
-    td{ width: 50%; padding-top: 3.1%;} 
-    .close-icon{ margin-top: -8.8%;margin-right: -2.6%;}
-    .box{ top: calc(50% - (600px/2)); }
-}
-
-//iPhone 8 Plus
-@media only screen 
-and (device-width : 414px) 
-and (device-height : 736px) 
-and (-webkit-device-pixel-ratio : 3) { 
-    td{ width: 50%; padding-top: 5%;}    
-    .close-icon{margin-top: -8.2%;margin-right: -2.4%;}
-    .box{ top: calc(50% - (600px/2)); }
-}
-
-}
-
-
-
-
