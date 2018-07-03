@@ -17,7 +17,7 @@ page-sendMessage {
 .close-icon-box{ width: 50%; }
 button[disabled], [ion-button][disabled]{ opacity: 0.6;background: #DEDEDE !important;border: 0.5px solid #666;color: #666!important;}
 .grid-img [col-6]{ padding: 0px; }
-textarea, select{
+textarea, select, input{
     max-width: 100%;
     width: 100%;
     height: 35vh;
@@ -26,7 +26,7 @@ textarea, select{
     font-size: 24px;
     font-weight: 500;
     }
-textarea::after {
+textarea::after,input::after  {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -36,9 +36,10 @@ textarea::after {
     border-bottom-color: transparent;
     content: "";
 }
-textarea {  padding: 0px !important; display: block; background: #fff;    padding:0px; border-radius: 4px;margin-bottom: 0px;margin-top: 0px;color: #616161;font-family: 'open_sanslight'; font-size: 32px;border: none;border-radius: 0px; resize:none;
+textarea,input {  padding: 0px !important; display: block; background: #fff;    padding:0px; border-radius: 4px;margin-bottom: 0px;margin-top: 0px;color: #000;font-family: 'open_sanslight'; font-size: 32px;border: none;border-radius: 0px; resize:none;
 }
 textarea[placeholder]          {text-indent: 0px; }
+input[placeholder]          {text-indent: 0px; }
 
 .column-15-per{width: 15%;}
 .overlay {position: absolute;  top: 0;  bottom: 0;  left: 0;  right: 0;  height: 100%;  width: 85%;  opacity: 1;  transition: .5s ease;  background-color: transparent;  margin-left: 15%;}
@@ -87,7 +88,7 @@ button{ width: 45%;height: 2.8em !important;}
 }
 .header_grid .col{ padding: 0px; }
 .back_arrow:before{ content: "\f27d";padding-left: 8px;font-size: 2.4rem; }
-.select_label{font-size: 13px;color: #02B9E7; text-align: left;margin-left: 10px;background-color: #fff;margin: 0px;padding: 5px 5px 10px 10px;}
+.select_label{font-size: 13px;color: #02B9E7; text-align: left;margin-left: 10px;background-color: #fff;margin: 0px;padding: 10px 0px;}
 ion-select {font-size: 14px;color: #757575; padding-left: 0px !important;}
 .grid-img .item-inner{border-bottom: 0px !important;}
 .user-name-badge span{ color: #fff !important; }
@@ -113,7 +114,7 @@ ion-select {font-size: 14px;color: #757575; padding-left: 0px !important;}
 max-height: 50px !important;
 padding-top: 0px !important;
 }
-.sendin_footer{ margin-left: 10px;background-color: #fff;margin: 0px;padding: 5px 5px 10px 10px;}
+.sendin_footer{ margin-left: 10px;background-color: #fff;margin: 0px;padding: 10px 16px 10px 16px;}
 
 ion-footer.openKeyboard{
     bottom: 30.5% !important;
@@ -126,13 +127,13 @@ ion-footer.openKeyboardWithSpellCheck{
   }
 
 .select_gray_text{color:#757575;}
-.sendin_footer ion-icon{ line-height: 1px;top: 1px;margin-left: 0px;color: red;float:right;margin-right: 10px;height: 5px; }
+.sendin_footer ion-icon{ margin-top: -3px;font-size: 2em;line-height: 1px;top: 1px;margin-left: 0px;color: #BDBDBD;float:right;margin-right: 10px;height: 5px; }
 .sendin_footer ion-icon:active{opacity: 0.5;}
-.sendin_footer .ion-ios-close:before,.sendin_footer .ion-md-close:before{margin-top: -5px;}
+// .sendin_footer .ion-ios-close:before,.sendin_footer .ion-md-close:before{margin-top: -5px;}
 .send_btn_col{ padding-right: 10px; }
 .img_box{ margin-bottom: 5vh; }
 .img_box .col{ padding: 0px; }
-.scroll_down_label{font-size: 13px;color: #02B9E7; text-align: left;margin-left: 10px;background-color: #fff;margin: 0px;padding: 5px 5px 0px 10px;}
+.scroll_down_label{border-bottom: 1px solid #DEDEDE;font-size: 13px;color: #02B9E7; text-align: left;margin-left: 10px;background-color: #fff;margin: 0px;padding: 5px 5px 0px 10px;}
 
 .option-row{ position: relative;z-index: 9999;width: 55%;margin-bottom: -7px;}
 .speech-bubble {
@@ -190,10 +191,40 @@ ion-footer.openKeyboardWithSpellCheck{
     align-items: center;     /* center items vertically, in this case */
 }
 .speech-bubble ion-col:active{ opacity: 0.5;}
+.input_box input{ height: auto;font-size: 15px; }
+.user_name_box ion-list{margin: 0px 0px 0px 0px;}
+.autosuggestion_list{width:100%; margin-top: 11%;position: fixed; z-index: 9;background: #fff; max-height: 70%;overflow: scroll;}
+  .autosuggestion_list ion-label{ white-space: normal;}
+  .autosuggestion_list .label-ios, .autosuggestion_list .label-md { color: #02B9E7;margin: 0px 0px 0px 0px;font-family: 'open_sanslight'; }
+  .autosuggestion_list ion-item{ border-bottom: 0.55px solid #c8c7cc;}
+  .user {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    vertical-align: middle;
+  }
+  .user_name_box ion-item{border: none !important;padding: 0px;}
+  .user_name_box ion-item input{margin-left: 0px !important;}
+  .to_label{ color: #BDBDBD;font-size: 15px;}
+  ion-footer{ background-color: #fff; }
+  ion-footer ion-row{border-bottom: 1px solid #DEDEDE;}
+  .remove_icon{font-size: 2.2em;float: right;margin-right: 10%;color: #BDBDBD;}
+  .first_row{border-top: 0.55px solid #c8c7cc;}
+.autosuggestion_list ion-item:first-child{
+    border-top: 0.55px solid #c8c7cc;
+}
+.with_selected_user .to_label{ max-width: 8%; }
+.with_selected_user .sendin_footer{ font-size: 15px;padding: 10px 0px;}
+ion-footer ion-toolbar{ height: 20px !important; }
+.counting_iphone_x{margin-top: -22px !important;}
 
 
 @media(max-width:749px){
-    textarea{font-size: 24px; height: 30vh;}
+    textarea{font-size: 24px; height: 20vh;}
     }
     
    //iPhone 5,5S,5se in portrait & landscape
@@ -201,7 +232,7 @@ ion-footer.openKeyboardWithSpellCheck{
 and (min-device-width : 320px) 
 and (max-device-width : 568px)
 {
-  ion-content .scroll-content{ margin-top: 110px !important;}
+  ion-content .scroll-content{ margin-top: 150px !important;}
   .close-icon{ margin-top: -11.5%;margin-right: -2.5%; }
   ion-footer.openKeyboardWithSpellCheck{bottom: 45% !important;} 
 ion-footer.openKeyboard{bottom: 36% !important;}

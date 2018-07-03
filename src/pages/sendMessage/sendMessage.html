@@ -23,21 +23,65 @@
             <ion-label class="select_label">SELECT <span (click)="selectGroups()">GROUP</span> / <span (click)="selectIndividual()">USER</span></ion-label>
         </ion-col>
     </ion-row> -->
-    <ion-row>
-        <ion-col col-6 class="align-center first-grid-col" (click)="accessGallery()">
-          <ion-icon ios="ios-image" md="md-image" class="camera-image-icon"></ion-icon>
-        </ion-col>
-        <ion-col col-6 class="align-center" (click)="openCamera()">
-          <ion-icon ios="ios-camera" md="md-camera" class="camera-image-icon"></ion-icon>
-        </ion-col>
-      </ion-row>
+
+  
+    <ion-row class="user_name_box" *ngIf="!allUsers.length>0">
+      <ion-col col-19>
+        <ion-list>
+          <ion-item>
+            <ion-label class="to_label">To:</ion-label>
+            <ion-input autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" class="input_box" [(ngModel)]="searchText" (input)="getUsers()" placeholder="Enter User/Group"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col col-3>
+        <ion-icon *ngIf="showList" class="remove_icon" name="ios-close-outline" (click)="removeSearch()"></ion-icon>
+        <ion-label *ngIf="!showList && !allUsers.length>0" class="select_label"><span (click)="selectGroups()">Group</span> <span class="select_gray_text">/</span> <span (click)="selectIndividual()">User</span></ion-label>
+      </ion-col>
+  </ion-row>
+
+  <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0">
+    <ion-col col-19>
+      <ion-list>
+        <ion-item>
+          <ion-label class="to_label">To:</ion-label>
+          <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
+            <span *ngFor="let res of allUsers;" text-wrap> <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span> <span>{{res.type=='group'?'(Group)':''}}</span></span>
+        </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col col-3>
+      <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
+    </ion-col>
+</ion-row>
+
+  <!-- <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
+      <span *ngFor="let res of allUsers;" text-wrap> <span class="select_gray_text">Sending To {{res.type=='group'?'Group':'User'}}</span> <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span></span><ion-icon name="close" (click)="resetSelection()"></ion-icon>
+  </ion-label>  -->
+
+  <ng-container *ngIf="showList">
+    <span class="autosuggestion_list">
+    <ion-item *ngFor="let row of filterUser" (click)="selectUserFromList(row.target_user.name,row.chat.id,row.target_user.id,row.target_user)">
+            <img src="{{row.target_user.avatar_img_url}}" class="user">
+       <span>{{row.chat.name}}</span>
+      <!-- <span>{{row.formatted_address}}</span> -->
+    </ion-item>
+    <ion-item *ngFor="let row1 of filterGroup" (click)="selectGroupFromList(row1.chat.name,row1.chat.id,row1.chat.id,row1.chat.users)">
+            <img src="{{row1.chat.image_url}}" class="user">
+            <span>{{row1.chat.name}} (Group)</span>
+      <!-- <span>{{row.formatted_address}}</span> -->
+    </ion-item>
+    </span>
+  </ng-container>
+
   </ion-grid>
 
 </ion-header>
 
 <ion-content padding no-bounce>
 
-    <ion-label style="min-height:25px;margin:0px;" (click)="closekeyboard()"></ion-label>
+    <!-- <ion-label style="min-height:25px;margin:0px;" (click)="closekeyboard()"></ion-label> -->
 
 <div class="message-box" style="height: 100%;padding-top:0%;">
 
@@ -78,7 +122,7 @@
     <ion-row *ngIf="allUsers">
       <ion-col col-12>
           <!-- Sending To  <span *ngFor="let res of allUsers;" text-wrap (keyup)="resize()" [innerHTML]="res.name" class="user-name-badge"></span> -->
-          <textarea autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" placeholder="Start typing here" [(ngModel)]="messageText" (change)="updateValue($event)" (ngModelChange)="changeModelValue()" (keyup)="valchange($event)"></textarea>
+          <textarea #myInput autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" placeholder="{{showList?'':'Start typing here'}}" [(ngModel)]="messageText" (change)="updateValue($event)" (ngModelChange)="changeModelValue()" (keyup)="valchange($event)"></textarea>
         </ion-col>
     </ion-row>
 
@@ -127,13 +171,16 @@
 </ion-content>
 
 <ion-footer class="{{classnameForFooter}}">
-    
     <ion-label *ngIf="base64Image && isKeyboardOpen" class="scroll_down_label" (click)="closekeyboard()">Scroll down to see image</ion-label>
 
-    <ion-label *ngIf="!allUsers.length>0" class="select_label"><span class="select_gray_text">SELECT</span> <span (click)="selectGroups()">GROUP</span> <span class="select_gray_text">/</span> <span (click)="selectIndividual()">USER</span></ion-label>
-    <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
-        <span *ngFor="let res of allUsers;" text-wrap> <span class="select_gray_text">Sending To {{res.type=='group'?'Group':'User'}}</span> <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span></span><ion-icon name="close" (click)="resetSelection()"></ion-icon>
-    </ion-label> 
+    <ion-row>
+        <ion-col col-6 class="align-center first-grid-col" (click)="accessGallery()">
+          <ion-icon ios="ios-image" md="md-image" class="camera-image-icon"></ion-icon>
+        </ion-col>
+        <ion-col col-6 class="align-center" (click)="openCamera()">
+          <ion-icon ios="ios-camera" md="md-camera" class="camera-image-icon"></ion-icon>
+        </ion-col>
+      </ion-row>
 
   <ion-toolbar position="bottom" *ngIf="mentionMembers.length>0">
   

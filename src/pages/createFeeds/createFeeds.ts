@@ -121,7 +121,7 @@ public placeHolderText="What do you want to share with your colleagues?";
   postFeedOnServer(formData) {
 
     this.apiInProgress=true;
-    let feedData = formData.feed.trim();
+    let feedData = formData.feed.trim().replace(/\r?\n/g, '<br />');
     //feedData = this.commonMethod.replaceURLWithHTMLLinks(feedData);
 
     let mentionId = [];
@@ -146,7 +146,7 @@ public placeHolderText="What do you want to share with your colleagues?";
     }
 
 
-    let objData = { 'feed': { title: this.feedTitle.trim(),body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
+    let objData = { 'feed': { title: this.feedTitle.trim().replace(/\r?\n/g, '<br />'),body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',

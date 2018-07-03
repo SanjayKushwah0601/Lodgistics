@@ -1296,11 +1296,9 @@ page-introinviteusers.ion-page.show-page {
 // ion-fab[bottom].footer_fab_box {
 //     bottom: -8.5%;
 // }
-
 // ion-fab[bottom].feb_btn_on_private {
 //     bottom: -9.2% !important;
 // }
-
 ion-fab[center].footer_fab_box {
     left: 50.6%;
 }
@@ -1553,6 +1551,16 @@ ion-menu .learn_btn .button-inner {
 
 ion-menu .email_support_btn .button-inner {
     justify-content: left;
+}
+
+ion-fab .ion-ios-close:before,
+ion-fab .ion-md-close:before {
+    font-weight: 400;
+}
+
+ion-fab .ion-ios-add:before,
+ion-fab .ion-md-add:before {
+    font-weight: 400;
 }
 
 @media(max-width:749px) {

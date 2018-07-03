@@ -20,6 +20,7 @@ import { removeMessageConfirmMsg } from '../../providers/appConfig';
 
 export class SendMessagePage {
   //@ViewChild('myInput') myInput: ElementRef;
+  @ViewChild('myInput') myInput;
   
   public messageText = "";
   public base64Image = "";
@@ -37,6 +38,11 @@ export class SendMessagePage {
   //public members = [];
   public dbMembers = [];
   public isKeyboardOpen=false;
+  public completeTestService=['aa','ba','ca'];
+  public showList = false;
+  public filterUser:any;
+  public filterGroup:any;
+  public searchText="";
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage, public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File, public alertCtrl: AlertController,private sqlite: SQLite) {
     this.keyboard.disableScroll(true);
@@ -206,6 +212,7 @@ export class SendMessagePage {
             data => {
               //this.commonMethod.hideLoader();
               this.foundRepos.privates = data.json();
+              this.filterUser=this.foundRepos.privates;
             },
             err => {
               alertVar.present();
@@ -243,6 +250,7 @@ export class SendMessagePage {
             data => {
               //this.commonMethod.hideLoader();
               this.foundRepos.groups = data.json();
+              this.filterGroup=this.foundRepos.groups;
             },
             err => {
               alertVar.present();
@@ -782,6 +790,86 @@ export class SendMessagePage {
     }
   }
 
+  getUsers(){
+    this.showList=true;
+    //console.log(this.foundRepos.groups.length);
+    //console.log(this.foundRepos.privates.length);
+    this.filterGroup=this.getFilteredList(this.foundRepos.groups);
+    this.filterUser=this.getFilteredList(this.foundRepos.privates);
+  }
+
+  getFilteredList(data) {
+    //alert(data.length);
+    this.searchText=this.searchText.trim();
+    if (this.searchText && this.searchText!='') {
+      var lsearchText = this.searchText.toLowerCase();
+      return data.filter((a) =>
+        a.chat.name.toLowerCase().includes(lsearchText) 
+      );
+      // let res=[];
+      // for (let i = 0; i < data.length; i++) {
+      //   let text = data[i].chat.name;
+      //   if (text.toLowerCase().indexOf(this.searchText) > -1) {
+      //     res.push(data[i]);
+      //   }
+      // }
+      // return res;
+    }
+    return data;
+}
+
+selectUserFromList(name,id,user_id,userInfo){
+      // let name=this.foundRepos.privates[i].target_user.name;
+      // let id=this.foundRepos.privates[i].chat.id;
+      // let user_id=this.foundRepos.privates[i].target_user.id;
+      // let userInfo=this.foundRepos.privates[i].target_user;
+  this.allUsers=[{type:'private',id:id,name:name,user_id:user_id}]; 
+  this.mentionUsers = [];
+  let tempUsers=[];
+    for(let j=0;j<this.dbMembers.length;j++){
+      if(userInfo.id==this.dbMembers[j].id){
+        userInfo.avatar.url=this.dbMembers[j].image;
+        tempUsers.push(userInfo);
+      } 
+    }
+    this.mentionMembers=tempUsers;
+    this.removeSearch();
+    this.focusInput();
+}
+
+
+selectGroupFromList(name,id,user_id,group_users) {
+    // let name=this.foundRepos.groups[i].chat.name;
+    // let id=this.foundRepos.groups[i].chat.id;
+    // let user_id=this.foundRepos.groups[i].chat.id;
+    // let group_users=this.foundRepos.groups[i].chat.users;
+  this.allUsers=[{type:'group',id:id,name:name,user_id:user_id}]; 
+  this.mentionUsers = [];
+  let tempUsers=[];
+  for(let i=0;i<group_users.length;i++){
+    for(let j=0;j<this.dbMembers.length;j++){
+      if(group_users[i].id==this.dbMembers[j].id && group_users[i].id!=this.userId){
+        group_users[i].avatar.url=this.dbMembers[j].image;
+        tempUsers.push(group_users[i]);
+      } 
+    }
+  }
+  this.mentionMembers=tempUsers;
+  this.removeSearch();
+  this.focusInput();
+}
+
+removeSearch(){
+  this.showList=false;
+  this.searchText="";
+}
+
+focusInput() {
+  console.log("focus start");
+  this.myInput.setFocus();
+ // input.setFocus();
+ console.log("focus end");
+}
 
 
 
