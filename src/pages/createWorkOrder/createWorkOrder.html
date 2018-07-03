@@ -1,26 +1,33 @@
 <!-- <ion-content padding no-bounce disable-scroll> -->
 <div class="page-wraper-box">
-        
+
     <div class="box">
 
-            <ion-title class="wo_title"> {{wo_no==''?'Create New Work Order':'Edit Work Order #'}}{{wo_no!=''?wo_no:''}}</ion-title>
+        <ion-title class="wo_title"> {{wo_no==''?'Create New Work Order':'Edit Work Order #'}}{{wo_no!=''?wo_no:''}}</ion-title>
 
         <table>
             <tr>
                 <td colspan="2">
-                    <ion-label>Request <span class="required">*</span></ion-label>
+                    <ion-label>Request
+                        <span class="required">*</span>
+                    </ion-label>
                     <textarea tappable rows="2" class="request" [(ngModel)]="workOrderData.descriptions"></textarea>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <ion-label>Location <span class="required">*</span></ion-label>
-                    <ion-select [disabled]="wo_no!=''" tappable (ngModelChange)='updateSelection()' [(ngModel)]="workOrderData.maintainable_type" placeholder="Select">
+                    <ion-label>Location
+                        <span class="required">*</span>
+                    </ion-label>
+                    <ion-select [disabled]="wo_no!=''" tappable (ngModelChange)='updateSelection()' [(ngModel)]="workOrderData.maintainable_type"
+                        placeholder="Select">
                         <ion-option *ngFor="let type of locationType;" value="{{type}}">{{type}}</ion-option>
                     </ion-select>
                 </td>
                 <td>
-                    <ion-label>{{workOrderData.maintainable_type}} <span class="required">*</span></ion-label>
+                    <ion-label>{{workOrderData.maintainable_type}}
+                        <span class="required">*</span>
+                    </ion-label>
                     <ion-select [disabled]="wo_no!=''" tappable [(ngModel)]="workOrderData.maintainable_id" placeholder="Select" (ngModelChange)="updateCheckList()">
                         <ng-container *ngIf="workOrderData.maintainable_type=='Room'">
                             <ion-option *ngFor="let rooms of room;" value="{{rooms.id}}">{{rooms.room_number}}</ion-option>
@@ -37,7 +44,8 @@
             <tr [hidden]="workOrderData.maintainable_type=='Equipment'">
                 <td colspan="2">
                     <ion-label>Checklist Item</ion-label>
-                    <ion-select [(ngModel)]="workOrderData.maintenance_checklist_item_id" [disabled]="!workOrderData.maintainable_id || wo_no!=''" interface="action-sheet" tappable class="check-list-item" placeholder="select checklist item">
+                    <ion-select [(ngModel)]="workOrderData.maintenance_checklist_item_id" [disabled]="!workOrderData.maintainable_id || wo_no!=''"
+                        interface="action-sheet" tappable class="check-list-item" placeholder="select checklist item">
                         <ng-container *ngIf="workOrderData.maintainable_type=='Room'">
                             <optgroup *ngFor="let roomCheckList of roomCheckListItems;">
                                 <ion-option [disabled]="true">-- {{roomCheckList.name}} --</ion-option>
@@ -57,16 +65,22 @@
             </tr>
             <tr>
                 <td>
-                    <ion-label>Priority <span class="required">*</span></ion-label>
-                    <ion-select [disabled]="!userPermissions.wo_access.priority && wo_no!=''" tappable [(ngModel)]="workOrderData.priority" class="request" placeholder="select checklist item">
+                    <ion-label>Priority
+                        <span class="required">*</span>
+                    </ion-label>
+                    <ion-select [disabled]="!userPermissions.wo_access.priority && wo_no!=''" tappable [(ngModel)]="workOrderData.priority" class="request"
+                        placeholder="select checklist item">
                         <ion-option value="l">Low</ion-option>
                         <ion-option value="m">Medium</ion-option>
                         <ion-option value="h">High</ion-option>
                     </ion-select>
                 </td>
                 <td>
-                    <ion-label>Status <span class="required">*</span></ion-label>
-                    <ion-select [disabled]="!userPermissions.wo_access.status && wo_no!=''" tappable [(ngModel)]="workOrderData.status" class="request" placeholder="select checklist item">
+                    <ion-label>Status
+                        <span class="required">*</span>
+                    </ion-label>
+                    <ion-select [disabled]="!userPermissions.wo_access.status && wo_no!=''" tappable [(ngModel)]="workOrderData.status" class="request"
+                        placeholder="select checklist item">
                         <ion-option value="open">Open</ion-option>
                         <ion-option value="closed">Closed</ion-option>
                         <ion-option value="working">Working</ion-option>
@@ -77,17 +91,18 @@
             <tr>
                 <td>
                     <ion-label>Assigned To</ion-label>
-                    <ion-select [disabled]="!userPermissions.wo_access.assigned_to_id && wo_no!=''" tappable [(ngModel)]="workOrderData.assigned_to_id" class="request" placeholder="select checklist item">
+                    <ion-select [disabled]="!userPermissions.wo_access.assigned_to_id && wo_no!=''" tappable [(ngModel)]="workOrderData.assigned_to_id"
+                        class="request" placeholder="select checklist item">
                         <ion-option value="">Unassigned</ion-option>
                         <ng-container *ngFor="let user of members;">
-                        <ion-option *ngIf="(user.id==userId && userPermissions.wo_access.assignable) || user.id!=userId" value="{{user.id}}">{{user.name}}</ion-option>
+                            <ion-option value="{{user[1]}}">{{user[0]}}</ion-option>
                         </ng-container>
                     </ion-select>
                 </td>
                 <td>
                     <ion-label>Due Date</ion-label>
-                    <ion-datetime [disabled]="!userPermissions.wo_access.due_to_date && wo_no!=''" tappable [(ngModel)]="workOrderData.due_to_date" min="{{minDate}}" max="{{maxDate}}" displayFormat="MM/DD/YYYY"
-                        placeholder="MM/DD/YYYY" class="due-date-time"></ion-datetime>
+                    <ion-datetime [disabled]="!userPermissions.wo_access.due_to_date && wo_no!=''" tappable [(ngModel)]="workOrderData.due_to_date"
+                        min="{{minDate}}" max="{{maxDate}}" displayFormat="MM/DD/YYYY" placeholder="MM/DD/YYYY" class="due-date-time"></ion-datetime>
                 </td>
             </tr>
             <!-- <tr>
@@ -121,12 +136,13 @@
             <tr>
                 <td colspan="2">
                     <div class="popup-buttons" class="{{wo_no!=''?'float_left':'float_right'}}">
-                        <button *ngIf="wo_no!='' && userPermissions.wo_access.can_delete" (click)="confirmCloseWorkOrder()" class="delete_wo" tappable ion-button>Delete WO#{{wo_no}}</button>
+                        <button *ngIf="wo_no!='' && userPermissions.wo_access.can_delete" (click)="confirmCloseWorkOrder()" class="delete_wo" tappable
+                            ion-button>Delete WO#{{wo_no}}</button>
                         <button tappable ion-button (click)="dismiss()">Cancel</button>
                         <button *ngIf="wo_no==''" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
                             (click)="createWorkOrder()">Create WO</button>
                         <button *ngIf="wo_no!='' && userPermissions.wo_access.can_edit" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id || workOrderData.status=='closed')"
-                         (click)="updateWorkOrder()">{{workOrderData.status=='closed'?'Close WO':'Update WO'}}</button>
+                            (click)="updateWorkOrder()">{{workOrderData.status=='closed'?'Close WO':'Update WO'}}</button>
                     </div>
                 </td>
             </tr>

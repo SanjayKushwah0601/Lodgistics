@@ -18,7 +18,7 @@ import { getRoomCheckListItemsUrl } from '../../services/configURLs';
 import { getPublicAreaCheckListItemsUrl } from '../../services/configURLs';
 import { getWoDataUrl } from '../../services/configURLs';
 import { updateWoDataUrl } from '../../services/configURLs';
-import { createWorkOrderUrl } from '../../services/configURLs';
+import { createWorkOrderUrl, getAssignableUsersUrl } from '../../services/configURLs';
 
 @Component({
   selector: 'page-createWorkOrder',
@@ -51,8 +51,8 @@ export class CreateWorkOrderPage {
   public publicAreaCheckListItems = [];
   public userPermissions: any;
   public wo_no = "";
-  public room_id="";
-  public maintenance_checklist_item_id="";
+  public room_id = "";
+  public maintenance_checklist_item_id = "";
   public selectOptions: any;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite) {
@@ -62,10 +62,11 @@ export class CreateWorkOrderPage {
     };
 
     this.mentioned_user_ids = this.params.get("mentioned_user_ids");
-    this.getAllMembersFromDb();
+    //this.getAllMembersFromDb();
+    this.getAssignableUsers();
 
     this.keyboard.disableScroll(true);
-    this.userPermissions = { "wo_access": { "priority": false, "status": false, "due_to_date": false, "assigned_to_id": false, "assignable": false, "view_all": false, "view_department": false, "view_own": false, "view_assigned_to": false, "view_listing": false, "can_create": false, "team": true,"can_delete" :false, "can_edit" :false } };
+    this.userPermissions = { "wo_access": { "priority": false, "status": false, "due_to_date": false, "assigned_to_id": false, "assignable": false, "view_all": false, "view_department": false, "view_own": false, "view_assigned_to": false, "view_listing": false, "can_create": false, "team": true, "can_delete": false, "can_edit": false } };
 
     this.commonMethod.getUserPermissions().then(
       permissions => {
@@ -117,8 +118,8 @@ export class CreateWorkOrderPage {
 
                     this.nativeStorage.setItem('wo_data', { locationType: this.locationType, room: this.room, publicArea: this.publicArea, equipment: this.equipment })
                       .then(
-                      () => { console.log('Stored wo_data!'); },
-                      error => { console.error('Error storing wo_data', error); }
+                        () => { console.log('Stored wo_data!'); },
+                        error => { console.error('Error storing wo_data', error); }
                       );
                     this.commonMethod.hideLoader();
                     this.processData();
@@ -177,7 +178,7 @@ export class CreateWorkOrderPage {
 
     this.keyboard.disableScroll(true);
 
-    
+
     //To do Need to remove
     //this.projectBaseUrl = baseUrl;
     this.projectBaseUrl = "http://dev.lodgistics.com";
@@ -195,8 +196,7 @@ export class CreateWorkOrderPage {
 
   }
 
-  processData()
-  {
+  processData() {
     this.id = this.params.get('id') ? this.params.get('id') : '';
     this.workOrderData.descriptions = this.params.get('value') ? this.params.get('value') : '';
     this.imageFromParent = this.params.get('image_url') ? this.params.get('image_url') : '';
@@ -272,8 +272,7 @@ export class CreateWorkOrderPage {
       );
       /* end api call to get WO location */
     }
-    else if(this.room_id!="" && this.room_id!="null" && this.room_id!=null)
-    {
+    else if (this.room_id != "" && this.room_id != "null" && this.room_id != null) {
       this.workOrderData.maintainable_type == 'Room';
       this.workOrderData.maintainable_id = this.room_id;
       this.updateCheckList();
@@ -555,50 +554,50 @@ export class CreateWorkOrderPage {
     }
   }
 
-  getAllMembersFromDb() {
-    this.nativeStorage.getItem('user_auth').then(
-      accessToken => {
-        this.userId = accessToken.user_id;
+  // getAllMembersFromDb() {
+  //   this.nativeStorage.getItem('user_auth').then(
+  //     accessToken => {
+  //       this.userId = accessToken.user_id;
 
-        this.sqlite.create({
-          name: 'data.db',
-          location: 'default'
-        }).then((db: SQLiteObject) => {
+  //       this.sqlite.create({
+  //         name: 'data.db',
+  //         location: 'default'
+  //       }).then((db: SQLiteObject) => {
 
-          db.executeSql("SELECT * FROM members WHERE user_id!='" + this.userId + "' AND is_maintenance_dep='1' ORDER BY name ASC", {}).then((allMembers) => {
-            console.log("SELECT MEMBERS FROM DB: " + JSON.stringify(allMembers));
+  //         db.executeSql("SELECT * FROM members WHERE user_id!='" + this.userId + "' AND is_maintenance_dep='1' ORDER BY name ASC", {}).then((allMembers) => {
+  //           console.log("SELECT MEMBERS FROM DB: " + JSON.stringify(allMembers));
 
-            if (allMembers.rows.length > 0) {
-              for (let i = 0; i < allMembers.rows.length; i++) {
-                if (this.mentioned_user_ids != '' && this.mentioned_user_ids != null && this.mentioned_user_ids.length == 1 && this.mentioned_user_ids[0] == allMembers.rows.item(i).user_id) {
-                  this.workOrderData.assigned_to_id = allMembers.rows.item(i).user_id;
-                }
+  //           if (allMembers.rows.length > 0) {
+  //             for (let i = 0; i < allMembers.rows.length; i++) {
+  //               if (this.mentioned_user_ids != '' && this.mentioned_user_ids != null && this.mentioned_user_ids.length == 1 && this.mentioned_user_ids[0] == allMembers.rows.item(i).user_id) {
+  //                 this.workOrderData.assigned_to_id = allMembers.rows.item(i).user_id;
+  //               }
 
-                let tempUserInfo = {
-                  "id": allMembers.rows.item(i).user_id,
-                  "name": allMembers.rows.item(i).name,
-                  "image": allMembers.rows.item(i).image
-                };
+  //               let tempUserInfo = {
+  //                 "id": allMembers.rows.item(i).user_id,
+  //                 "name": allMembers.rows.item(i).name,
+  //                 "image": allMembers.rows.item(i).image
+  //               };
 
-                this.members.push(tempUserInfo);
-              }
-            }
-
-
+  //               this.members.push(tempUserInfo);
+  //             }
+  //           }
 
 
-          }, (error1) => {
-            console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
-          });
 
-        }).catch(e => console.log(e));
 
-      },
-      error => {
-        return '';
-      }
-    );
-  }
+  //         }, (error1) => {
+  //           console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
+  //         });
+
+  //       }).catch(e => console.log(e));
+
+  //     },
+  //     error => {
+  //       return '';
+  //     }
+  //   );
+  // }
 
   updateCheckList() {
     if ((this.roomCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'Room') || (this.publicAreaCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'PublicArea')) {
@@ -812,10 +811,45 @@ export class CreateWorkOrderPage {
     );
   }
 
-  closeKeyBoard()
-  {
+  closeKeyBoard() {
     this.keyboard.close();
   }
 
+  getAssignableUsers() {
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
 
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(getAssignableUsersUrl, accessToken).timeout(60000).subscribe(
+            data => {
+              //this.commonMethod.hideLoader();
+              let allMembers = data.json();
+              this.members = allMembers;
+            },
+            err => {
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              //this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+        }
+        else {
+          this.commonMethod.hideLoader();
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        return '';
+      }
+    );
+  }
 }
