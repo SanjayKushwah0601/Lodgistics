@@ -1,20 +1,27 @@
-<div id="ListBackdrop" *ngIf="fabButtonOpened"></div> 
+<div id="ListBackdrop" *ngIf="fabButtonOpened"></div>
 <ion-header>
   <ion-navbar>
-    <button ion-button color="light" *ngIf="foundRepos.length!=0" class="post-feed clear_all_btn" (click)="clearAll()">Dismiss All</button>
+    <ion-buttons left>
+      <button ion-button color="light" *ngIf="foundRepos.length!=0" (click)="clearAll()">Dismiss All</button>
+    </ion-buttons>
     <!-- <span start class="broadcast">
           <span (tap)="broadcastList()">
-            <span class="broadcast_btn">
+            <span class="broadcast_btn"> class="post-feed clear_all_btn"
                 <img src="assets/img/broadcost-red-icon.png" />
               </span>
             (15)</span>
         </span>  -->
-    <button ion-button menuToggle end>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title class="mention-title">
+
+    <!-- <ion-title class="mention-title">
       <div [ngClass]="foundRepos.length>0?'padding-title':'margin-left-less'">MY MENTIONS
       </div>
+    </ion-title> -->
+    <ion-title>
+      MY MENTIONS
+    </ion-title>
+
+
+    <ion-buttons right>
       <button ion-button color="light" class="snooze-feeds snooze_all_btn" *ngIf="foundRepos.length>0">
         <span class="header_icons">
           <ion-icon *ngIf="!snoozeAllStatus" (click)="snoozeAll()" class="acknowledged snooze_btn_icon_header" ios="ios-notifications"
@@ -23,9 +30,12 @@
             md="md-notifications-off"></ion-icon>
         </span>
       </button>
-
-    </ion-title>
-
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button menuToggle end>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -36,10 +46,15 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <span *ngIf="showLabels && !spinner" class="txt-update">Last updated: {{lastUpdatesAt | amTimeAgo}}  <ion-icon class="icon-refresh" name="refresh" (click)="callMyMentions()"></ion-icon></span>
+  <span *ngIf="showLabels && !spinner" class="txt-update">Last updated: {{lastUpdatesAt | amTimeAgo}}
+    <ion-icon class="icon-refresh" name="refresh" (click)="callMyMentions()"></ion-icon>
+  </span>
 
   <div class="clear"></div>
-  <span *ngIf="spinner" class="api_data_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_data_loader_text">Fetching mentions records...</span></span>
+  <span *ngIf="spinner" class="api_data_loader">
+    <ion-spinner name="bubbles"></ion-spinner>
+    <span class="api_data_loader_text">Fetching mentions records...</span>
+  </span>
 
   <!--<div *ngIf="foundRepos==''" class="no-result" text-center>No Result(s) Found</div>-->
 
@@ -63,8 +78,8 @@
                 <img src="{{item.content.created_by.avatar_img_url}}">
               </ion-avatar>
               <div class="pull-left">
-                <h2>{{item.content.created_by.name}} 
-                  <span *ngIf="item.content.room_number && item.content.room_number>0"class="work-order-badge room_no_badge">Room #{{item.content.room_number}}</span>
+                <h2>{{item.content.created_by.name}}
+                  <span *ngIf="item.content.room_number && item.content.room_number>0" class="work-order-badge room_no_badge">Room #{{item.content.room_number}}</span>
                 </h2>
                 <p>{{item.content.content_type_name?item.content.content_type_name:item.content.created_by.role}}</p>
               </div>
@@ -80,7 +95,7 @@
               <ion-row [ngClass]="item.content.temp_data?'card-footer blue-border':'card-footer'">
                 <ion-col class="bottom-buttons" *ngIf="!item.acknowledged_by_me" (click)="!item.inProgress?acknowledgeMention(item.content.content_id,item.content.created_by.id,item.mention_type,j):''">
                   <button ion-button icon-left clear>
-                     <ion-spinner *ngIf="item.inProgress" name="bubbles"></ion-spinner>
+                    <ion-spinner *ngIf="item.inProgress" name="bubbles"></ion-spinner>
                     <div *ngIf="!item.inProgress">
                       <ion-icon class="eye_icon" ios="ios-eye" md="md-eye"></ion-icon>
                       <span>ACKNOWLEDGE</span>
@@ -94,7 +109,7 @@
                 </ion-col>
                 <ion-col class="bottom-buttons" *ngIf="item.acknowledged_by_me && item.snoozed" (click)="!item.unsnoozeInProgress?unsnooze(j):''">
                   <button ion-button icon-left clear class="acknowledged">
-                     <ion-spinner *ngIf="item.unsnoozeInProgress" name="bubbles"></ion-spinner>                    
+                    <ion-spinner *ngIf="item.unsnoozeInProgress" name="bubbles"></ion-spinner>
                     <div *ngIf="!item.unsnoozeInProgress">
                       <ion-icon class="acknowledged snooze_btn_icon" ios="ios-time" md="md-time"></ion-icon> (4 hrs)</div>
                   </button>
@@ -144,18 +159,38 @@
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-  <ion-fab bottom center edge #fab class="footer_fab_box" >
-      <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
-      <ion-fab-list side="top">
-        <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
-      </ion-fab-list>
-      <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
-        <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
-      </ion-fab-list>
-      <ion-fab-list side="right">
-        <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
-      </ion-fab-list>
-    </ion-fab>
+  <ion-fab bottom center edge #fab class="footer_fab_box">
+    <button ion-fab class="btn_feb_add" (click)="openFabButton()">
+      <ion-icon class="fab_btn" name="add"></ion-icon>
+    </button>
+    <ion-fab-list side="top">
+      <span (click)="createFeedQuick(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-create-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>Post</div>
+      </span>
+    </ion-fab-list>
+    <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+      <span (click)="createWorkOrderQuick(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-construct-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>WO</div>
+      </span>
+    </ion-fab-list>
+    <ion-fab-list side="right">
+      <span (click)="sendMessage(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-chatboxes-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>Message</div>
+      </span>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>
 
@@ -173,19 +208,19 @@
         <ion-icon name="ios-chatboxes-outline"></ion-icon>
       </ion-col>
       <ion-col col-2.4 class="bottom-menu">
-          <!-- space for fab button -->
-        </ion-col>
+        <!-- space for fab button -->
+      </ion-col>
       <ion-col col-2.4 (click)="openWOPage()" class="bottom-menu">
-          <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
-          <ion-icon name="ios-construct-outline"></ion-icon>
-        </ion-col>
+        <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
+        <ion-icon name="ios-construct-outline"></ion-icon>
+      </ion-col>
       <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
-          <ion-icon name="ios-list-outline"></ion-icon>
-        </ion-col>
+        <ion-icon name="ios-list-outline"></ion-icon>
+      </ion-col>
       <!-- <ion-col col-2.4 class="active">
         <ion-icon name="ios-at"></ion-icon>
       </ion-col> -->
-      
+
     </ion-row>
     <ion-row *ngIf="!userPermissions.wo_access.view_listing">
       <ion-col col-2.4 (click)="openFeedPage()" class="bottom-menu">
@@ -197,11 +232,11 @@
         <ion-icon name="ios-chatboxes-outline"></ion-icon>
       </ion-col>
       <ion-col col-2.4 class="bottom-menu">
-          <!-- space for fab button -->
-        </ion-col>
+        <!-- space for fab button -->
+      </ion-col>
       <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
-          <ion-icon name="ios-list-outline"></ion-icon>
-        </ion-col>
+        <ion-icon name="ios-list-outline"></ion-icon>
+      </ion-col>
       <ion-col col-2.4 class="active">
         <ion-icon name="ios-at-outline"></ion-icon>
       </ion-col>

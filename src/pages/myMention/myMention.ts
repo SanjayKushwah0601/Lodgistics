@@ -75,13 +75,13 @@ export class MyMentionPage {
   public woNotificationCount = 0;
   public interval: any;
   public allDeletedMsg = "";
-  public snoozeAllStatus=true;
-  public showLabels=false;
+  public snoozeAllStatus = true;
+  public showLabels = false;
   public userPermissions: any;
   public isPopupOpen = false;
-  public spinner=false;
-public fabButtonOpened=false;
-  
+  public spinner = false;
+  public fabButtonOpened = false;
+
   constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private toast: Toast, private sqlite: SQLite, private iab: InAppBrowser, public platform: Platform, public zone: NgZone, public modalCtrl: ModalController) {
 
     this.viewWOUrl = viewWorkOrderUrl;
@@ -94,16 +94,16 @@ public fabButtonOpened=false;
       }
     };
     this.platform.ready().then(() => {
-      
-            this.commonMethod.getUserPermissions().then(
-              permissions => {
-                this.userPermissions = permissions;
-              },
-              error => {
-                return false;
-              }
-            );
-          });
+
+      this.commonMethod.getUserPermissions().then(
+        permissions => {
+          this.userPermissions = permissions;
+        },
+        error => {
+          return false;
+        }
+      );
+    });
 
     let thisObj = this;
     this.interval = window.setInterval(function () {
@@ -113,7 +113,7 @@ public fabButtonOpened=false;
         count => {
           thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
           thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-          thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+          thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
         },
         error => {
           return false;
@@ -163,21 +163,20 @@ public fabButtonOpened=false;
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         console.log("access token details  : " + JSON.stringify(accessToken));
-        this.spinner=true;
+        this.spinner = true;
         this.showPageLoader = true;
         this.currentPage = 1;
         if (this.commonMethod.checkNetwork()) {
           this.commonMethod.getDataWithoutLoder(getMyMentionsUrl, accessToken).subscribe(
             data => {
-              this.showLabels=true;
+              this.showLabels = true;
               this.foundRepos = [];
               this.tempFoundRepos = data.json();
-              this.snoozeAllStatus=true;
+              this.snoozeAllStatus = true;
               for (let i = 0; i < this.tempFoundRepos.length; i++) {
                 this.tempFoundRepos[i].state = "active";
-                if(this.tempFoundRepos[i].snoozed==false)
-                {
-                  this.snoozeAllStatus=false;
+                if (this.tempFoundRepos[i].snoozed == false) {
+                  this.snoozeAllStatus = false;
                 }
               }
               //this.commonMethod.hideLoader();
@@ -188,12 +187,12 @@ public fabButtonOpened=false;
                 }
               }
               console.log(this.foundRepos);
-              this.spinner=false;
+              this.spinner = false;
               //alert(this.foundRepos); 
             },
             err => {
               //this.commonMethod.hideLoader();
-              this.spinner=false;
+              this.spinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -203,7 +202,7 @@ public fabButtonOpened=false;
           );
         }
         else {
-          this.spinner=false;
+          this.spinner = false;
           this.commonMethod.showNetworkError();
         }
       },
@@ -232,11 +231,11 @@ public fabButtonOpened=false;
             data => {
               this.foundRepos.splice(index, 1);
               this.commonMethod.hideLoader();
-              if(id==null){
-                this.navCtrl.push(FeedDetailPage, { feed_id: comment_id});
-                
-              }else{
-              this.navCtrl.push(FeedDetailPage, { feed_id: id, feed_comment_id: comment_id });
+              if (id == null) {
+                this.navCtrl.push(FeedDetailPage, { feed_id: comment_id });
+
+              } else {
+                this.navCtrl.push(FeedDetailPage, { feed_id: id, feed_comment_id: comment_id });
               }
             },
             err => {
@@ -600,7 +599,7 @@ public fabButtonOpened=false;
 
     let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
     if (newValue != "") {
-       val = newValue;
+      val = newValue;
     }
 
     return val.replace(/text-decoration-line/g, "text-decoration");
@@ -873,7 +872,7 @@ public fabButtonOpened=false;
       accessToken => {
 
         if (this.commonMethod.checkNetwork()) {
-          this.foundRepos[index].inProgress = true; 
+          this.foundRepos[index].inProgress = true;
           this.commonMethod.postDataWithoutLoder(createAcknowledgementUrl, objData, accessToken).subscribe(
             data => {
               //let res=data.json();
@@ -1077,193 +1076,191 @@ public fabButtonOpened=false;
   }
 
   snooze(index) {
-        let alertVar = this.alertCtrl.create({
-          title: 'Error!',
-          subTitle: 'Invalid Details!',
-          buttons: ['OK']
-        });
-        let objData = {'mention_ids': [this.foundRepos[index].mention_id] };
-        this.nativeStorage.getItem('user_auth').then(
-          accessToken => {
-            if (this.commonMethod.checkNetwork()) {
-              this.tempFoundRepos[index].snoozeInProgress = true;
-              this.foundRepos[index].snoozeInProgress = true;
-              this.commonMethod.putDataWithoutLoder(snoozeMentionUrl, objData, accessToken).subscribe(
-                data => {
-                  this.foundRepos[index].snoozed = true;
-                  this.tempFoundRepos[index].snoozed = true;
-                  this.foundRepos[index].snoozeInProgress = false;
-                  this.tempFoundRepos[index].snoozeInProgress = false;
-                  this.isAllSnooze();
-                  //alert(data.json());
-                },
-                err => {
-                  this.foundRepos[index].snoozeInProgress = false;
-                  this.tempFoundRepos[index].snoozeInProgress = false;
-                  console.log("Error 1: " + JSON.stringify(err.json()));
-                },
-                () => {
-                  console.log('getData completed');
-                }
-              );
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+    let objData = { 'mention_ids': [this.foundRepos[index].mention_id] };
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.tempFoundRepos[index].snoozeInProgress = true;
+          this.foundRepos[index].snoozeInProgress = true;
+          this.commonMethod.putDataWithoutLoder(snoozeMentionUrl, objData, accessToken).subscribe(
+            data => {
+              this.foundRepos[index].snoozed = true;
+              this.tempFoundRepos[index].snoozed = true;
+              this.foundRepos[index].snoozeInProgress = false;
+              this.tempFoundRepos[index].snoozeInProgress = false;
+              this.isAllSnooze();
+              //alert(data.json());
+            },
+            err => {
+              this.foundRepos[index].snoozeInProgress = false;
+              this.tempFoundRepos[index].snoozeInProgress = false;
+              console.log("Error 1: " + JSON.stringify(err.json()));
+            },
+            () => {
+              console.log('getData completed');
             }
-            else {
-              this.commonMethod.showNetworkError();
-            }
-          },
-          error => {
-            return '';
-          }
-        );
-      }
-
-      unsnoozeAll() {
-        let alertVar = this.alertCtrl.create({
-          title: 'Error!',
-          subTitle: 'Invalid Details!',
-          buttons: ['OK']
-        });
-        let objData = {};
-        this.nativeStorage.getItem('user_auth').then(
-          accessToken => {
-            if (this.commonMethod.checkNetwork()) {
-              this.commonMethod.putData(unsnoozeMentionUrl, objData, accessToken).subscribe(
-                data => {
-                  this.callMyMentions();
-                  //alert(data.json());
-                },
-                err => {
-                  this.commonMethod.hideLoader();
-                  console.log("Error 1: " + JSON.stringify(err.json()));
-                },
-                () => {
-                  this.commonMethod.hideLoader();
-                  console.log('getData completed');
-                }
-              );
-            }
-            else {
-              this.commonMethod.showNetworkError();
-            }
-          },
-          error => {
-            return '';
-          }
-        );
-      }
-
-      unsnooze(index) {
-        let alertVar = this.alertCtrl.create({
-          title: 'Error!',
-          subTitle: 'Invalid Details!',
-          buttons: ['OK']
-        });
-        let objData = {'mention_ids': [this.foundRepos[index].mention_id] };
-        this.nativeStorage.getItem('user_auth').then(
-          accessToken => {
-            if (this.commonMethod.checkNetwork()) {
-              this.foundRepos[index].unsnoozeInProgress = true;
-              this.tempFoundRepos[index].unsnoozeInProgress = true;
-              this.commonMethod.putDataWithoutLoder(unsnoozeMentionUrl, objData, accessToken).subscribe(
-                data => {
-                  this.foundRepos[index].snoozed = false;
-                  this.tempFoundRepos[index].snoozed = false;
-                  this.foundRepos[index].unsnoozeInProgress = false;
-                  this.tempFoundRepos[index].unsnoozeInProgress = false;
-                  this.isAllSnooze();
-                  //alert(data.json());
-                },
-                err => {
-                  this.foundRepos[index].unsnoozeInProgress = false;
-                  this.tempFoundRepos[index].unsnoozeInProgress = false;
-                  console.log("Error 1: " + JSON.stringify(err.json()));
-                },
-                () => {
-                  console.log('getData completed');
-                }
-              );
-            }
-            else {
-              this.commonMethod.showNetworkError();
-            }
-          },
-          error => {
-            return '';
-          }
-        );
-      }
-
-      isAllSnooze()
-      {
-        this.snoozeAllStatus=true;
-        for (let i = 0; i < this.tempFoundRepos.length; i++) {
-          if(this.tempFoundRepos[i].snoozed==false)
-          {
-            this.snoozeAllStatus=false;
-          }
+          );
         }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+      },
+      error => {
+        return '';
       }
+    );
+  }
 
-      broadcastList() {
-        let modal = this.modalCtrl.create(BroadcastListPage);
-        modal.onDidDismiss(data => {
-          //this.callTodaysFeedInBackground();
-        });
-        modal.present();
+  unsnoozeAll() {
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+    let objData = {};
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.putData(unsnoozeMentionUrl, objData, accessToken).subscribe(
+            data => {
+              this.callMyMentions();
+              //alert(data.json());
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              console.log("Error 1: " + JSON.stringify(err.json()));
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+      },
+      error => {
+        return '';
       }
+    );
+  }
+
+  unsnooze(index) {
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+    let objData = { 'mention_ids': [this.foundRepos[index].mention_id] };
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.foundRepos[index].unsnoozeInProgress = true;
+          this.tempFoundRepos[index].unsnoozeInProgress = true;
+          this.commonMethod.putDataWithoutLoder(unsnoozeMentionUrl, objData, accessToken).subscribe(
+            data => {
+              this.foundRepos[index].snoozed = false;
+              this.tempFoundRepos[index].snoozed = false;
+              this.foundRepos[index].unsnoozeInProgress = false;
+              this.tempFoundRepos[index].unsnoozeInProgress = false;
+              this.isAllSnooze();
+              //alert(data.json());
+            },
+            err => {
+              this.foundRepos[index].unsnoozeInProgress = false;
+              this.tempFoundRepos[index].unsnoozeInProgress = false;
+              console.log("Error 1: " + JSON.stringify(err.json()));
+            },
+            () => {
+              console.log('getData completed');
+            }
+          );
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+      },
+      error => {
+        return '';
+      }
+    );
+  }
+
+  isAllSnooze() {
+    this.snoozeAllStatus = true;
+    for (let i = 0; i < this.tempFoundRepos.length; i++) {
+      if (this.tempFoundRepos[i].snoozed == false) {
+        this.snoozeAllStatus = false;
+      }
+    }
+  }
+
+  broadcastList() {
+    let modal = this.modalCtrl.create(BroadcastListPage);
+    modal.onDidDismiss(data => {
+      //this.callTodaysFeedInBackground();
+    });
+    modal.present();
+  }
 
 
-      createFeedQuick(fab?: FabContainer){
-        if (fab !== undefined) {
-          fab.close();
-        }
-        this.fabButtonOpened=false;
-        this.createFeed();
-      }
-    
-      createWorkOrderQuick(fab?: FabContainer){
-        if (fab !== undefined) {
-          fab.close();
-        }
-        this.fabButtonOpened=false;
-        this.createWorkOrder('','','','','');
-      }
-    
-      sendMessage(fab?: FabContainer){
-        if (fab !== undefined) {
-          fab.close();
-        }
-        this.fabButtonOpened=false;
-        let modal = this.modalCtrl.create(SendMessagePage);
-        modal.onDidDismiss(data => {
-          this.closekeyboard();
-        });
-        modal.present();
-      }
-    
-      openFabButton(){
-        if(this.fabButtonOpened==false){
-            this.fabButtonOpened=true;
-        }else{
-            this.fabButtonOpened=false;
-        }
-      }
-    
-      createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
-        let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
-        modal.onDidDismiss(data => {
-          this.closekeyboard();
-        });
-        modal.present();
-      }
-    
-      createFeed() {
-        //console.log('create feed call');
-        this.navCtrl.push(CreateFeedsPage);
-      }
-      closekeyboard() {
-        this.keyboard.close();
-      }
+  createFeedQuick(fab?: FabContainer) {
+    if (fab !== undefined) {
+      fab.close();
+    }
+    this.fabButtonOpened = false;
+    this.createFeed();
+  }
+
+  createWorkOrderQuick(fab?: FabContainer) {
+    if (fab !== undefined) {
+      fab.close();
+    }
+    this.fabButtonOpened = false;
+    this.createWorkOrder('', '', '', '', '');
+  }
+
+  sendMessage(fab?: FabContainer) {
+    if (fab !== undefined) {
+      fab.close();
+    }
+    this.fabButtonOpened = false;
+    let modal = this.modalCtrl.create(SendMessagePage);
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+    });
+    modal.present();
+  }
+
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
+    }
+  }
+
+  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+    });
+    modal.present();
+  }
+
+  createFeed() {
+    //console.log('create feed call');
+    this.navCtrl.push(CreateFeedsPage);
+  }
+  closekeyboard() {
+    this.keyboard.close();
+  }
 
 
 }
