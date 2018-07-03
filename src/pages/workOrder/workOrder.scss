@@ -491,9 +491,10 @@ page-workOrder {
         flex: 1;
         padding: 0 6px;
         width: 0;
-        height: 3.5rem; //border-right-width: 0.8px;
-        //border-right-style: solid;
-        //border-right-color: #aeaeae;
+        height: 3.5rem;
+        border-right-width: 0.8px;
+        border-right-style: solid;
+        border-right-color: #aeaeae;
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 4rem;

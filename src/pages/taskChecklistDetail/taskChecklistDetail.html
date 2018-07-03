@@ -1,10 +1,10 @@
 <ion-header id="header_box">
   <ion-navbar>
-    <ion-title [ngClass]="(reviewMode && canUpdateReview)?'title_with_comment_btn':''">{{pageTitle}}</ion-title>
-    <span *ngIf="reviewMode && canUpdateReview" (click)="addReviewComment(taskListData.id)" class="comment_btn">Comment</span>
+    <ion-title>{{pageTitle}}</ion-title>
+    <ion-buttons right>
+      <button ion-button *ngIf="reviewMode && canUpdateReview" (click)="addReviewComment(taskListData.id)">Comment</button>
+    </ion-buttons>
   </ion-navbar>
-  <!-- <span *ngIf="!showDetails"><span (click)="showTaskDetail()" class="show_btn">Show Details</span></span>
-  <span *ngIf="showDetails"><span (click)="hideTaskDetail()" class="show_btn">Hide Details</span></span> -->
 </ion-header>
 
 <ion-content padding no-bounce [ngClass]="isPopupOpen?'open-popup':''">

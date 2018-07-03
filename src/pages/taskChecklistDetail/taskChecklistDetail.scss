@@ -11,15 +11,15 @@ page-taskChecklistDetail {
     // .toolbar-md ion-title {
     //     //padding: 0 25% 1px 0px;
     // }
-    .toolbar-title-ios,
-    .toolbar-title-md {
-        // font-size: 15px;
-        letter-spacing: 2px;
-        color: #808080;
-        text-align: left;
-        width: 100%;
-        margin-left: 0px;
-    }
+    // .toolbar-title-ios,
+    // .toolbar-title-md {
+    //     // font-size: 15px;
+    //     letter-spacing: 2px;
+    //     color: #808080;
+    //     text-align: left;
+    //     width: 100%;
+    //     margin-left: 0px;
+    // }
     .item-ios-light,
     .item-divider-ios-light,
     .item-md-light,
@@ -285,21 +285,20 @@ page-taskChecklistDetail {
     }
     .sub_items_box {
         padding-right: 5px !important;
-    }
-    .comment_btn {
-        float: right;
-        height: 23px;
-        position: absolute;
-        color: #02B9E7 !important;
-        top: 32%;
-        margin: 0px 0% 0px 64%;
-        letter-spacing: 0.5px;
-        background-color: transparent;
-        font-size: 1.6rem;
-    }
-    .comment_btn:active {
-        opacity: 0.5;
-    }
+    } // .comment_btn {
+    //     float: right;
+    //     height: 23px;
+    //     position: absolute;
+    //     color: #02B9E7 !important;
+    //     top: 32%;
+    //     margin: 0px 0% 0px 64%;
+    //     letter-spacing: 0.5px;
+    //     background-color: transparent;
+    //     font-size: 1.6rem;
+    // }
+    // .comment_btn:active {
+    //     opacity: 0.5;
+    // }
     .incomplete {
         color: #fff;
         padding: 3px 6px;
@@ -406,10 +405,9 @@ page-taskChecklistDetail {
     .comment_box .label-ios,
     .comment_box .label-md {
         margin: 0px 0px 0px 0px;
-    }
-    .title_with_comment_btn .toolbar-title {
-        width: 85%;
-    }
+    } // .title_with_comment_btn .toolbar-title {
+    //     width: 85%;
+    // }
     .api_loader {
         padding-top: 15px;
         position: absolute;
