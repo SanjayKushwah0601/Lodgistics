@@ -675,7 +675,6 @@ ion-footer ion-col.active {
     text-transform: capitalize !important;
 }
 
-//
 .reply_msg_alert .alert-message {
     max-height: initial;
     padding: 0 5px 0px !important;
@@ -1464,7 +1463,6 @@ ion-fab-list[side=top]:active {
     color: red;
 }
 
-// .notification_btn_side_menu ion-toggle .toggle-checked{background-color: #32db64;}
 ion-menu .hint_text_label {
     padding: 5px 0px;
     font-size: 14px;
@@ -1507,6 +1505,14 @@ ion-menu div.scroll-content {
     font-size: 1.7rem;
     font-family: inherit;
     font-weight: 600;
+}
+
+.notification_btn_side_menu ion-toggle .toggle-checked {
+    background-color: #32db64;
+}
+
+.toggle-md .toggle-checked .toggle-inner {
+    background-color: #fff;
 }
 
 .email_support_icon {
