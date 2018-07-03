@@ -70,31 +70,35 @@ export class CreateHotelPage {
 
     getHotels() {
 
-        this.formData.name = this.formData.name.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/]/gi, '');
-        if (this.formData.name.trim() != "") {
-            let url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + encodeURI(this.formData.name.trim()) + "+lodging+in+US&key=AIzaSyC-G-qKL13oH9EG6-IqJz-FYCQ6f9r9svs";
-            console.log("url =" + url);
-            this.http.get(url, {}, {})
-                .then(data => {
-                    console.log(data.status);
-                    //console.log(data.data); // data received by server
-                    console.log(data.headers);
-                    console.log(data.data);
-                    let temp = JSON.parse(data.data);
-                    this.hotelsData = temp.results;
-                    this.showList = true;
-                })
-                .catch(error => {
-                    console.error(error.status);
-                    console.error(error.error); // error message as string
-                    console.error(error.headers);
-                });
-        }
-        else {
-            this.hotelsData = {};
-            this.showList = false;
-        }
+        setTimeout(() => {
 
+            this.formData.name = this.formData.name.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/]/gi, '');
+            if (this.formData.name.trim() != "") {
+                let url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + encodeURI(this.formData.name.trim()) + "+lodging+in+US&key=AIzaSyC-G-qKL13oH9EG6-IqJz-FYCQ6f9r9svs";
+                console.log("url =" + url);
+                this.http.get(url, {}, {})
+                    .then(data => {
+                        console.log(data.status);
+                        //console.log(data.data); // data received by server
+                        console.log(data.headers);
+                        console.log(data.data);
+                        if (this.formData.name != '') {
+                            let temp = JSON.parse(data.data);
+                            this.hotelsData = temp.results;
+                            this.showList = true;
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error.status);
+                        console.error(error.error); // error message as string
+                        console.error(error.headers);
+                    });
+            }
+            else {
+                this.hotelsData = {};
+                this.showList = false;
+            }
+        }, 300);
     }
 
     selectHotel(row) {
