@@ -197,8 +197,8 @@
       <span class="counting counting_iphone_x">@
         <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label>
       </span>
-      <ion-scroll scrollX="true">
-        <ul class="results">
+      <ion-scroll scrollX="true" style="min-height: 56px;">
+        <ul nowrap class="results">
           <li *ngFor="let memberInfo of mentionMembers" (tap)="selectUser($event,memberInfo,'false')" [ngClass]="showSelected(memberInfo.id)?'selected':''">
             <span>
               <img src="{{memberInfo.avatar.url}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />

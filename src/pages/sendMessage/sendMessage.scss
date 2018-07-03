@@ -544,7 +544,11 @@ page-sendMessage {
         height: 20px !important;
     }
     .counting_iphone_x {
-        margin-top: -22px !important;
+        margin-top: 3px !important;
+    }
+    ion-scroll.scroll-x .scroll-content {
+        overflow-x: auto;
+        min-height: 56px !important;
     }
     @media(max-width:749px) {
         textarea {
