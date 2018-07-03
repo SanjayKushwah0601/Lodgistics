@@ -52,15 +52,15 @@
     <ion-segment [(ngModel)]="selectedTab">
       <ion-segment-button value="h" (tap)="selectTab('h')">
         High Priority
-        <span class="segment_badge">{{total.high}}</span>
+        <span [ngClass]="selectedTab == 'h'?'segment_badge':'segment_badge1'">{{total.high}}</span>
       </ion-segment-button>
       <ion-segment-button value="m" (tap)="selectTab('m')">
         Medium Priority
-        <span class="segment_badge">{{total.medium}}</span>
+        <span [ngClass]="selectedTab == 'm'?'segment_badge':'segment_badge1'">{{total.medium}}</span>
       </ion-segment-button>
       <ion-segment-button value="l" (tap)="selectTab('l')">
         Low Priority
-        <span class="segment_badge">{{total.low}}</span>
+        <span [ngClass]="selectedTab == 'l'?'segment_badge':'segment_badge1'">{{total.low}}</span>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
