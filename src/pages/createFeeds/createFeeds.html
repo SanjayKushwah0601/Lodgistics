@@ -2,9 +2,10 @@
   <ion-navbar>
 
     <ion-title (click)="closekeyboard()">CREATE NEW POST</ion-title>
-    <button ion-button (click)="!apiInProgress?createFeedPost(feedForm.value):''" [disabled]="apiInProgress || !feedText.trim()" class="post-feed">
-        <ion-spinner class="api_loader_spinner" *ngIf="apiInProgress" name="bubbles"></ion-spinner>
-        <span *ngIf="!apiInProgress">Post</span>
+    <button ion-button (click)="!apiInProgress?createFeedPost(feedForm.value):''" [disabled]="apiInProgress || !feedText.trim()"
+      class="post-feed">
+      <ion-spinner class="api_loader_spinner" *ngIf="apiInProgress" name="bubbles"></ion-spinner>
+      <span *ngIf="!apiInProgress">Post</span>
     </button>
   </ion-navbar>
 
@@ -23,10 +24,10 @@
 <ion-content padding [attr.noScroll]="shouldScroll">
 
   <!-- <ion-label style="min-height:40px;margin:0px;" (tap)="closekeyboard()"></ion-label> -->
- 
+
   <form [formGroup]="feedForm">
 
-      <!-- <ion-grid *ngIf="showMentions" class="mentions_list_grid">
+    <!-- <ion-grid *ngIf="showMentions" class="mentions_list_grid">
           <ion-row>
             <ion-col col-9>
                 
@@ -45,13 +46,15 @@
 
 
     <ion-grid>
-        <ion-row>
-            <ion-col col-12>
-              <ion-textarea class="title_textarea" (focus)="isFocusOnTitleInput = true" (blur)="isFocusOnTitleInput = false" placeholder="ADD TITLE HERE" formControlName="title" [(ngModel)]="feedTitle" type="text" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="characters" class="title_textarea"></ion-textarea>
+      <ion-row>
+        <ion-col col-12>
+          <ion-textarea class="title_textarea" (focus)="isFocusOnTitleInput = true" (blur)="isFocusOnTitleInput = false" placeholder="ADD TITLE HERE"
+            formControlName="title" [(ngModel)]="feedTitle" type="text" autocomplete="off" autocorrect="on" spellcheck="on"
+            autocapitalize="characters" class="title_textarea"></ion-textarea>
 
-                <!-- <ion-input (focus)="isFocusOnTitleInput = true" (blur)="isFocusOnTitleInput = false" placeholder="Add Title here" formControlName="title" [(ngModel)]="feedTitle" type="text" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" ></ion-input> -->
-            </ion-col>
-          </ion-row>
+          <!-- <ion-input (focus)="isFocusOnTitleInput = true" (blur)="isFocusOnTitleInput = false" placeholder="Add Title here" formControlName="title" [(ngModel)]="feedTitle" type="text" autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" ></ion-input> -->
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col col-12>
           <textarea autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" [style.height.px]="deviceHeight-(imageHeight+100)"
@@ -67,14 +70,14 @@
               <td class="column-15-per" tappable (click)="closekeyboard()"></td>
               <td class="image-div">
                 <span class="close-icon-box">
-      
-        <img class="group-img-avatar" src="{{base64Image}}" (click)="shoOverlay()"/>
-        <div class="overlay1" *ngIf="showOverlay"></div>
-        <div class="overlay" *ngIf="showOverlay">
-          <ion-icon class="close-icon" ios="ios-close" md="md-close" (click)="removeImage()" ></ion-icon>
-        </div>
-        
-      </span>
+
+                  <img class="group-img-avatar" src="{{base64Image}}" (click)="shoOverlay()" />
+                  <div class="overlay1" *ngIf="showOverlay"></div>
+                  <div class="overlay" *ngIf="showOverlay">
+                    <ion-icon class="close-icon" ios="ios-close" md="md-close" (click)="removeImage()"></ion-icon>
+                  </div>
+
+                </span>
               </td>
               <td class="column-15-per" tappable (click)="closekeyboard()"></td>
             </tr>
@@ -96,18 +99,26 @@
 
   <ion-toolbar position="bottom">
 
-  <span class="scroll-ion">
-  <span class="counting counting_iphone_x">@ <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label></span>
-  <ion-scroll scrollX="true">
-    <ul class="results">
-      <li *ngFor="let memberInfo of mentionMembers" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''"><span><img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''"/></span>        <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label></li>
-      <li *ngIf="members.length>2" style="padding-left: 5px;" (mousedown)="(this.mentionUsers.length != members.length)?selectAllMention($event,true):selectAllMention($event,false)"
-        [ngClass]="(mentionUsers.length == members.length)?'selected':''">
-        <label style="font-weight:600;">ALL</label></li>
-    </ul>
-  </ion-scroll>
-  </span>
+    <span class="scroll-ion">
+      <span class="counting counting_iphone_x">@
+        <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label>
+      </span>
+      <ion-scroll scrollX="true">
+        <ul class="results">
+          <li *ngFor="let memberInfo of mentionMembers" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+            <span>
+              <img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
+            </span>
+            <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
+          </li>
+          <li *ngIf="members.length>2" style="padding-left: 5px;" (mousedown)="(this.mentionUsers.length != members.length)?selectAllMention($event,true):selectAllMention($event,false)"
+            [ngClass]="(mentionUsers.length == members.length)?'selected':''">
+            <label style="font-weight:600;">ALL</label>
+          </li>
+        </ul>
+      </ion-scroll>
+    </span>
   </ion-toolbar>
-  
+
 
 </ion-footer>

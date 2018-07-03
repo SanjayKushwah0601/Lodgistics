@@ -1,4 +1,4 @@
-<div id="ListBackdrop" *ngIf="fabButtonOpened"></div> 
+<div id="ListBackdrop" *ngIf="fabButtonOpened"></div>
 <ion-header>
   <ion-navbar>
 
@@ -6,10 +6,10 @@
       <span (tap)="broadcastList()">
         <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
         <span class="broadcast_btn">
-            <img src="assets/img/broadcost-red-icon.png" />
-          </span>
+          <img src="assets/img/broadcost-red-icon.png" />
+        </span>
         ({{broadcast_count}})</span>
-    </span> 
+    </span>
 
     <button ion-button menuToggle end>
       <ion-icon name="menu"></ion-icon>
@@ -28,7 +28,7 @@
           </form>
         </ion-col>
         <ion-col col-2 center class="no-border">
-          <ion-icon *ngIf="searchQuery.trim()!=''" ios="ios-close" md="md-close" (click)="closeSearch()"></ion-icon>
+          <ion-icon class="remove_icon" *ngIf="searchQuery.trim()!=''" ios="ios-close" md="md-close" (click)="closeSearch()"></ion-icon>
         </ion-col>
       </ion-row>
       <!--<form (ngSubmit)="getItems($event)"><ion-searchbar class="searchbar-style"  [showCancelButton]="true" cancelButtonText="" (ionCancel)="closeFilter()" (ionClear)="closeFilter()"></ion-searchbar></form>-->
@@ -53,13 +53,16 @@
 <ion-content padding (click)="closekeyboard()" [ngClass]="showGroupList && !initWithPrivate?'':'scroll-content-private'">
   <span *ngIf="searchQuery.trim()==''">
     <ion-card style="width:100%;margin:0px;">
-<!--<div class="accord-bar">
+      <!--<div class="accord-bar">
   <div class="groups-tab"><span [ngClass]="showGroupList?'active':''" (click)="toggleDetails(true,false)">GROUPS <label class="user_count">({{foundRepos.groups.length}})</label></span>
   <span [ngClass]="showGroupList?'':'active'" (click)="toggleDetails(false,true)">PRIVATE <label class="user_count">({{totalPrivateUSers}})</label></span></div>
 </div> -->
       <span *ngIf="showGroupList">
 
-<span *ngIf="groupSpinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching records...</span></span>
+        <span *ngIf="groupSpinner" class="api_loader">
+          <ion-spinner name="bubbles"></ion-spinner>
+          <span class="api_loader_text">Fetching records...</span>
+        </span>
         <!-- <div class="accord-bar text-left" (click)="createGroup()"><ion-icon name="add" class="icon-add"></ion-icon><span class="head head_left">Create New Group</span>  </div> -->
         <span *ngIf="foundRepos && !groupSpinner">
           <span *ngFor="let res of foundRepos.groups; let i=index" id="{{i}}" id="grouplistitems">
@@ -96,7 +99,10 @@
       <ion-icon *ngIf="!showIndividualList" name="arrow-down" class="icon-arrow-down" (click)="toggleDetails(false,true)"></ion-icon>
     </div>-->
       <span *ngIf="showIndividualList">
-<span *ngIf="privateSpinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching records...</span></span>
+        <span *ngIf="privateSpinner" class="api_loader">
+          <ion-spinner name="bubbles"></ion-spinner>
+          <span class="api_loader_text">Fetching records...</span>
+        </span>
         <span *ngIf="foundRepos && !privateSpinner">
           <span *ngFor="let res of foundRepos.privates; let i=index">
             <ion-item *ngIf="!res.is_system_user" (click)="goToPrivateChat(res)">
@@ -155,18 +161,38 @@
     <!--<div *ngIf="searchDataResponse.length<=0" class="no-result" text-center>No Result(s) Found</div>-->
   </span>
 
-  <ion-fab bottom center edge #fab [ngClass]="showGroupList?'footer_fab_box':'footer_fab_box feb_btn_on_private'" >
-      <button ion-fab class="btn_feb_add" (click)="openFabButton()"><ion-icon class="fab_btn" name="add"></ion-icon></button>
-      <ion-fab-list side="top">
-        <span (click)="createFeedQuick(fab)"><button ion-fab><ion-icon name="ios-create-outline"></ion-icon></button><div class="label">New<br/>Post</div></span>
-      </ion-fab-list>
-      <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
-        <span (click)="createWorkOrderQuick(fab)"><button ion-fab><ion-icon name="ios-construct-outline"></ion-icon></button><div class="label">New<br/>WO</div></span>
-      </ion-fab-list>
-      <ion-fab-list side="right">
-        <span (click)="sendMessage(fab)"><button ion-fab><ion-icon name="ios-chatboxes-outline"></ion-icon></button><div class="label">New<br/>Message</div></span>
-      </ion-fab-list>
-    </ion-fab>
+  <ion-fab bottom center edge #fab [ngClass]="showGroupList?'footer_fab_box':'footer_fab_box feb_btn_on_private'">
+    <button ion-fab class="btn_feb_add" (click)="openFabButton()">
+      <ion-icon class="fab_btn" name="add"></ion-icon>
+    </button>
+    <ion-fab-list side="top">
+      <span (click)="createFeedQuick(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-create-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>Post</div>
+      </span>
+    </ion-fab-list>
+    <ion-fab-list side="left" *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create">
+      <span (click)="createWorkOrderQuick(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-construct-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>WO</div>
+      </span>
+    </ion-fab-list>
+    <ion-fab-list side="right">
+      <span (click)="sendMessage(fab)">
+        <button ion-fab>
+          <ion-icon name="ios-chatboxes-outline"></ion-icon>
+        </button>
+        <div class="label">New
+          <br/>Message</div>
+      </span>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>
 <ion-footer>
@@ -181,19 +207,19 @@
         <ion-icon name="ios-chatboxes-outline"></ion-icon>
       </ion-col>
       <ion-col col-2.4 class="bottom-menu">
-          <!-- space for fab button -->
-        </ion-col>
+        <!-- space for fab button -->
+      </ion-col>
       <ion-col col-2.4 (click)="openWOPage()" class="bottom-menu">
         <span *ngIf="woNotificationCount>0" class="footer_badge"></span>
-    <ion-icon name="ios-construct-outline"></ion-icon>
-  </ion-col>  
+        <ion-icon name="ios-construct-outline"></ion-icon>
+      </ion-col>
       <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
         <ion-icon name="ios-list-outline"></ion-icon>
       </ion-col>
       <!-- <ion-col col-2.4 (click)="openMyMentionPage()" class="bottom-menu">
         <ion-icon name="ios-at"></ion-icon>
       </ion-col> -->
-        
+
     </ion-row>
     <ion-row *ngIf="!userPermissions.wo_access.view_listing">
       <ion-col col-2.4 (click)="openFeedPage()" class="bottom-menu">
@@ -205,15 +231,15 @@
         <ion-icon name="ios-chatboxes-outline"></ion-icon>
       </ion-col>
       <ion-col col-2.4 class="bottom-menu">
-          <!-- space for fab button -->
-        </ion-col>
+        <!-- space for fab button -->
+      </ion-col>
       <ion-col col-2.4 (click)="openTaskChecklistPage()" class="bottom-menu list_footer_tab">
         <ion-icon name="ios-list-outline"></ion-icon>
       </ion-col>
       <ion-col col-2.4 (click)="openMyMentionPage()" class="bottom-menu">
         <ion-icon name="ios-at-outline"></ion-icon>
       </ion-col>
-        
+
     </ion-row>
   </ion-grid>
 

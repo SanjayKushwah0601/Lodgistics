@@ -97,45 +97,6 @@ page-createFollowUp {
         border-width: 1px 1px 1px 1px;
         border-style: solid;
         margin-top: 0px;
-    } //iPhone 5 & 5S in portrait & landscape
-    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-        td {
-            width: 50%;
-            padding-top: 1.2%;
-        }
-        .close-icon {
-            margin-top: -10.5%;
-            margin-right: -3.2%;
-        }
-        .box {
-            top: calc(55% - (600px/2));
-        }
-    } //iPhone 6 in portrait & landscape
-    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
-        td {
-            width: 50%;
-            padding-top: 3.1%;
-        }
-        .close-icon {
-            margin-top: -8.8%;
-            margin-right: -2.6%;
-        }
-        .box {
-            top: calc(50% - (600px/2));
-        }
-    } //iPhone 6+
-    @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
-        td {
-            width: 50%;
-            padding-top: 5%;
-        }
-        .close-icon {
-            margin-top: -8.2%;
-            margin-right: -2.4%;
-        }
-        .box {
-            top: calc(50% - (600px/2));
-        }
     } //iPhone X
     @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
         td {
@@ -149,32 +110,6 @@ page-createFollowUp {
         .box {
             top: calc(50% - (600px/2));
         }
-    } //iPhone 8
-    @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
-        td {
-            width: 50%;
-            padding-top: 3.1%;
-        }
-        .close-icon {
-            margin-top: -8.8%;
-            margin-right: -2.6%;
-        }
-        .box {
-            top: calc(50% - (600px/2));
-        }
-    } //iPhone 8 Plus
-    @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
-        td {
-            width: 50%;
-            padding-top: 5%;
-        }
-        .close-icon {
-            margin-top: -8.2%;
-            margin-right: -2.4%;
-        }
-        .box {
-            top: calc(50% - (600px/2));
-        }
     }
     ion-calendar .title .back,
     ion-calendar .title .forward {
@@ -182,5 +117,17 @@ page-createFollowUp {
     }
     ion-calendar .title .switch-btn {
         background-color: transparent;
+    } //s7 device
+    @media only screen and (-webkit-min-device-pixel-ratio: 4) and (min-device-width: 360px) and (max-device-width: 640px) {
+        .close-icon {
+            margin-top: -3.8%;
+            margin-right: 1%;
+        }
+    } // pixel
+    @media only screen and (min-width: 411px) and (max-width: 767px) {
+        .close-icon {
+            margin-top: -3.8%;
+            margin-right: 1%;
+        }
     }
 }

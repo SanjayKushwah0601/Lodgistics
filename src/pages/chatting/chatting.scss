@@ -214,6 +214,12 @@ page-chatting {
     .no-border {
         border-left: none !important;
     }
+    .remove_icon {
+        font-size: 1.5em !important;
+        margin-right: 20%;
+        margin-top: 12%;
+        float: right;
+    }
     .search-res-text {
         background-color: transparent;
         padding-left: 26px;
@@ -670,8 +676,7 @@ page-chatting {
     .ion-md-close {
         color: #AEAEAE;
         font-size: 0.5em;
-    }
-    // ion-fab[bottom].footer_fab_box {
+    } // ion-fab[bottom].footer_fab_box {
     //     bottom: -10.7%;
     // }
     .footer_fab_box {

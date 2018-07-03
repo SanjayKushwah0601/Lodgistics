@@ -1,4 +1,4 @@
-import { Component, NgZone,ViewChild, ElementRef } from '@angular/core';
+import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
@@ -21,30 +21,30 @@ import { removeMessageConfirmMsg } from '../../providers/appConfig';
 export class SendMessagePage {
   //@ViewChild('myInput') myInput: ElementRef;
   @ViewChild('myInput') myInput;
-  
+
   public messageText = "";
   public base64Image = "";
   public actionSheet: any;
   private showOverlay = false;
-  public foundRepos:any;
-  public groupIds=[];
-  public userIds=[];
+  public foundRepos: any;
+  public groupIds = [];
+  public userIds = [];
   public userId: any;
-  public allUsers=[];
+  public allUsers = [];
   public classnameForFooter = '';
   public mentionUsers = [];
   public mentionMembers = [];
   public showMentions = false;
   //public members = [];
   public dbMembers = [];
-  public isKeyboardOpen=false;
-  public completeTestService=['aa','ba','ca'];
+  public isKeyboardOpen = false;
+  public completeTestService = ['aa', 'ba', 'ca'];
   public showList = false;
-  public filterUser:any;
-  public filterGroup:any;
-  public searchText="";
+  public filterUser: any;
+  public filterGroup: any;
+  public searchText = "";
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage, public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File, public alertCtrl: AlertController,private sqlite: SQLite) {
+  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage, public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File, public alertCtrl: AlertController, private sqlite: SQLite) {
     this.keyboard.disableScroll(true);
     this.messageText = '';
     this.foundRepos = { groups: [], privates: [] };
@@ -55,7 +55,7 @@ export class SendMessagePage {
     this.keyboard.onKeyboardShow().subscribe(data => {
       console.log('keyboard is shown');
       this.zone.run(() => {
-        this.isKeyboardOpen=true;
+        this.isKeyboardOpen = true;
         if (data.keyboardHeight > 230) {
           this.classnameForFooter = "openKeyboardWithSpellCheck";
         } else {
@@ -71,7 +71,7 @@ export class SendMessagePage {
       console.log('keyboard is hiode');
       this.events.publish('hide:keyboard');
       this.zone.run(() => {
-        this.isKeyboardOpen=false;
+        this.isKeyboardOpen = false;
         //this.deviceHeight = (platform.height() - 150);
         this.classnameForFooter = "closeKeyboard";
       });
@@ -94,9 +94,9 @@ export class SendMessagePage {
   }
 
   send() {
-    if(this.base64Image){
+    if (this.base64Image) {
       this.uploadImageOnAws(this.base64Image);
-    }else{
+    } else {
       this.sendMessage('');
     }
     this.keyboard.close();
@@ -110,10 +110,9 @@ export class SendMessagePage {
     });
   }
 
-  changeModelValue()
-  {
+  changeModelValue() {
     this.zone.run(() => {
-      this.messageText=this.messageText;
+      this.messageText = this.messageText;
     });
   }
 
@@ -125,14 +124,14 @@ export class SendMessagePage {
       });
       this.platform.resume.subscribe(() => {
         console.log("resume");
-        setTimeout(() => { 
-        this.nativeStorage.getItem('notificatio_click').then(
-          click => {
-           if(click.click){
-            this.viewCtrl.dismiss('');
-           }
-          });
-        },2000);
+        setTimeout(() => {
+          this.nativeStorage.getItem('notificatio_click').then(
+            click => {
+              if (click.click) {
+                this.viewCtrl.dismiss('');
+              }
+            });
+        }, 2000);
       });
     });
   }
@@ -212,7 +211,7 @@ export class SendMessagePage {
             data => {
               //this.commonMethod.hideLoader();
               this.foundRepos.privates = data.json();
-              this.filterUser=this.foundRepos.privates;
+              this.filterUser = this.foundRepos.privates;
             },
             err => {
               alertVar.present();
@@ -250,7 +249,7 @@ export class SendMessagePage {
             data => {
               //this.commonMethod.hideLoader();
               this.foundRepos.groups = data.json();
-              this.filterGroup=this.foundRepos.groups;
+              this.filterGroup = this.foundRepos.groups;
             },
             err => {
               alertVar.present();
@@ -279,29 +278,30 @@ export class SendMessagePage {
       title: 'Select a Group',
     });
     for (var i = 0; i < this.foundRepos.groups.length; i++) {
-      let thisObj=this;
-      let name=this.foundRepos.groups[i].chat.name;
+      let thisObj = this;
+      let name = this.foundRepos.groups[i].chat.name;
       //let id=this.departmentsData[i].id;
-      let id=this.foundRepos.groups[i].chat.id;
-      let user_id=this.foundRepos.groups[i].chat.id;
-      let group_users=this.foundRepos.groups[i].chat.users;
+      let id = this.foundRepos.groups[i].chat.id;
+      let user_id = this.foundRepos.groups[i].chat.id;
+      let group_users = this.foundRepos.groups[i].chat.users;
 
-      actionSheet.addButton({ text: name ,handler: () => 
-        { 
-          thisObj.allUsers=[{type:'group',id:id,name:name,user_id:user_id}]; 
+      actionSheet.addButton({
+        text: name, handler: () => {
+          thisObj.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
           thisObj.mentionUsers = [];
-          let tempUsers=[];
+          let tempUsers = [];
 
-          for(let i=0;i<group_users.length;i++){
-            for(let j=0;j<thisObj.dbMembers.length;j++){
-              if(group_users[i].id==thisObj.dbMembers[j].id && group_users[i].id!=thisObj.userId){
-                group_users[i].avatar.url=thisObj.dbMembers[j].image;
+          for (let i = 0; i < group_users.length; i++) {
+            for (let j = 0; j < thisObj.dbMembers.length; j++) {
+              if (group_users[i].id == thisObj.dbMembers[j].id && group_users[i].id != thisObj.userId) {
+                group_users[i].avatar.url = thisObj.dbMembers[j].image;
                 tempUsers.push(group_users[i]);
-              } 
+              }
             }
           }
-          thisObj.mentionMembers=tempUsers;
-      } });
+          thisObj.mentionMembers = tempUsers;
+        }
+      });
     }
     actionSheet.present();
   }
@@ -311,33 +311,34 @@ export class SendMessagePage {
       title: 'Select a User',
     });
     for (var i = 0; i < this.foundRepos.privates.length; i++) {
-      let thisObj=this;
-      let name=this.foundRepos.privates[i].target_user.name;
-      let id=this.foundRepos.privates[i].chat.id;
-      let user_id=this.foundRepos.privates[i].target_user.id;
-      let userInfo=this.foundRepos.privates[i].target_user;
+      let thisObj = this;
+      let name = this.foundRepos.privates[i].target_user.name;
+      let id = this.foundRepos.privates[i].chat.id;
+      let user_id = this.foundRepos.privates[i].target_user.id;
+      let userInfo = this.foundRepos.privates[i].target_user;
 
-      actionSheet.addButton({ text: name ,handler: () => 
-        { 
-          thisObj.allUsers=[{type:'private',id:id,name:name,user_id:user_id}]; 
+      actionSheet.addButton({
+        text: name, handler: () => {
+          thisObj.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
           thisObj.mentionUsers = [];
-          let tempUsers=[];
-            for(let j=0;j<thisObj.dbMembers.length;j++){
-              if(userInfo.id==thisObj.dbMembers[j].id){
-                userInfo.avatar.url=thisObj.dbMembers[j].image;
-                tempUsers.push(userInfo);
-              } 
+          let tempUsers = [];
+          for (let j = 0; j < thisObj.dbMembers.length; j++) {
+            if (userInfo.id == thisObj.dbMembers[j].id) {
+              userInfo.avatar.url = thisObj.dbMembers[j].image;
+              tempUsers.push(userInfo);
             }
-          thisObj.mentionMembers=tempUsers;
-      } });
+          }
+          thisObj.mentionMembers = tempUsers;
+        }
+      });
     }
     actionSheet.present();
   }
 
-  resetSelection(){
+  resetSelection() {
 
-    if(this.mentionUsers.length>0){
-      let alert=this.alertCtrl.create({
+    if (this.mentionUsers.length > 0) {
+      let alert = this.alertCtrl.create({
         message: removeMessageConfirmMsg,
         cssClass: 'confirm-work-order',
         enableBackdropDismiss: false,
@@ -352,21 +353,21 @@ export class SendMessagePage {
             text: 'Yes Remove',
             handler: data => {
               console.log('Yes clicked');
-              this.messageText="";
-              this.allUsers=[]; 
-              this.mentionMembers=[];
+              this.messageText = "";
+              this.allUsers = [];
+              this.mentionMembers = [];
               this.mentionUsers = [];
             }
           }
         ]
       });
       alert.present();
-    }else{
-      this.allUsers=[]; 
-      this.mentionMembers=[];
+    } else {
+      this.allUsers = [];
+      this.mentionMembers = [];
       this.mentionUsers = [];
     }
-    
+
   }
 
 
@@ -374,20 +375,20 @@ export class SendMessagePage {
     this.base64Image = "";
   }
 
-  updateSelection(){
-    this.allUsers=[];
-    let tempStr="<span style='color:#fff !important'>.</span>";
-    if(this.groupIds.length>0){
+  updateSelection() {
+    this.allUsers = [];
+    let tempStr = "<span style='color:#fff !important'>.</span>";
+    if (this.groupIds.length > 0) {
       for (var i = 0; i < this.foundRepos.groups.length; i++) {
-        if( this.groupIds.indexOf(this.foundRepos.groups[i].chat.id)>=0 ){
-          this.allUsers.push({type:'group',id:this.foundRepos.groups[i].chat.id,name:this.foundRepos.groups[i].chat.name.replace(/ /g,'&nbsp;'),user_id:this.foundRepos.groups[i].chat.id}); 
+        if (this.groupIds.indexOf(this.foundRepos.groups[i].chat.id) >= 0) {
+          this.allUsers.push({ type: 'group', id: this.foundRepos.groups[i].chat.id, name: this.foundRepos.groups[i].chat.name.replace(/ /g, '&nbsp;'), user_id: this.foundRepos.groups[i].chat.id });
         }
       }
     }
-    if(this.userIds.length>0){
+    if (this.userIds.length > 0) {
       for (var i = 0; i < this.foundRepos.privates.length; i++) {
-        if(this.userIds.indexOf(this.foundRepos.privates[i].target_user.id)>=0 ){
-          this.allUsers.push({type:'private',id:this.foundRepos.privates[i].chat.id,name:this.foundRepos.privates[i].target_user.name.replace(/ /g,'&nbsp;'),user_id:this.foundRepos.privates[i].target_user.id}); 
+        if (this.userIds.indexOf(this.foundRepos.privates[i].target_user.id) >= 0) {
+          this.allUsers.push({ type: 'private', id: this.foundRepos.privates[i].chat.id, name: this.foundRepos.privates[i].target_user.name.replace(/ /g, '&nbsp;'), user_id: this.foundRepos.privates[i].target_user.id });
         }
       }
     }
@@ -496,16 +497,16 @@ export class SendMessagePage {
 
     let messageText = this.messageText.trim();
 
-    if(this.allUsers.length>0){
+    if (this.allUsers.length > 0) {
 
-      for(let i=0;i<this.allUsers.length;i++){
+      for (let i = 0; i < this.allUsers.length; i++) {
 
-        if(this.allUsers[i].id!=null && this.allUsers[i].id>0){
+        if (this.allUsers[i].id != null && this.allUsers[i].id > 0) {
           let objData = { 'chat_message': { message: messageText, chat_id: this.allUsers[i].id, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: '' } };
           this.sendMsgToUser(objData);
-        }else{
+        } else {
           let objData = { 'chat_message': { message: messageText, chat_id: this.allUsers[i].id, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: '' } };
-          this.createChatChanel(objData,this.allUsers[i].user_id);
+          this.createChatChanel(objData, this.allUsers[i].user_id);
         }
       }
     }
@@ -515,7 +516,7 @@ export class SendMessagePage {
 
   }
 
-  sendMsgToUser(objData){
+  sendMsgToUser(objData) {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
@@ -543,14 +544,14 @@ export class SendMessagePage {
     );
   }
 
-  createChatChanel(objData,user_id) {
+  createChatChanel(objData, user_id) {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
       buttons: ['OK']
     });
 
-    let objData1 = { 'chat': { 'user_ids': [this.userId,user_id], 'is_private': true } };
+    let objData1 = { 'chat': { 'user_ids': [this.userId, user_id], 'is_private': true } };
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
 
@@ -558,7 +559,7 @@ export class SendMessagePage {
           this.commonMethod.postData(addEditGroupUrl, objData1, accessToken).subscribe(
             data => {
               let chanelCreateData = data.json();
-              objData.chat_message.chat_id=chanelCreateData.id;
+              objData.chat_message.chat_id = chanelCreateData.id;
               this.sendMsgToUser(objData);
             },
             err => {
@@ -790,21 +791,21 @@ export class SendMessagePage {
     }
   }
 
-  getUsers(){
-    this.showList=true;
+  getUsers() {
+    this.showList = true;
     //console.log(this.foundRepos.groups.length);
     //console.log(this.foundRepos.privates.length);
-    this.filterGroup=this.getFilteredList(this.foundRepos.groups);
-    this.filterUser=this.getFilteredList(this.foundRepos.privates);
+    this.filterGroup = this.getFilteredList(this.foundRepos.groups);
+    this.filterUser = this.getFilteredList(this.foundRepos.privates);
   }
 
   getFilteredList(data) {
     //alert(data.length);
-    this.searchText=this.searchText.trim();
-    if (this.searchText && this.searchText!='') {
+    this.searchText = this.searchText.trim();
+    if (this.searchText && this.searchText != '') {
       var lsearchText = this.searchText.toLowerCase();
       return data.filter((a) =>
-        a.chat.name.toLowerCase().includes(lsearchText) 
+        a.chat.name.toLowerCase().includes(lsearchText)
       );
       // let res=[];
       // for (let i = 0; i < data.length; i++) {
@@ -816,60 +817,60 @@ export class SendMessagePage {
       // return res;
     }
     return data;
-}
+  }
 
-selectUserFromList(name,id,user_id,userInfo){
-      // let name=this.foundRepos.privates[i].target_user.name;
-      // let id=this.foundRepos.privates[i].chat.id;
-      // let user_id=this.foundRepos.privates[i].target_user.id;
-      // let userInfo=this.foundRepos.privates[i].target_user;
-  this.allUsers=[{type:'private',id:id,name:name,user_id:user_id}]; 
-  this.mentionUsers = [];
-  let tempUsers=[];
-    for(let j=0;j<this.dbMembers.length;j++){
-      if(userInfo.id==this.dbMembers[j].id){
-        userInfo.avatar.url=this.dbMembers[j].image;
+  selectUserFromList(name, id, user_id, userInfo) {
+    // let name=this.foundRepos.privates[i].target_user.name;
+    // let id=this.foundRepos.privates[i].chat.id;
+    // let user_id=this.foundRepos.privates[i].target_user.id;
+    // let userInfo=this.foundRepos.privates[i].target_user;
+    this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+    this.mentionUsers = [];
+    let tempUsers = [];
+    for (let j = 0; j < this.dbMembers.length; j++) {
+      if (userInfo.id == this.dbMembers[j].id) {
+        userInfo.avatar.url = this.dbMembers[j].image;
         tempUsers.push(userInfo);
-      } 
+      }
     }
-    this.mentionMembers=tempUsers;
+    this.mentionMembers = tempUsers;
     this.removeSearch();
     this.focusInput();
-}
+  }
 
 
-selectGroupFromList(name,id,user_id,group_users) {
+  selectGroupFromList(name, id, user_id, group_users) {
     // let name=this.foundRepos.groups[i].chat.name;
     // let id=this.foundRepos.groups[i].chat.id;
     // let user_id=this.foundRepos.groups[i].chat.id;
     // let group_users=this.foundRepos.groups[i].chat.users;
-  this.allUsers=[{type:'group',id:id,name:name,user_id:user_id}]; 
-  this.mentionUsers = [];
-  let tempUsers=[];
-  for(let i=0;i<group_users.length;i++){
-    for(let j=0;j<this.dbMembers.length;j++){
-      if(group_users[i].id==this.dbMembers[j].id && group_users[i].id!=this.userId){
-        group_users[i].avatar.url=this.dbMembers[j].image;
-        tempUsers.push(group_users[i]);
-      } 
+    this.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
+    this.mentionUsers = [];
+    let tempUsers = [];
+    for (let i = 0; i < group_users.length; i++) {
+      for (let j = 0; j < this.dbMembers.length; j++) {
+        if (group_users[i].id == this.dbMembers[j].id && group_users[i].id != this.userId) {
+          group_users[i].avatar.url = this.dbMembers[j].image;
+          tempUsers.push(group_users[i]);
+        }
+      }
     }
+    this.mentionMembers = tempUsers;
+    this.removeSearch();
+    this.focusInput();
   }
-  this.mentionMembers=tempUsers;
-  this.removeSearch();
-  this.focusInput();
-}
 
-removeSearch(){
-  this.showList=false;
-  this.searchText="";
-}
+  removeSearch() {
+    this.showList = false;
+    this.searchText = "";
+  }
 
-focusInput() {
-  console.log("focus start");
-  this.myInput.setFocus();
- // input.setFocus();
- console.log("focus end");
-}
+  focusInput() {
+    console.log("focus start");
+    this.myInput.setFocus();
+    // input.setFocus();
+    console.log("focus end");
+  }
 
 
 
