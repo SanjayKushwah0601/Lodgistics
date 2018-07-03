@@ -671,6 +671,10 @@ ion-footer ion-col.active {
     padding-top: 50px;
 }
 
+.alert-md .alert-button {
+    text-transform: capitalize !important;
+}
+
 //
 .reply_msg_alert .alert-message {
     max-height: initial;
@@ -881,7 +885,7 @@ ion-alert .alert-radio-group [ion-button][disabled] {
     content: "Switch Hotel";
     font-size: 1.1rem;
     vertical-align: middle;
-    font-weight: 200;
+    font-weight: 400;
     color: #00bdf1;
     margin-bottom: 5px;
 }
@@ -1454,6 +1458,10 @@ ion-fab-list[side=top]:active {
 
 .feed_action_items ion-icon {
     margin-right: 10px;
+}
+
+.feed_action_items buttoncss {
+    color: red;
 }
 
 // .notification_btn_side_menu ion-toggle .toggle-checked{background-color: #32db64;}

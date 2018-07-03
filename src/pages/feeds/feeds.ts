@@ -1109,7 +1109,7 @@ export class FeedsPage {
       });
     }
   }
-  
+
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {
