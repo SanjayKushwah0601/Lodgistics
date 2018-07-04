@@ -141,7 +141,7 @@
                         <button tappable ion-button (click)="dismiss()">Cancel</button>
                         <button *ngIf="wo_no==''" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
                             (click)="createWorkOrder()">Create WO</button>
-                        <button *ngIf="wo_no!='' && userPermissions.wo_access.can_edit" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id || workOrderData.status=='closed')"
+                            <button *ngIf="wo_no!='' && userPermissions.wo_access.can_edit" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
                             (click)="updateWorkOrder()">{{workOrderData.status=='closed'?'Close WO':'Update WO'}}</button>
                     </div>
                 </td>

@@ -199,13 +199,13 @@
       </span>
       <ion-scroll scrollX="true" style="min-height: 56px;">
         <ul nowrap class="results">
-          <li *ngFor="let memberInfo of mentionMembers" (tap)="selectUser($event,memberInfo,'false')" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+          <li *ngFor="let memberInfo of mentionMembers" (click)="selectUser($event,memberInfo,'false')" [ngClass]="showSelected(memberInfo.id)?'selected':''">
             <span>
               <img src="{{memberInfo.avatar.url}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
             </span>
             <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
           </li>
-          <li *ngIf="mentionMembers.length>2" style="padding-left: 5px;     border-left: solid #757575 0.5px;" (tap)="this.mentionUsers.length != mentionMembers.length?selectAllMention($event,true):selectAllMention($event,false)"
+          <li *ngIf="mentionMembers.length>2" style="padding-left: 5px;     border-left: solid #757575 0.5px;" (click)="this.mentionUsers.length != mentionMembers.length?selectAllMention($event,true):selectAllMention($event,false)"
             [ngClass]="mentionUsers.length == mentionMembers.length?'selected':''">
             <label style="font-weight:600;">ALL</label>
           </li>

@@ -1,20 +1,40 @@
 <div id="ListBackdrop" *ngIf="fabButtonOpened"></div>
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle end>
+    <!-- <button ion-button menuToggle end>
       <ion-icon name="menu"></ion-icon>
     </button>
 
     <span start class="broadcast" *ngIf="broadcast_count>0">
       <span (click)="broadcastList()">
-        <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+        
         <span class="broadcast_btn">
           <img src="assets/img/broadcost-red-icon.png" />
         </span>
         ({{broadcast_count}})</span>
-    </span>
+    </span> -->
 
-    <ion-title>{{hotelName?hotelName:'HOTEL FEED'}}</ion-title>
+
+    <ion-buttons left>
+      <button ion-button left>
+      <span start class="broadcast" *ngIf="broadcast_count>0">
+        <span (click)="broadcastList()">
+          <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+          <span class="broadcast_btn">
+            <img src="assets/img/broadcost-red-icon.png" />
+          </span>
+          ({{broadcast_count}})</span>
+        </span>
+      </button>
+    </ion-buttons>
+
+    <ion-title text-center>{{hotelName?hotelName:'HOTEL FEED'}}</ion-title>
+
+    <ion-buttons right>
+      <button ion-button menuToggle right>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
   <ion-toolbar no-border-top>
@@ -283,14 +303,14 @@
         <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
           <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></p> -->
           <p *ngIf="(item.showMore == undefined || item.showMore)">
-            <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+            <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
             <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
             <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
             <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
           </p>
 
           <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
-            <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+            <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
             <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
             <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
             <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
@@ -306,13 +326,13 @@
               <td class="">
                 <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></p> -->
                 <p *ngIf="(item.showMore == undefined || item.showMore)">
-                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                   <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                   <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                   <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
                 <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
-                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                   <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                   <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                   <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
@@ -342,13 +362,13 @@
               <td class="td-box-2">
                 <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"  class="vertical-image-feed"></p> -->
                 <p *ngIf="(item.showMore == undefined || item.showMore)">
-                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                   <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                   <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                   <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                 </p>
                 <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
-                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j) | safeHtml"></span>
+                  <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                   <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                   <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                   <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>

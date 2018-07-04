@@ -1,118 +1,181 @@
 page-inviteUsers {
-	
-  .scroll-content{ padding: 0px !important;}	
-  .open-popup .scroll-content{ overflow: hidden;}
-  .scroll-content{ font-family: 'open_sanslight';}
-  .toolbar-ios ion-title, .toolbar-md ion-title{ padding: 0 35px 1px;}
-  .row ion-col.col{ padding: 0px; }
-  .item-block{ border-top: 0px !important;padding: 0px 5px !important; }
-  .items_list{ margin: 0px 0px; color: #000;font-family: 'open_sanslight'; border-bottom: 1px solid #f1f1f1; padding-bottom: 25px;}
-  .items_list .row{  
-    display: flex;
-    flex-direction: row;
-    /* make main axis horizontal (default setting) */
-    justify-content: center;
-    /* center items horizontally, in this case */
-    align-items: center;
-    /* center items vertically, in this case */
-    white-space: normal;
-    height: 55px;
-  }
-
-  .scroll-content{margin-bottom: 42px !important;}
-  ion-footer{border-top: 1px solid #E5E5E5;}
-  ion-footer ion-icon{    font-size: 1.8em;}
-  ion-footer .row{    font-size: 1.0rem !important;}
-  ion-footer .grid{background: #fff;}
-  .item-ios,.item-md{padding-left: 0px; padding-right: 0px;padding-top: 0px;}
-  .item-ios h2,.item-md h2{font-size: 20px; color: #757575;  font-family: 'open-sans';}
-  .item-ios p,.item-md p{ font-size: 20px; color: #757575;font-family: 'open_sanslight';white-space: normal;font-size: 1.2rem;}
-  .items_list ion-label{ margin: 0px 0px 0px 0px; color: #757575;font-family: 'open-sans';line-height: 1.3;font-size: 1.4rem;}
-  .item-ios:active{background-color: #EEE;}
-
-  ion-footer button{ margin: 0px !important;
-    border-radius: 0px !important;
-  }
-  .api_loader{ padding-top: 15px;position: absolute;width: 100%;margin-left: 20%; }	
-  .api_loader_text{ margin-top: 5px;position: absolute;width: 100%;}
-  ion-avatar{ margin-right: 10px !important; }
-  ion-avatar img{width: 50px !important;height: 50px !important;margin-top: 2%;}
-  .plus_btn{ 
-    float: right;
-    color: #02B9E7 !important;
-    vertical-align: middle;
-    letter-spacing: 0.5px;
-    font-size: 1.6rem;
-    margin-right: 5px;
-    font-weight: bolder ;
-  }
-  .plus_btn:active{opacity: 0.5;}
-  .select-ios .select-icon, .select-md .select-icon{
-    display: none;
-  }
-  .text-input{color: #424242;}
-  .text-input-ios{margin-top: 0px !important;font-size: 16px;}
-  .role_dept{min-height: 3rem !important;}
-  .float_label{ margin-top: -10% !important; }
-  .label-ios[floating]{ color: #BDBDBD; }
-  .with_float{margin-top:0% !important; transform: translate3d(0, 0, 0) scale(0.8) !important;}
-
-
-
-  @media(max-width:749px){
-    
+    .scroll-content {
+        padding: 0px !important;
     }
-
-  //iPhone 5 & 5S in portrait & landscape
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 568px)
-{
-  .scroll-content{margin-bottom: 42px !important;}
-}
-
-//iPhone 6 in portrait & landscape
-@media only screen 
-and (min-device-width : 375px) 
-and (max-device-width : 667px) {
-  .scroll-content{margin-bottom: 45px !important;}
-}
-
-//iPhone 6+
-@media only screen 
-and (min-device-width : 414px) 
-and (max-device-width : 736px)
-and (device-width : 414px)
-and (device-height : 736px)
-and (orientation : portrait) 
-and (-webkit-min-device-pixel-ratio : 3) 
-and (-webkit-device-pixel-ratio : 3)
-{
-  .scroll-content{    margin-bottom: 47px !important;}
-}
-
-//iPhone X
-@media only screen 
-and (device-width : 375px) 
-and (device-height : 812px) 
-and (-webkit-device-pixel-ratio : 3) { 
-  .scroll-content{    margin-bottom: 80px !important;}
-}
-
-//iPhone 8
-@media only screen 
-and (device-width : 375px) 
-and (device-height : 667px) 
-and (-webkit-device-pixel-ratio : 2) { 
-  .scroll-content{    margin-bottom: 45px !important;}
-}
-
-//iPhone 8 Plus
-@media only screen 
-and (device-width : 414px) 
-and (device-height : 736px) 
-and (-webkit-device-pixel-ratio : 3) { 
-  .scroll-content{    margin-bottom: 47px !important;}
-}
-
+    .open-popup .scroll-content {
+        overflow: hidden;
+    }
+    .scroll-content {
+        font-family: 'open_sanslight';
+    }
+    .toolbar-ios ion-title,
+    .toolbar-md ion-title {
+        padding: 0 35px 1px;
+    }
+    .row ion-col.col {
+        padding: 0px;
+    }
+    .item-block {
+        border-top: 0px !important;
+        padding: 0px 5px !important;
+    }
+    .items_list {
+        margin: 0px 0px;
+        color: #000;
+        font-family: 'open_sanslight';
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 25px;
+    }
+    .items_list .row {
+        display: flex;
+        flex-direction: row;
+        /* make main axis horizontal (default setting) */
+        justify-content: center;
+        /* center items horizontally, in this case */
+        align-items: center;
+        /* center items vertically, in this case */
+        white-space: normal;
+        height: 60px;
+    }
+    .scroll-content {
+        margin-bottom: 42px !important;
+    }
+    ion-footer {
+        border-top: 1px solid #E5E5E5;
+    }
+    ion-footer ion-icon {
+        font-size: 1.8em;
+    }
+    ion-footer .row {
+        font-size: 1.0rem !important;
+    }
+    ion-footer .grid {
+        background: #fff;
+    }
+    .item-ios,
+    .item-md {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+    }
+    .item-ios h2,
+    .item-md h2 {
+        font-size: 20px;
+        color: #757575;
+        font-family: 'open-sans';
+    }
+    .item-ios p,
+    .item-md p {
+        font-size: 20px;
+        color: #757575;
+        font-family: 'open_sanslight';
+        white-space: normal;
+        font-size: 1.2rem;
+    }
+    .items_list ion-label {
+        margin: 0px 0px 0px 0px;
+        color: #757575;
+        font-family: 'open-sans';
+        line-height: 1.3;
+        font-size: 1.4rem;
+    }
+    .item-ios:active {
+        background-color: #EEE;
+    }
+    ion-footer button {
+        margin: 0px !important;
+        border-radius: 0px !important;
+    }
+    .api_loader {
+        padding-top: 15px;
+        position: absolute;
+        width: 100%;
+        margin-left: 20%;
+    }
+    .api_loader_text {
+        margin-top: 5px;
+        position: absolute;
+        width: 100%;
+    }
+    ion-avatar {
+        margin-right: 10px !important;
+    }
+    ion-avatar img {
+        width: 50px !important;
+        height: 50px !important;
+        margin-top: 2%;
+    }
+    .plus_btn {
+        float: right;
+        color: #02B9E7 !important;
+        vertical-align: middle;
+        letter-spacing: 0.5px;
+        font-size: 1.6rem;
+        margin-right: 5px;
+        font-weight: bolder;
+    }
+    .plus_btn:active {
+        opacity: 0.5;
+    }
+    .select-ios .select-icon,
+    .select-md .select-icon {
+        display: none;
+    }
+    .text-input {
+        color: #424242;
+    }
+    .text-input-ios {
+        margin-top: 0px !important;
+        font-size: 16px;
+    }
+    .role_dept {
+        min-height: 3rem !important;
+    }
+    .float_label {
+        margin-top: -10% !important;
+    }
+    .label-ios[floating] {
+        color: #BDBDBD;
+    }
+    .with_float {
+        margin-top: 0% !important;
+        transform: translate3d(0, 0, 0) scale(0.8) !important;
+    }
+    @media(max-width:749px) {}
+    //iPhone 5 & 5S in portrait & landscape
+    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+        .scroll-content {
+            margin-bottom: 42px !important;
+        }
+    }
+    //iPhone 6 in portrait & landscape
+    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+        .scroll-content {
+            margin-bottom: 45px !important;
+        }
+    }
+    //iPhone 6+
+    @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
+        .scroll-content {
+            margin-bottom: 47px !important;
+        }
+    }
+    //iPhone X
+    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+        .scroll-content {
+            margin-bottom: 80px !important;
+        }
+    }
+    //iPhone 8
+    @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
+        .scroll-content {
+            margin-bottom: 45px !important;
+        }
+    }
+    //iPhone 8 Plus
+    @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
+        .scroll-content {
+            margin-bottom: 47px !important;
+        }
+    }
 }

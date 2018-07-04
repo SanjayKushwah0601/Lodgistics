@@ -320,10 +320,9 @@ page-feeds {
     .card-btn:active {
         background: #EEE;
         opacity: 0.8;
-    }
-    .toolbar-title-md {
-        margin-left: 0px !important;
-    }
+    } // .toolbar-title-md {
+    //     margin-left: 0px !important;
+    // }
     .card-header-md+.card-content-md,
     .card-md .item+.card-content-md {
         touch-action: inherit !important;
@@ -449,11 +448,24 @@ page-feeds {
         margin-right: 10%;
         color: #ed5466;
     }
+    ion-header .toolbar-title {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flow-root;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+    }
     .broadcast {
         margin-left: 5%;
-        color: #ed5466;
-        display: flex;
-        position: absolute;
+        color: #ed5466; // display: flex;
+        // position: absolute;
     }
     .broadcast ion-icon {
         margin-right: 2px;
@@ -587,9 +599,10 @@ page-feeds {
         border-left: 0px solid #BDBDBD;
     }
     .feed_title {
-        display: block;
+        // display: block;
         padding-bottom: 1px;
         font-family: 'open_sanssemibold';
+        display: initial !important;
     }
     ion-slides {
         height: auto;
@@ -781,23 +794,22 @@ page-feeds {
             padding-top: 3px;
             font-family: 'open-sans';
         }
-    }
-    @media(max-width:479px) {
-        .toolbar-ios ion-title,
-        .toolbar-md ion-title {
-            padding: 0 0px 1px 0px;
-            margin: 0 18px 0 60px;
-        }
-    }
-    @media only screen and (-webkit-min-device-pixel-ratio: 3) and (min-device-width: 412px) and (max-device-width: 690px) {
-        ion-title {
-            margin-left: 64px !important;
-            margin-right: 20px !important;
-        }
-        .broadcast {
-            top: 17px;
-        }
-    }
+    } // @media(max-width:479px) {
+    //     .toolbar-ios ion-title,
+    //     .toolbar-md ion-title {
+    //         padding: 0 0px 1px 0px;
+    //         margin: 0 18px 0 60px;
+    //     }
+    // }
+    // @media only screen and (-webkit-min-device-pixel-ratio: 3) and (min-device-width: 412px) and (max-device-width: 690px) {
+    //     ion-title {
+    //         margin-left: 64px !important;
+    //         margin-right: 20px !important;
+    //     }
+    //     .broadcast {
+    //         top: 17px;
+    //     }
+    // }
     .selectable {
         -webkit-user-select: text;
         -moz-user-select: text;
