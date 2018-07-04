@@ -270,6 +270,9 @@ page-sendMessage {
         padding-top: 4px;
         position: relative
     }
+    .results li:last-child{
+        border-right: none;
+    }
     .results li img {
         width: 20px !important;
         height: 20px !important;
@@ -402,9 +405,10 @@ page-sendMessage {
         background: #428bca;
         border-radius: .4em;
         width: 100%;
-        margin-top: -50px;
         color: #fff;
         display: flex;
+        margin-top: -53px;
+        min-height: 25px;
         flex-direction: row;
         /* make main axis horizontal (default setting) */
         justify-content: center;
@@ -544,7 +548,7 @@ page-sendMessage {
         height: 20px !important;
     }
     .counting_iphone_x {
-        margin-top: 3px !important;
+        margin-top: 15px !important;
     }
     ion-scroll.scroll-x .scroll-content {
         overflow-x: auto;
@@ -632,5 +636,8 @@ page-sendMessage {
         .open-keyboard {
             height: 60%;
         }
+    }
+    .footer_toolbar {
+        min-height: 30px;
     }
 }

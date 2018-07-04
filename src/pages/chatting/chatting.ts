@@ -54,13 +54,13 @@ export class ChattingPage {
   public totalUnreadPrivateCount = 0;
   public interval: any;
   public tabClickable = true;
-  public broadcast_count=0;
+  public broadcast_count = 0;
   public userPermissions: any;
-public privateSpinner=false;
-  public groupSpinner=false;
-  public fabButtonOpened=false;
+  public privateSpinner = false;
+  public groupSpinner = false;
+  public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public keyboard: Keyboard, public navParams: NavParams, private iab: InAppBrowser, public modalCtrl: ModalController, public platform: Platform, public fabContainer:FabContainer) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public keyboard: Keyboard, public navParams: NavParams, private iab: InAppBrowser, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
 
     this.viewWOUrl = viewWorkOrderUrl;
 
@@ -83,16 +83,16 @@ public privateSpinner=false;
       }
     };
     this.platform.ready().then(() => {
-      
-            this.commonMethod.getUserPermissions().then(
-              permissions => {
-                this.userPermissions = permissions;
-              },
-              error => {
-                return false;
-              }
-            );
-          });
+
+      this.commonMethod.getUserPermissions().then(
+        permissions => {
+          this.userPermissions = permissions;
+        },
+        error => {
+          return false;
+        }
+      );
+    });
     let thisObj = this;
     this.interval = window.setInterval(function () {
       /// call your function here
@@ -101,7 +101,7 @@ public privateSpinner=false;
         count => {
           thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
           thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-          thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+          thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
         },
         error => {
           return false;
@@ -152,7 +152,7 @@ public privateSpinner=false;
 
         if (this.commonMethod.checkNetwork()) {
 
-          this.groupSpinner=true;
+          this.groupSpinner = true;
           this.commonMethod.getDataWithoutLoder(getGroupsOnlyUrl, accessToken).timeout(60000).subscribe(
             data => {
               console.log('getData completed time out 1');
@@ -204,8 +204,8 @@ public privateSpinner=false;
                         if (updateChatGroupsData != "") {
                           db.executeSql(updateChatGroupsQuery + updateChatGroupsData + " Else name End)", {}).then((data1) => {
                             console.log("UPDATED: " + JSON.stringify(data1));
-                            updateGroupFlag=false;
-                            this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                            updateGroupFlag = false;
+                            this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
                           }, (error1) => {
                             console.log("UPDATED ERROR: " + JSON.stringify(error1));
                           });
@@ -260,25 +260,25 @@ public privateSpinner=false;
                         if (insertChatGroupUsersData != "") {
                           db.executeSql(insertChatGroupUsersQuery + insertChatGroupUsersData.substring(0, insertChatGroupUsersData.length - 1), {}).then((dataUser1) => {
                             console.log("Data  == GROUP USER INSERTED: " + JSON.stringify(dataUser1));
-insertUserFlag = false;
-this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                            insertUserFlag = false;
+                            this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
 
-                         //   this.commonMethod.hideLoader();
+                            //   this.commonMethod.hideLoader();
 
                           }, (errorUser1) => {
                             console.log("Data  == GROUP USER INSERT ERROR: " + JSON.stringify(errorUser1));
                           });
                         } else if (updateChatGroupUsersGroupIdData == "") {
                           //this.commonMethod.hideLoader();
-                          this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                          this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
 
                         }
                         if (updateChatGroupUsersGroupIdData != "") {
                           //console.log("chat_group_users Data  == " + updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)");
                           db.executeSql(updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)", {}).then((dataUser1) => {
-                          //  this.commonMethod.hideLoader();
-                          updateUserFlag=false;
-                          this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                            //  this.commonMethod.hideLoader();
+                            updateUserFlag = false;
+                            this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
 
                             console.log(" 1 GROUP USER UPDATED: " + JSON.stringify(dataUser1) + "  " + i + "  " + this.foundRepos.groups.length);
                           }, (errorUser1) => {
@@ -298,12 +298,12 @@ this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
                     notifications => {
                       let feedCount = notifications.feed_count;
                       let messageCount = this.totalUnreadGroupCount + this.totalUnreadPrivateCount;
-                      let woCount = notifications.wo_count?notifications.wo_count:0;
+                      let woCount = notifications.wo_count ? notifications.wo_count : 0;
 
                       this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount, wo_count: woCount })
                         .then(
-                        () => console.log('Stored user_notifications!'),
-                        error => console.error('Error storing user_notifications', error)
+                          () => console.log('Stored user_notifications!'),
+                          error => console.error('Error storing user_notifications', error)
                         );
                     },
                     error => {
@@ -313,9 +313,9 @@ this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
 
                   if (insertChatGroupsData != "") {
                     db.executeSql(insertChatGroupsQuery + insertChatGroupsData.substring(0, insertChatGroupsData.length - 1), {}).then((data1) => {
-                      insertGroupFlag=false;
-                     // this.commonMethod.hideLoader();
-                     this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                      insertGroupFlag = false;
+                      // this.commonMethod.hideLoader();
+                      this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
 
                       console.log("Data  == GROUPS INSERTED: " + JSON.stringify(data1));
                     }, (error1) => {
@@ -323,8 +323,8 @@ this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
                     });
                   }
                   else {
-                  //  this.commonMethod.hideLoader();
-                  this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
+                    //  this.commonMethod.hideLoader();
+                    this.hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag);
 
                   }
                   //this.commonMethod.hideLoader();
@@ -346,7 +346,7 @@ this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
               console.log('getData completed time out 3');
 
               //this.commonMethod.hideLoader();
-              this.groupSpinner=false;
+              this.groupSpinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -371,17 +371,16 @@ this.hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag);
       }
     );
   }
-  hideLoader(insertGroupFlag,updateGroupFlag,insertUserFlag,updateUserFlag) {
-if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
-  //this.commonMethod.hideLoader();
-  this.groupSpinner=false;
-}
+  hideLoader(insertGroupFlag, updateGroupFlag, insertUserFlag, updateUserFlag) {
+    if (!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag) {
+      //this.commonMethod.hideLoader();
+      this.groupSpinner = false;
+    }
   }
   toggleDetails(group, individual) {
     if (individual == true && this.tabClickable) {
       console.log("toggleDetails 1");
       this.tabClickable = false;
-
       this.openIndividualTab();
     } else if (this.tabClickable) {
       console.log("toggleDetails 2");
@@ -398,7 +397,7 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
       count => {
         this.feedNotificationCount = count.feed_count ? count.feed_count : 0;
         this.messagesNotificationCount = count.message_count ? count.message_count : 0;
-        this.woNotificationCount = count.wo_count ? count.wo_count: 0;
+        this.woNotificationCount = count.wo_count ? count.wo_count : 0;
       },
       error => {
         return false;
@@ -418,12 +417,14 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           //this.commonMethod.showLoader();
-          this.privateSpinner=true;
+          this.privateSpinner = true;
           this.commonMethod.getDataWithoutLoder(getPrivateOnlyUrl, accessToken).timeout(60000).subscribe(
             data => {
-              //this.commonMethod.hideLoader();
-              this.privateSpinner=false;
+              // //this.commonMethod.hideLoader();
+              this.privateSpinner = false;
+              this.tabClickable = true;
               this.totalUnreadPrivateCount = 0;
+              console.log(JSON.stringify(data.json()))
               this.foundRepos.privates = data.json();
 
               for (let i = 0; i < this.foundRepos.privates.length; i++) {
@@ -435,12 +436,12 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
                 notifications => {
                   let feedCount = notifications.feed_count;
                   let messageCount = this.totalUnreadGroupCount + this.totalUnreadPrivateCount;
-                  let woCount = notifications.wo_count?notifications.wo_count:0;
+                  let woCount = notifications.wo_count ? notifications.wo_count : 0;
 
                   this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount, wo_count: woCount })
                     .then(
-                    () => console.log('Stored user_notifications!'),
-                    error => console.error('Error storing user_notifications', error)
+                      () => console.log('Stored user_notifications!'),
+                      error => console.error('Error storing user_notifications', error)
                     );
                 },
                 error => {
@@ -450,7 +451,7 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
 
             },
             err => {
-              this.privateSpinner=false;
+              this.privateSpinner = false;
               this.tabClickable = true;
               alertVar.present();
               console.error("Error : " + err);
@@ -698,10 +699,11 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
       });
     }).catch(e => console.log(e));
   }
+
   ionViewDidEnter() {
     this.nativeStorage.setItem('lastPage', { "pageName": ChattingPage.name, "index": this.navCtrl.getActive().index });
     this.platform.ready().then(() => {
-      
+
       // this.platform.registerBackButtonAction(() => {
 
       //   this.keyboard.close();
@@ -1304,27 +1306,27 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
     modal.present();
   }
 
-  createFeedQuick(fab?: FabContainer){
+  createFeedQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     this.createFeed();
   }
 
-  createWorkOrderQuick(fab?: FabContainer){
+  createWorkOrderQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
-    this.createWorkOrder('','','','','');
+    this.fabButtonOpened = false;
+    this.createWorkOrder('', '', '', '', '');
   }
 
-  sendMessage(fab?: FabContainer){
+  sendMessage(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -1332,11 +1334,11 @@ if(!insertGroupFlag && !updateGroupFlag && !insertUserFlag && !updateUserFlag){
     modal.present();
   }
 
-  openFabButton(){
-    if(this.fabButtonOpened==false){
-        this.fabButtonOpened=true;
-    }else{
-        this.fabButtonOpened=false;
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
     }
   }
 

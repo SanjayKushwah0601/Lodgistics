@@ -1,4 +1,7 @@
 page-taskChecklistDetail {
+    ion-header .toolbar-title {
+        display: inline;
+    }
     .scroll-content {
         padding: 0px !important;
     }

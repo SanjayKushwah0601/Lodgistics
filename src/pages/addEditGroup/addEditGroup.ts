@@ -10,7 +10,7 @@ import { Validator } from '../../validator';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { addEditGroupUrl } from '../../services/configURLs';
 import { getAllMembersUrl } from '../../services/configURLs';
-import { getAwsSignedUrl,getRolesAndDepartmentsUrl } from '../../services/configURLs';
+import { getAwsSignedUrl, getRolesAndDepartmentsUrl } from '../../services/configURLs';
 import { ChattingPage } from '../chatting/chatting';
 import { GroupChatPage } from '../groupChat/groupChat';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -63,14 +63,14 @@ export class AddEditGroupPage {
   public actionSheet: any;
 
   public selectedTab: string = "user";
-  public roleItems= [];
-  public totalRow=1;
+  public roleItems = [];
+  public totalRow = 1;
   public rolesData = [];
   public departmentsData = [];
 
-  public formData=[];
-  public createButton=false;
-  public createButtonGroup=false;
+  public formData = [];
+  public createButton = false;
+  public createButtonGroup = false;
   constructor(public navCtrl: NavController, public keyboard: Keyboard, public zone: NgZone, public platform: Platform, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public commonMethod: srviceMethodsCall, private _FB: FormBuilder, public navParams: NavParams, private sqlite: SQLite, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events) {
 
     //this.commonMethod.showLoader();
@@ -237,26 +237,26 @@ export class AddEditGroupPage {
       name: '',
       role_name: '',
       role_id: '',
-      department_name:'',
+      department_name: '',
       department_id: '',
     });
-  } 
+  }
 
   ionViewDidEnter() {
-this.addClassContent = true;
+    this.addClassContent = true;
     this.platform.ready().then(() => {
       this.platform.registerBackButtonAction(() => {
-  // Print this event to the console
-  
+        // Print this event to the console
+
         // Navigate to another page
         this.events.publish('hide:keyboard');
         this.keyboard.close();
         setTimeout(() => {
           if (this.groupInfo && this.groupInfo.id) {
-  
+
             this.openGroupCaht();
           } else {
-  
+
             this.navCtrl.pop();
           }
         },
@@ -288,15 +288,15 @@ this.addClassContent = true;
     }
 
     this.getRolesAndDepartmentsData();
-    this.roleItems = [1,2];
+    this.roleItems = [1, 2];
     //this.totalRow=1;
     //this.roleItems.push(this.totalRow);
-   // this.totalRow+=1;
+    // this.totalRow+=1;
     //this.roleItems.push(this.totalRow);
     this.addOther();
 
   }
-  
+
   addEditGroup(formData) {
     this.platform.ready().then(() => {
       var networkState = navigator.connection.type;
@@ -692,7 +692,7 @@ this.addClassContent = true;
     this.isUpdateGroup = true;
     if (event.target.value.trim().length > 0) {
       this.buttonEnable = true;
-      this.createButtonGroup=true;
+      this.createButtonGroup = true;
     } else {
       this.buttonEnable = false;
     }
@@ -792,22 +792,22 @@ this.addClassContent = true;
   }
 
   addOther() {
-   // this.totalRow++;
+    // this.totalRow++;
     //this.roleItems.unshift(this.totalRow);
-    if(this.formData.length>1){
+    if (this.formData.length > 1) {
       this.formData.unshift({
         property_token: '',
         role_name: '',
         role_id: '',
-        department_name:'',
+        department_name: '',
         department_id: '',
       });
-    }else{
+    } else {
       this.formData.push({
         property_token: '',
         role_name: '',
         role_id: '',
-        department_name:'',
+        department_name: '',
         department_id: '',
       });
     }
@@ -827,11 +827,11 @@ this.addClassContent = true;
       title: 'Select Role',
     });
     for (var i = 0; i < this.rolesData.length; i++) {
-      let thisObj=this;
-      let name=this.rolesData[i].name;
-      let id=this.rolesData[i].id;
-      actionSheet.addButton({ text: name ,handler: () => { thisObj.formData[index].role_name=name; thisObj.formData[index].role_id=id; thisObj.checkDuplicate(index);  console.log(name + " id is"+ id); thisObj.canCreateGroup(); } });
-  
+      let thisObj = this;
+      let name = this.rolesData[i].name;
+      let id = this.rolesData[i].id;
+      actionSheet.addButton({ text: name, handler: () => { thisObj.formData[index].role_name = name; thisObj.formData[index].role_id = id; thisObj.checkDuplicate(index); console.log(name + " id is" + id); thisObj.canCreateGroup(); } });
+
     }
     actionSheet.present();
     this.canCreateGroup();
@@ -841,47 +841,47 @@ this.addClassContent = true;
       title: 'Select Department',
     });
     for (var i = 0; i < this.departmentsData.length; i++) {
-      let thisObj=this;
-      let name=this.departmentsData[i].name;
-      let id=this.departmentsData[i].id;
-      actionSheet.addButton({ text: name ,handler: () => { thisObj.formData[index].department_name=name; thisObj.formData[index].department_id=id;   thisObj.checkDuplicate(index); console.log(name + " id is"+ id); thisObj.canCreateGroup(); } });
+      let thisObj = this;
+      let name = this.departmentsData[i].name;
+      let id = this.departmentsData[i].id;
+      actionSheet.addButton({ text: name, handler: () => { thisObj.formData[index].department_name = name; thisObj.formData[index].department_id = id; thisObj.checkDuplicate(index); console.log(name + " id is" + id); thisObj.canCreateGroup(); } });
     }
     actionSheet.present();
-   
+
   }
-  canAddMore(){
-    let status=false;
-    if(this.formData.length>1){
-      status=true;
-      for(let j=0;j<this.formData.length;j++){
-        if( this.formData[j].department_id=='' || this.formData[j].role_id=='' ){
-          status=false;
+  canAddMore() {
+    let status = false;
+    if (this.formData.length > 1) {
+      status = true;
+      for (let j = 0; j < this.formData.length; j++) {
+        if (this.formData[j].department_id == '' || this.formData[j].role_id == '') {
+          status = false;
         }
       }
     }
     return status;
   }
-  canCreateGroup(){
+  canCreateGroup() {
     console.log("create group function");
-    let status=false;
-    if(this.formData.length>=1){
-      for(let j=0;j<this.formData.length;j++){
-        if( this.formData[j].department_id!='' && this.formData[j].role_id!=''){
-          status=true;
-          this.createButton=true;
+    let status = false;
+    if (this.formData.length >= 1) {
+      for (let j = 0; j < this.formData.length; j++) {
+        if (this.formData[j].department_id != '' && this.formData[j].role_id != '') {
+          status = true;
+          this.createButton = true;
           console.log("create group function inside if ");
-          console.log("createButton"+this.createButton);
-          console.log("createButtonGroup"+this.createButtonGroup);
+          console.log("createButton" + this.createButton);
+          console.log("createButtonGroup" + this.createButtonGroup);
         }
       }
     }
   }
 
-  checkDuplicate(i){
-    if( this.formData[i].department_id!='' && this.formData[i].role_id!='' ){
-      for(let j=0;j<this.formData.length;j++){
-        if( i!=j && this.formData[j].department_id!='' && this.formData[j].role_id!='' && this.formData[j].department_id==this.formData[i].department_id && this.formData[j].role_id==this.formData[i].role_id){
-          
+  checkDuplicate(i) {
+    if (this.formData[i].department_id != '' && this.formData[i].role_id != '') {
+      for (let j = 0; j < this.formData.length; j++) {
+        if (i != j && this.formData[j].department_id != '' && this.formData[j].role_id != '' && this.formData[j].department_id == this.formData[i].department_id && this.formData[j].role_id == this.formData[i].role_id) {
+
           let alertVar = this.alertCtrl.create({
             title: 'Error!',
             subTitle: 'Selection already exist!',
@@ -889,10 +889,10 @@ this.addClassContent = true;
           });
           alertVar.present();
 
-          this.formData[i].department_id="";
-          this.formData[i].department_name="";
-          this.formData[i].role_id="";
-          this.formData[i].role_name="";
+          this.formData[i].department_id = "";
+          this.formData[i].department_name = "";
+          this.formData[i].role_id = "";
+          this.formData[i].role_name = "";
         }
       }
     }

@@ -110,12 +110,12 @@
                 <span class="badge" *ngIf="res.chat.unread>0">{{res.chat.unread}}</span>
                 <div class="avatar-group">
                   <div class="gr-full">
-                    <img src="{{res.target_user.avatar_img_url}}">
+                    <img src="{{res.target_user?.avatar_img_url}}">
                   </div>
                 </div>
               </ion-avatar>
               <div class="pull-left">
-                <h2 class="group-name individual">{{res.target_user.name}}:</h2>
+                <h2 class="group-name individual">{{res.target_user?.name}}:</h2>
                 <h2 *ngIf="res.chat.last_message && res.chat.last_message.sender_id==userId" class="user-name">You:</h2>
                 <!--<p>{{item.created_by.role}}</p>-->
               </div>

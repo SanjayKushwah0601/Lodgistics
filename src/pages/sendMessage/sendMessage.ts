@@ -307,6 +307,7 @@ export class SendMessagePage {
   }
 
   selectIndividual() {
+    console.log(JSON.stringify(this.foundRepos))
     let actionSheet = this.actionSheetCtrl.create({
       title: 'Select a User',
     });

@@ -146,7 +146,7 @@
                 <ion-col col-10 class="option-col align-center" (click)="removeImage()">
                   Remove Image
                 </ion-col>
-                <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (click)="hideOverlay()"></ion-icon>
+                <ion-icon col-1 name="ios-close-outline" class="option-icon last-option-icon" (click)="hideOverlay()"></ion-icon>
               </ion-row>
             </ion-grid>
 
@@ -191,7 +191,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-toolbar position="bottom" *ngIf="mentionMembers.length>0">
+  <ion-toolbar position="bottom" class="footer_toolbar" *ngIf="mentionMembers.length>0">
 
     <span class="scroll-ion">
       <span class="counting counting_iphone_x">@
