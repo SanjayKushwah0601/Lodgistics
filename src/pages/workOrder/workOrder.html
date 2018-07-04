@@ -99,10 +99,9 @@
       <ion-grid class="option-row close_wo" *ngIf="item.showOption">
         <ion-row class="speech-bubble">
           <ion-col col-10 *ngIf="!item.closeInProgress" class="option-col align-center" (tap)="closeWoCall(item.id,j)">
-            <ion-icon ios="ios-construct-outline" md="md-construct-outline" class="option-icon"></ion-icon> CLOSE WO
+            <ion-icon name="ios-construct-outline" class="option-icon"></ion-icon> CLOSE WO
           </ion-col>
-          <ion-icon *ngIf="!item.closeInProgress" col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon"
-            (tap)="closeWo(j)"></ion-icon>
+          <ion-icon *ngIf="!item.closeInProgress" col-1 name="ios-close-outline" class="option-icon last-option-icon" (tap)="closeWo(j)"></ion-icon>
           <ion-spinner *ngIf="item.closeInProgress" name="bubbles"></ion-spinner>
         </ion-row>
       </ion-grid>
