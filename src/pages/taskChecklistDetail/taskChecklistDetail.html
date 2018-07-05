@@ -65,7 +65,7 @@
               <!-- <ion-icon name="checkmark" item-end (click)="confirmMarkAll()"></ion-icon>   -->
               <!-- <span class="right_icons count" (press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):confirmResetAll(res.title,j,'',res.id)):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span> -->
               <ion-spinner *ngIf="res.inProgress" name="bubbles"></ion-spinner>
-              <span *ngIf="!res.inProgress" class="right_icons count" (long-press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):''):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span>
+              <span *ngIf="!res.inProgress" class="right_icons count" (long-press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):''):''">[{{getTotalCompleted(res.item_records)}}/{{res.item_records.length}}]</span>
             </ion-col>
           </ion-row>
         </ion-grid>
