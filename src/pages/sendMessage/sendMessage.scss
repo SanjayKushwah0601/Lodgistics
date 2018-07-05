@@ -521,6 +521,7 @@ page-sendMessage {
     }
     ion-footer {
         background-color: #fff;
+        min-height: 37px;
     }
     ion-footer ion-row {
         border-bottom: 1px solid #DEDEDE;
@@ -579,7 +580,7 @@ page-sendMessage {
         .open-keyboard {
             height: 55%;
         }
-    } //iPhone 6,7,8,6S in portrait & landscape
+    } //iPhone 6,7,8,6S in portrait & landscape , Pixel 2 XL
     @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
         //.scroll-content{    margin-bottom: 42px !important;}
         .close-icon {
@@ -587,7 +588,7 @@ page-sendMessage {
             margin-right: -2.5%;
         }
         ion-footer.openKeyboardWithSpellCheck {
-            bottom: 39% !important;
+            bottom: 43% !important;
         }
         ion-footer.openKeyboard {
             bottom: 32% !important;
@@ -637,6 +638,24 @@ page-sendMessage {
         }
         .open-keyboard {
             height: 60%;
+        }
+    } // pixel
+    @media only screen and (min-width: 411px) and (max-width: 767px) {
+        ion-content .scroll-content {
+            margin-top: 150px !important;
+        }
+        .close-icon {
+            margin-top: -11.5%;
+            margin-right: -2.5%;
+        }
+        ion-footer.openKeyboardWithSpellCheck {
+            bottom: 42.9% !important
+        }
+        ion-footer.openKeyboard {
+            bottom: 36% !important;
+        }
+        .open-keyboard {
+            height: 55%;
         }
     }
     .footer_toolbar {
