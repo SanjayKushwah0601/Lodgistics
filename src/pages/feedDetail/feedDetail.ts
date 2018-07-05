@@ -52,10 +52,10 @@ export class FeedDetailPage {
   public showMentions = false;
   public mentionMembers = [];
   public totalMentionUsers = 0;
-public alert : any;
-public oldFeedTextValue="";
-  public spinner=false;
-  public apiInProgress=false;
+  public alert: any;
+  public oldFeedTextValue = "";
+  public spinner = false;
+  public apiInProgress = false;
 
   constructor(public navCtrl: NavController, public _FB: FormBuilder, public commonMethod: srviceMethodsCall, private viewCtrl: ViewController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navParams: NavParams, private keyboard: Keyboard, public zone: NgZone, private sqlite: SQLite, public platform: Platform, public events: Events, public translationservice: TranslationService) {
 
@@ -137,11 +137,11 @@ public oldFeedTextValue="";
         this.userId = accessToken.user_id;
 
         if (this.commonMethod.checkNetwork()) {
-          this.spinner=true;
+          this.spinner = true;
           this.commonMethod.getDataWithoutLoder(getFeedsUrl + '/' + this.navParams.get('feed_id'), accessToken).subscribe(
             data => {
               this.foundRepos = data.json();
-              this.spinner=false;
+              this.spinner = false;
               if (this.feed_comment_id != null) {
                 setTimeout(() => {
                   this.highlightComment = true;
@@ -155,7 +155,7 @@ public oldFeedTextValue="";
               }
             },
             err => {
-              this.spinner=false;
+              this.spinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -223,7 +223,7 @@ public oldFeedTextValue="";
 
         if (this.commonMethod.checkNetwork()) {
 
-          this.apiInProgress=true;
+          this.apiInProgress = true;
           this.commonMethod.postDataWithoutLoder(createFeedUrl, objData, accessToken).subscribe(
             data => {
               //this.foundRepos1 = data.json();
@@ -240,7 +240,7 @@ public oldFeedTextValue="";
                   this.commonMethod.getDataWithoutLoder(getFeedsUrl + '/' + this.navParams.get('feed_id'), accessToken).subscribe(
                     data => {
                       this.foundRepos = data.json();
-                      this.apiInProgress=false;
+                      this.apiInProgress = false;
                       //console.error(this.foundRepos);
 
                       setTimeout(() => {
@@ -249,7 +249,7 @@ public oldFeedTextValue="";
                       //alert(this.foundRepos); 
                     },
                     err => {
-                      this.apiInProgress=false;
+                      this.apiInProgress = false;
                       alertVar.present();
                       console.error("Error : " + err);
                     },
@@ -266,7 +266,7 @@ public oldFeedTextValue="";
 
             },
             err => {
-              this.apiInProgress=false;
+              this.apiInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -364,9 +364,8 @@ public oldFeedTextValue="";
           //});
           this.feedComment = this.removeLastInstance(strArray[i], this.feedComment);
           /* this is only for android */
-          if(this.feedComment.trim()=="")
-          {
-            this.feedComment=this.feedComment.trim();
+          if (this.feedComment.trim() == "") {
+            this.feedComment = this.feedComment.trim();
           }
           this.feedComment = this.feedComment + "@" + memberInfo.name + " ";
           mentionAdded = false;
@@ -438,7 +437,7 @@ public oldFeedTextValue="";
     let w = window.screen.width / 100 * 45;
     //let imgStyle="width='"+w+"px"+' height='"+w+"px"+'";
     //console.log(w);
-    this.alert= this.alertCtrl.create({
+    this.alert = this.alertCtrl.create({
       title: '',
       message: '<div class="img-loader"></div><img src="' + url + '" class="loaded-image" alt="Loading..." >',
       cssClass: 'image_upload_alert show-image-alert',
@@ -491,52 +490,52 @@ public oldFeedTextValue="";
     this.platform.ready().then(() => {
       this.platform.registerBackButtonAction(() => {
 
-       // console.log();
+        // console.log();
         //this.events.publish('hide:keyboard');
         //this.keyboard.close();
         //setTimeout(() => {
-          // this.nativeStorage.getItem("lastPage")
-          //   .then(
-          //   pageDetail => {
-          //     if (pageDetail.pageName) {
+        // this.nativeStorage.getItem("lastPage")
+        //   .then(
+        //   pageDetail => {
+        //     if (pageDetail.pageName) {
 
-          //       if (pageDetail.index) {
-          //         if (pageDetail.index != -1) {
-          //           this.navCtrl.popTo(pageDetail.index);
-          //         } else {
-          //           this.navCtrl.setRoot(FeedsPage);
-          //         }
-          //       } else if (pageDetail.pageName == MyMentionPage.name) {
-          //         this.navCtrl.setRoot(MyMentionPage);
-          //       } else if (pageDetail.pageName == ChattingPage.name) {
-          //         this.navCtrl.setRoot(ChattingPage);
-          //       } else if (pageDetail.pageName == ProfilePage.name) {
-          //         this.navCtrl.pop({});
-          //       }else if (pageDetail.pageName == MyVideosPage.name) {
-          //         //this.navCtrl.setRoot(ProfilePage);
-          //         this.navCtrl.pop({});
-          //       } else if (pageDetail.pageName == CreateFeedsPage.name) {
-          //         this.navCtrl.push(CreateFeedsPage)
-          //       }else if (pageDetail.pageName == WorkOrderPage.name) {
-          //         this.navCtrl.setRoot(WorkOrderPage);
-          //       }else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
-          //         this.navCtrl.setRoot(TaskChecklistPage);
-          //       } else {
-          //         this.navCtrl.setRoot(FeedsPage);
-          //       }
-          //     }
-          //     else {
-          //       this.navCtrl.setRoot(FeedsPage);
-          //     }
-          //   }),
-          //   error => {
-          //     this.navCtrl.setRoot(FeedsPage);
-          //   };
+        //       if (pageDetail.index) {
+        //         if (pageDetail.index != -1) {
+        //           this.navCtrl.popTo(pageDetail.index);
+        //         } else {
+        //           this.navCtrl.setRoot(FeedsPage);
+        //         }
+        //       } else if (pageDetail.pageName == MyMentionPage.name) {
+        //         this.navCtrl.setRoot(MyMentionPage);
+        //       } else if (pageDetail.pageName == ChattingPage.name) {
+        //         this.navCtrl.setRoot(ChattingPage);
+        //       } else if (pageDetail.pageName == ProfilePage.name) {
+        //         this.navCtrl.pop({});
+        //       }else if (pageDetail.pageName == MyVideosPage.name) {
+        //         //this.navCtrl.setRoot(ProfilePage);
+        //         this.navCtrl.pop({});
+        //       } else if (pageDetail.pageName == CreateFeedsPage.name) {
+        //         this.navCtrl.push(CreateFeedsPage)
+        //       }else if (pageDetail.pageName == WorkOrderPage.name) {
+        //         this.navCtrl.setRoot(WorkOrderPage);
+        //       }else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
+        //         this.navCtrl.setRoot(TaskChecklistPage);
+        //       } else {
+        //         this.navCtrl.setRoot(FeedsPage);
+        //       }
+        //     }
+        //     else {
+        //       this.navCtrl.setRoot(FeedsPage);
+        //     }
+        //   }),
+        //   error => {
+        //     this.navCtrl.setRoot(FeedsPage);
+        //   };
 
 
-        },
-          100);
-      });
+      },
+        100);
+    });
     //});
     // this.navbar.backButtonClick = () => {
     //   console.log();
@@ -599,31 +598,31 @@ public oldFeedTextValue="";
         // this.navCtrl.pop();
         this.nativeStorage.getItem("lastPage")
           .then(
-          pageDetail => {
-            if (pageDetail.pageName) {
-              if (pageDetail.pageName == MyMentionPage.name) {
-                this.navCtrl.setRoot(MyMentionPage);
-              } else if (pageDetail.pageName == FeedsPage.name) {
-                this.navCtrl.setRoot(FeedsPage);
-              } else if (pageDetail.pageName == ProfilePage.name) {
-                this.navCtrl.pop({});
-              }else if (pageDetail.pageName == MyVideosPage.name) {
-                //this.navCtrl.setRoot(ProfilePage);
-                this.navCtrl.pop({});
-              }else if (pageDetail.pageName == CreateFeedsPage.name) {
-                this.navCtrl.push(CreateFeedsPage)
-              } else if (pageDetail.pageName == WorkOrderPage.name) {
-                this.navCtrl.setRoot(WorkOrderPage);
-              }else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
-                this.navCtrl.setRoot(TaskChecklistPage);
-              }else {
+            pageDetail => {
+              if (pageDetail.pageName) {
+                if (pageDetail.pageName == MyMentionPage.name) {
+                  this.navCtrl.setRoot(MyMentionPage);
+                } else if (pageDetail.pageName == FeedsPage.name) {
+                  this.navCtrl.setRoot(FeedsPage);
+                } else if (pageDetail.pageName == ProfilePage.name) {
+                  this.navCtrl.pop({});
+                } else if (pageDetail.pageName == MyVideosPage.name) {
+                  //this.navCtrl.setRoot(ProfilePage);
+                  this.navCtrl.pop({});
+                } else if (pageDetail.pageName == CreateFeedsPage.name) {
+                  this.navCtrl.push(CreateFeedsPage)
+                } else if (pageDetail.pageName == WorkOrderPage.name) {
+                  this.navCtrl.setRoot(WorkOrderPage);
+                } else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
+                  this.navCtrl.setRoot(TaskChecklistPage);
+                } else {
+                  this.navCtrl.setRoot(ChattingPage);
+                }
+              }
+              else {
                 this.navCtrl.setRoot(ChattingPage);
               }
-            }
-            else {
-              this.navCtrl.setRoot(ChattingPage);
-            }
-          }),
+            }),
           error => {
             this.navCtrl.setRoot(ChattingPage);
           };
@@ -703,9 +702,9 @@ public oldFeedTextValue="";
     });
   }
 
-  keyDownCheck(e){
-    this.oldFeedTextValue=this.feedComment;
-    console.log("11ketdown"+this.feedComment);
+  keyDownCheck(e) {
+    this.oldFeedTextValue = this.feedComment;
+    console.log("11ketdown" + this.feedComment);
   }
 
   valchange(e) {
@@ -713,7 +712,7 @@ public oldFeedTextValue="";
     //console.log("=="+e.keyCode);
     //console.log("==" + JSON.stringify(e));
     //if (e.key != "Backspace") {   // only for ios
-    if( !(this.oldFeedTextValue.length>this.feedComment.length))   // only for android
+    if (!(this.oldFeedTextValue.length > this.feedComment.length))   // only for android
     {
       this.zone.run(() => {
         //this.feedComment=this.feedComment;
@@ -754,7 +753,7 @@ public oldFeedTextValue="";
   }
 
 
-  translate(sourceText, langCode, root, i) {
+  translate(title, sourceText, langCode, root, i) {
 
     sourceText = sourceText.replace(/\n/g, "<br/>");
 
@@ -777,6 +776,9 @@ public oldFeedTextValue="";
         //alert("double clicked");
 
         this.touchtime = 0;
+        if (title != '' && root == true) {
+          this.translateTitle(title, langCode, i);
+        }
         //this.foundRepos.replies[i].body = this.foundRepos.replies[i].temp_data;
 
         if (root == true && this.foundRepos.temp_data != undefined && this.foundRepos.temp_data != "") {
@@ -841,6 +843,50 @@ public oldFeedTextValue="";
 
   }
 
+  translateTitle(sourceText, langCode, i) {
+    sourceText = sourceText.replace(/\n/g, "<br/>");
+    let tempStr = "";
+    console.log("sourceText=" + sourceText);
+
+    if (this.foundRepos.temp_title_data != undefined && this.foundRepos.temp_title_data != "") {
+      this.foundRepos.title = this.foundRepos.temp_title_data;
+      this.foundRepos.temp_title_data = "";
+    }
+    else {
+      //this.commonMethod.showLoader();
+      this.translationservice.translateText(sourceText, langCode).subscribe(data => {
+
+        if (data.detectedSourceLanguage == "en") {
+          this.foundRepos.temp_title_data = this.foundRepos.title;
+          this.foundRepos.title = tempStr + data.translatedText;
+          //this.commonMethod.hideLoader();
+        }
+        else {
+          this.translationservice.translateText(sourceText, 'en').subscribe(data => {
+            this.foundRepos.temp_title_data = this.foundRepos.title;
+            this.foundRepos.title = tempStr + data.translatedText;
+            //this.commonMethod.hideLoader();
+          }, error => {
+            //this.commonMethod.hideLoader();
+            let alert = this.alertCtrl.create({
+              subTitle: 'Error:' + '<br>' + error,
+              buttons: ['OK']
+            });
+            alert.present();
+          });
+        }
+
+      }, error => {
+        //this.commonMethod.hideLoader();
+        let alert = this.alertCtrl.create({
+          subTitle: 'Error:' + '<br>' + error,
+          buttons: ['OK']
+        });
+        alert.present();
+      });
+    }
+  }
+
 
   getUserName(user_id) {
     let userName = "";
@@ -875,9 +921,19 @@ public oldFeedTextValue="";
                 this.alert.dismiss();
               }
             });
-        },2000);
+        }, 2000);
       });
     });
   }
 
+  //TODO: Need to move this function into utility folder. 
+  updateHtml1(val) {
+    let allChatMentions = [];
+    let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
+    if (newValue != "") {
+      val = newValue;
+    }
+
+    return val.replace(/text-decoration-line/g, "text-decoration");
+  }
 }

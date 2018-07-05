@@ -16,14 +16,14 @@
 
 
     <ion-buttons left>
-      <button ion-button left>
-      <span start class="broadcast" *ngIf="broadcast_count>0">
-        <span (click)="broadcastList()">
-          <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
-          <span class="broadcast_btn">
-            <img src="assets/img/broadcost-red-icon.png" />
-          </span>
-          ({{broadcast_count}})</span>
+      <button ion-button left (click)="broadcastList()">
+        <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span>
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+              <img src="assets/img/broadcost-red-icon.png" />
+            </span>
+            ({{broadcast_count}})</span>
         </span>
       </button>
     </ion-buttons>

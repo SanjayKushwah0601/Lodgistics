@@ -36,16 +36,29 @@ export class TranslationService {
 
   // }
 
+  // translateText(sourceText, targetLanguageCode) {
+
+  //   let obj = { target: targetLanguageCode, q: sourceText };
+  //   return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ", obj)
+  //     .map(response => {
+  //       this.data = response.json().data.translations[0];
+  //       return this.data;
+  //     }).catch(this.handleError);
+
+  // }
+
   translateText(sourceText, targetLanguageCode) {
 
-        let obj={target:targetLanguageCode,q:sourceText};
-        return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ",obj)
-          .map(response => {
-            this.data = response.json().data.translations[0];
-            return this.data;
-          }).catch(this.handleError);
-    
-      }
+    let obj = { target: targetLanguageCode, q: sourceText };
+    return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ", obj)
+      .map(response => {
+        let data = response.json().data.translations[0];
+        data.translatedText = data.translatedText.replace(new RegExp("@ ", 'g'), "@");
+        console.log('Translated: ' + JSON.stringify(data.translatedText))
+        return data;
+      }).catch(this.handleError);
+
+  }
 
   private handleError(error: any) {
     this.errorMsg = (error.message) ? error.message :

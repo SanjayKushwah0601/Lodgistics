@@ -48,10 +48,10 @@
 
         <!-- <ion-grid class="option-row comment_ui" *ngIf="res.showOption">
               <ion-row class="speech-bubble">
-              <ion-col col-10 class="option-col align-center" (tap)="addComment()">
+              <ion-col col-10 class="option-col align-center" (click)="addComment()">
                 <ion-icon name="text-outline" class="option-icon"></ion-icon> COMMENT 
               </ion-col>
-              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeOptionMain(j)"></ion-icon>
+              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (click)="closeOptionMain(j)"></ion-icon>
             </ion-row>
             </ion-grid> -->
 
@@ -65,7 +65,7 @@
               <!-- <ion-icon name="checkmark" item-end (click)="confirmMarkAll()"></ion-icon>   -->
               <!-- <span class="right_icons count" (press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):confirmResetAll(res.title,j,'',res.id)):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span> -->
               <ion-spinner *ngIf="res.inProgress" name="bubbles"></ion-spinner>
-              <span *ngIf="!res.inProgress" class="right_icons count" (press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):''):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span>
+              <span *ngIf="!res.inProgress" class="right_icons count" (long-press)="!reviewMode?( (getTotalCompleted(res.item_records)!=res.item_records.length)?confirmMarkAll(res.title,j,'',res.id):''):''">[ {{getTotalCompleted(res.item_records)}} / {{res.item_records.length}} ]</span>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -78,16 +78,16 @@
 
           <ion-grid class="option-row comment_ui" *ngIf="item.showOption">
             <ion-row class="speech-bubble">
-              <ion-col col-10 class="option-col align-center" (tap)="addComment(j,k,item.id,item.comment)">
+              <ion-col col-10 class="option-col align-center" (click)="addComment(j,k,item.id,item.comment)">
                 <ion-icon name="text-outline" class="option-icon"></ion-icon> COMMENT
               </ion-col>
-              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (tap)="closeOption(j,k)"></ion-icon>
+              <ion-icon col-1 ios="ios-close-outline" md="md-close-outline" class="option-icon last-option-icon" (click)="closeOption(j,k)"></ion-icon>
             </ion-row>
           </ion-grid>
 
           <ion-grid>
             <ion-row>
-              <ion-col col-10 (press)="!reviewMode?openOptions(item.id,j,k):''" class="sub_items_box">
+              <ion-col col-10 (long-press)="!reviewMode?openOptions(item.id,j,k):''" class="sub_items_box">
                 <span class="left_content">{{item.title}}</span>
                 <span *ngIf="item.comment">
                   <div class="content_text">{{item.comment}}</div>
@@ -135,7 +135,7 @@
       <ion-col col-3 (click)="openChatPage()" class="bottom-menu">
           <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>
         <ion-icon name="ios-chatboxes-outline"></ion-icon><br/><span>MESSAGING</span></ion-col>
-      <ion-col col-3 (tap)="openMyMentionPage()" class="bottom-menu">
+      <ion-col col-3 (click)="openMyMentionPage()" class="bottom-menu">
         <ion-icon name="ios-at"></ion-icon><br/><span>MENTION</span></ion-col>
         <ion-col col-3  (click)="openWOPage()" class="bottom-menu">
           <ion-icon name="ios-construct"></ion-icon><br/><span>WORK ORDERS</span></ion-col> 

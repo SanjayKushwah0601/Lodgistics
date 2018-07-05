@@ -269,6 +269,15 @@ page-profile {
     .post-feed:active {
         opacity: 0.5;
     }
+    .post-feed {
+        /* float: right; */
+        color: #fff !important;
+        background-color: #02B9E7 !important;
+        /* top: -10px; */
+        /* padding: 4px; */
+        /* height: 100%; */
+        /* box-shadow: none; */
+    }
     button[disabled],
     [ion-button][disabled],
     [md-button][disabled] {

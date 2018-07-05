@@ -6,7 +6,10 @@
 </ion-header>
 
 <ion-content padding [ngClass]="isKeyboardOpen?'keyboard-open':'keyboard-close'" (click)="closekeyboard()">
- <span *ngIf="spinner" class="api_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_loader_text">Fetching records...</span></span>
+  <span *ngIf="spinner" class="api_loader">
+    <ion-spinner name="bubbles"></ion-spinner>
+    <span class="api_loader_text">Fetching records...</span>
+  </span>
 
   <div *ngIf="foundRepos" #mainScreenHeight>
     <ion-card style="width:100%;margin:0px;">
@@ -19,7 +22,9 @@
         <div class="pull-left">
           <h2>{{foundRepos.created_by.name}}</h2>
           <p *ngIf="foundRepos.created_by.title">{{foundRepos.created_by.title}}</p>
-          <p *ngIf="!foundRepos.created_by.title"><br></p>
+          <p *ngIf="!foundRepos.created_by.title">
+            <br>
+          </p>
         </div>
         <div class="pull-right">
           <!-- amDateFormat:'MMMM. d' -->
@@ -30,43 +35,56 @@
 
       </ion-item>
 
-      <span *ngIf="foundRepos.image_url==''" (click)="translate(foundRepos.body,'es',true,0)"> 
-  <ion-card-content ngClass="selectable">
-    <p  [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p>
-  </ion-card-content>
-  </span>
+      <span *ngIf="foundRepos.image_url==''" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+        <ion-card-content ngClass="selectable">
+          <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
+          <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p>
+        </ion-card-content>
+      </span>
 
 
-      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width>=foundRepos.image_height" (click)="translate(foundRepos.body,'es',true,0)"> 
-<ion-card-content ngClass="selectable">
-  <table class="card-table card-table-2">
-     <tr>
-         <td class=""><p  [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p></td>
-      </tr>
-      <tr>
-        <td (load)="imageLoaded()" (click)="showImage(foundRepos.image_url)"><img (load)="imageLoaded()" src="{{foundRepos.image_url}}"></td>
-      </tr>
-    </table>
-</ion-card-content>
-</span>
+      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width>=foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+        <ion-card-content ngClass="selectable">
+          <table class="card-table card-table-2">
+            <tr>
+              <td class="">
+                <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
+                <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p>
+              </td>
+            </tr>
+            <tr>
+              <td (load)="imageLoaded()" (click)="showImage(foundRepos.image_url)">
+                <img (load)="imageLoaded()" src="{{foundRepos.image_url}}">
+              </td>
+            </tr>
+          </table>
+        </ion-card-content>
+      </span>
 
-      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width<foundRepos.image_height" (click)="translate(foundRepos.body,'es',true,0)"> 
-  <ion-card-content ngClass="selectable">
-    <table class="card-table">
-      <tr>
-        <td (click)="showImage(foundRepos.image_url)"><img (load)="imageLoaded()" style="width:200px;height:250px;" src="{{foundRepos.image_url}}"></td>
-        <td class="td-box-2"><p  [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p></td>
-      </tr>
-    </table>
-  </ion-card-content>
-   </span>
+      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width<foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+        <ion-card-content ngClass="selectable">
+          <table class="card-table">
+            <tr>
+              <td (click)="showImage(foundRepos.image_url)">
+                <img (load)="imageLoaded()" style="width:200px;height:250px;" src="{{foundRepos.image_url}}">
+              </td>
+              <td class="td-box-2">
+                <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
+                <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p>
+              </td>
+            </tr>
+          </table>
+        </ion-card-content>
+      </span>
 
       <ion-row class="card-footer">
         <ion-col>
           <button ion-button icon-left clear small>
-        <div *ngIf="foundRepos.comments_count==1"><span class="comment_count">{{foundRepos.comments_count}}</span> Comment</div>
-       <div *ngIf="foundRepos.comments_count==0 || foundRepos.comments_count>1"> <span [ngClass]="foundRepos.comments_count==0?'':'comment_count'">{{foundRepos.comments_count}}</span> Comments</div>
-      </button>
+            <div *ngIf="foundRepos.comments_count==1">
+              <span class="comment_count">{{foundRepos.comments_count}}</span> Comment</div>
+            <div *ngIf="foundRepos.comments_count==0 || foundRepos.comments_count>1">
+              <span [ngClass]="foundRepos.comments_count==0?'':'comment_count'">{{foundRepos.comments_count}}</span> Comments</div>
+          </button>
         </ion-col>
       </ion-row>
 
@@ -74,50 +92,58 @@
 
 
     <ion-card class="sub-card" *ngFor="let item of foundRepos.replies; let j=index" id="{{item.id?item.id:'comment'+j}}" [ngClass]="item.id && feed_comment_id && feed_comment_id==item.id && highlightComment?'highlight-comment':''">
-      
-        <span *ngIf="!item.created_by_system">
-      <ion-item [ngClass]="item.id && feed_comment_id && feed_comment_id==item.id && highlightComment?'highlight-comment':''">
-        <ion-avatar item-left>
-          <img src="{{item.created_by.avatar_img_url}}">
-        </ion-avatar>
-        <div class="pull-left">
-          <h2>{{item.created_by.name}}</h2>
-          <!-- <p>{{item.created_by.role}} </p> -->
-          <p *ngIf="item.created_by.title">{{item.created_by.title}}</p>
-          <p *ngIf="!item.created_by.title"><br></p>
-        </div>
-        <div class="pull-right">
 
-          <span *ngIf=" (item.created_at | date:'dd/MM/yyyy') == (currentdate | date:'dd/MM/yyyy')" style="float:right;">{{item.created_at | amTimeAgo}}</span>
-          <span *ngIf=" (item.created_at | date:'dd/MM/yyyy') != (currentdate | date:'dd/MM/yyyy')" style="float:right;">{{item.created_at | date:'MMM d'}}</span>
+      <span *ngIf="!item.created_by_system">
+        <ion-item [ngClass]="item.id && feed_comment_id && feed_comment_id==item.id && highlightComment?'highlight-comment':''">
+          <ion-avatar item-left>
+            <img src="{{item.created_by.avatar_img_url}}">
+          </ion-avatar>
+          <div class="pull-left">
+            <h2>{{item.created_by.name}}</h2>
+            <!-- <p>{{item.created_by.role}} </p> -->
+            <p *ngIf="item.created_by.title">{{item.created_by.title}}</p>
+            <p *ngIf="!item.created_by.title">
+              <br>
+            </p>
+          </div>
+          <div class="pull-right">
 
-        </div>
+            <span *ngIf=" (item.created_at | date:'dd/MM/yyyy') == (currentdate | date:'dd/MM/yyyy')" style="float:right;">{{item.created_at | amTimeAgo}}</span>
+            <span *ngIf=" (item.created_at | date:'dd/MM/yyyy') != (currentdate | date:'dd/MM/yyyy')" style="float:right;">{{item.created_at | date:'MMM d'}}</span>
 
-      </ion-item>
-      <ion-card-content (click)="translate(item.body,'es',false,j)" ngClass="selectable">
-        <p class="sub-card-text" [innerHTML]="updateHtml(item.body,item.mentioned_user_ids) | safeHtml"></p>
-      </ion-card-content>
+          </div>
+
+        </ion-item>
+        <ion-card-content (click)="translate(item.body,'es',false,j)" ngClass="selectable">
+          <p class="sub-card-text" [innerHTML]="updateHtml(item.body,item.mentioned_user_ids) | safeHtml"></p>
+        </ion-card-content>
       </span>
 
 
       <ion-label *ngIf="item.created_by_system" class="bot_box">
         <p class="bot_user">
-                    <span>
-                      <img class="bot_user_img" src="{{item.created_by.avatar_img_url}}">
-                      <span class="bot_user_name"><b>{{item.created_by.name}}</b></span>
-                    </span>          
-                </p>
-                <div class="bot_user_msg">
-                  <p>
-                    <span class="chat-msg-box">
-                      <span class="bot_text" data-tap-disabled="true">
-                      <b>WO #{{foundRepos.work_order.id}}</b> has been closed by <b>{{getUserName(foundRepos.work_order.closed_by_user_id)}}</b> at {{item.created_at | date:'shortTime'}}.<br>
-                      <b>Location:</b> <span [innerHTML]="(foundRepos.work_order.location_detail?(foundRepos.work_order.location_detail):'') | safeHtml"></span><br>
-                      <b>Request:</b> {{foundRepos.work_order.description}}
-                    </span>
-                    </span>
-                  </p>
-                </div>
+          <span>
+            <img class="bot_user_img" src="{{item.created_by.avatar_img_url}}">
+            <span class="bot_user_name">
+              <b>{{item.created_by.name}}</b>
+            </span>
+          </span>
+        </p>
+        <div class="bot_user_msg">
+          <p>
+            <span class="chat-msg-box">
+              <span class="bot_text" data-tap-disabled="true">
+                <b>WO #{{foundRepos.work_order.id}}</b> has been closed by
+                <b>{{getUserName(foundRepos.work_order.closed_by_user_id)}}</b> at {{item.created_at | date:'shortTime'}}.
+                <br>
+                <b>Location:</b>
+                <span [innerHTML]="(foundRepos.work_order.location_detail?(foundRepos.work_order.location_detail):'') | safeHtml"></span>
+                <br>
+                <b>Request:</b> {{foundRepos.work_order.description}}
+              </span>
+            </span>
+          </p>
+        </div>
       </ion-label>
 
 
@@ -129,21 +155,29 @@
 
 
 <!-- <ion-footer class="{{classnameForFooter}}"> -->
-<ion-footer>
+<ion-footer class="feed_comment_iphone_x">
   <ion-toolbar position="bottom">
 
     <span class="scroll-ion">
-    <span class="counting">@ <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label></span>
-    <ion-scroll scrollX="true">
-      <ul class="results">
-        <ng-container *ngFor="let memberInfo of mentionMembers">
-          <li *ngIf="userId!=memberInfo.id && memberInfo.is_system_user!='1'" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''"><span><img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''"/></span>            <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label></li>
-        </ng-container>
-        <li *ngIf="totalMentionUsers>1" style="padding-left: 5px;" (mousedown)="(mentionUsers.length != totalMentionUsers)?selectAllMention($event,true):selectAllMention($event,false)"
-          [ngClass]="(mentionUsers.length == totalMentionUsers)?'selected':''">
-          <label style="font-weight:600;">ALL</label></li>
-      </ul>
-    </ion-scroll>
+      <span class="counting">@
+        <label [ngClass]="this.mentionUsers.length>=1?'blue_text':''">{{this.mentionUsers.length>0?this.mentionUsers.length:''}}</label>
+      </span>
+      <ion-scroll scrollX="true">
+        <ul class="results">
+          <ng-container *ngFor="let memberInfo of mentionMembers">
+            <li *ngIf="userId!=memberInfo.id && memberInfo.is_system_user!='1'" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+              <span>
+                <img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
+              </span>
+              <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
+            </li>
+          </ng-container>
+          <li *ngIf="totalMentionUsers>1" style="padding-left: 5px;" (mousedown)="(mentionUsers.length != totalMentionUsers)?selectAllMention($event,true):selectAllMention($event,false)"
+            [ngClass]="(mentionUsers.length == totalMentionUsers)?'selected':''">
+            <label style="font-weight:600;">ALL</label>
+          </li>
+        </ul>
+      </ion-scroll>
     </span>
 
     <form [formGroup]="commentForm">
@@ -151,13 +185,15 @@
         <ion-row>
           <ion-col col-9>
             <textarea autocomplete="off" autocorrect="on" spellcheck="on" autocapitalize="on" type="text" placeholder="Add a comment..."
-              formControlName="comment" [(ngModel)]="feedComment" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
-              <!-- (ngModelChange)="valchange($event)" -->
+              formControlName="comment" [(ngModel)]="feedComment" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)"
+              (keyup)="valchange($event)"></textarea>
+            <!-- (ngModelChange)="valchange($event)" -->
 
           </ion-col>
           <ion-col col-3 align-self-end>
             <ion-spinner class="api_loader_spinner" *ngIf="apiInProgress" name="bubbles"></ion-spinner>
-            <button *ngIf="!apiInProgress" ion-button (click)="commentOnFeed(commentForm.value)" [disabled]="feedComment==null || !feedComment.trim()" class="post-comment">Post</button>
+            <button *ngIf="!apiInProgress" ion-button (click)="commentOnFeed(commentForm.value)" [disabled]="feedComment==null || !feedComment.trim()"
+              class="post-comment">Post</button>
           </ion-col>
         </ion-row>
       </ion-grid>

@@ -38,7 +38,7 @@
         <span [ngClass]="showGroupList?'active':''" (click)="toggleDetails(true,false)">GROUPS
           <label class="user_count">({{foundRepos.groups.length}})</label>
         </span>
-        <span [ngClass]="showGroupList?'':'active'" (click)="toggleDetails(false,true)">PRIVATE
+        <span [ngClass]="showGroupList?'':'active'" (click)="toggleDetails(false,true)">DIRECT
           <label class="user_count">({{totalPrivateUSers}})</label>
         </span>
       </div>

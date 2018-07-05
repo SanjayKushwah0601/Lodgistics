@@ -270,7 +270,7 @@ page-sendMessage {
         padding-top: 4px;
         position: relative
     }
-    .results li:last-child{
+    .results li:last-child {
         border-right: none;
     }
     .results li img {
@@ -517,6 +517,7 @@ page-sendMessage {
     .to_label {
         color: #BDBDBD;
         font-size: 15px;
+        max-width: 10%;
     }
     ion-footer {
         background-color: #fff;
@@ -539,6 +540,7 @@ page-sendMessage {
     }
     .with_selected_user .to_label {
         max-width: 8%;
+        max-width: 10%;
     }
     .with_selected_user .sendin_footer {
         font-size: 15px;
@@ -559,7 +561,7 @@ page-sendMessage {
             font-size: 24px;
             height: 20vh;
         }
-    } //iPhone 5,5S,5se in portrait & landscape
+    } //iPhone 5,5S,5se in portrait & landscape & Moto G
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
         ion-content .scroll-content {
             margin-top: 150px !important;
@@ -569,7 +571,7 @@ page-sendMessage {
             margin-right: -2.5%;
         }
         ion-footer.openKeyboardWithSpellCheck {
-            bottom: 45% !important;
+            bottom: 43.9% !important;
         }
         ion-footer.openKeyboard {
             bottom: 36% !important;

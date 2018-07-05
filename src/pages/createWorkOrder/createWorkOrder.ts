@@ -168,7 +168,8 @@ export class CreateWorkOrderPage {
       maintainable_id: '',
       maintenance_checklist_item_id: "",
       first_img_url: "",
-      second_img_url: ""
+      second_img_url: "",
+      closed: false
     };
 
     this.nativeStorage.getItem('user_auth').then(
@@ -230,6 +231,7 @@ export class CreateWorkOrderPage {
                 this.workOrderData.maintainable_id = woData.maintainable_id;
                 this.updateCheckList();
                 this.workOrderData.maintenance_checklist_item_id = woData.maintenance_checklist_item_id;
+                this.workOrderData.closed=woData.closed;
                 //let foundRepos = data.json();
                 //console.log("==" + JSON.stringify(foundRepos));
 

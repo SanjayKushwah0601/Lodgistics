@@ -43,12 +43,12 @@ export class CreateFeedsPage {
   public showMentions = false;
   public mentionMembers = [];
   public actionSheet: any;
-  public event : any;
-  public oldFeedTextValue="";
-public apiInProgress=false;
-public placeHolderText="What do you want to share with your colleagues?";
+  public event: any;
+  public oldFeedTextValue = "";
+  public apiInProgress = false;
+  public placeHolderText = "What do you want to share with your colleagues?";
   public feedTitle = "";
-  public isFocusOnTitleInput=false;
+  public isFocusOnTitleInput = false;
 
 
   constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public platform: Platform, public zone: NgZone, private sqlite: SQLite, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events) {
@@ -120,8 +120,9 @@ public placeHolderText="What do you want to share with your colleagues?";
 
   postFeedOnServer(formData) {
 
-    this.apiInProgress=true;
-    let feedData = formData.feed.trim().replace(/\r?\n/g, '<br />');
+    this.apiInProgress = true;
+    // let feedData = formData.feed.trim().replace(/\r?\n/g, '<br />');
+    let feedData = formData.feed.trim();
     //feedData = this.commonMethod.replaceURLWithHTMLLinks(feedData);
 
     let mentionId = [];
@@ -146,7 +147,7 @@ public placeHolderText="What do you want to share with your colleagues?";
     }
 
 
-    let objData = { 'feed': { title: this.feedTitle.trim().replace(/\r?\n/g, '<br />'),body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
+    let objData = { 'feed': { title: this.feedTitle.trim(), body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -162,17 +163,17 @@ public placeHolderText="What do you want to share with your colleagues?";
 
           this.commonMethod.postDataWithoutLoder(createFeedUrl, objData, accessToken).subscribe(
             data => {
-              this.feedTitle="";
+              this.feedTitle = "";
               this.foundRepos = data.json();
               console.error(this.foundRepos);
               this.navCtrl.setRoot(FeedsPage);
-              this.apiInProgress=false;
+              this.apiInProgress = false;
               this.zone.run(() => {
                 this.postButtonEnable = false;
               });
             },
             err => {
-              this.apiInProgress=false;
+              this.apiInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -183,7 +184,7 @@ public placeHolderText="What do you want to share with your colleagues?";
 
         }
         else {
-          this.apiInProgress=false;
+          this.apiInProgress = false;
           this.commonMethod.showNetworkError();
         }
 
@@ -259,54 +260,62 @@ public placeHolderText="What do you want to share with your colleagues?";
   }
   removeLastInstance(badtext, str) {
     var charpos = str.toLowerCase().lastIndexOf(badtext.toLowerCase());
-    if (charpos<0) return str;
-    let ptone = str.substring(0,charpos);
-    let pttwo = str.substring(charpos+(badtext.length));
-    return (ptone+pttwo);
+    if (charpos < 0) return str;
+    let ptone = str.substring(0, charpos);
+    let pttwo = str.substring(charpos + (badtext.length));
+    return (ptone + pttwo);
   }
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
     console.log("selectUser call");
-  if (this.showMentions == true && this.feedText != "") {
-    let strArray = this.feedText.trim().split(" ");
-    // Display array values on page
-    for (var i = 0; i < strArray.length; i++) {
-      if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
-        //this.zone.run(() => {
+    if (this.showMentions == true && this.feedText != "") {
+      let strArray = this.feedText.trim().split(" ");
+      // Display array values on page
+      for (var i = 0; i < strArray.length; i++) {
+        if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
+          //this.zone.run(() => {
           //console.log("1="+this.feedText);
-        this.feedText = this.removeLastInstance(strArray[i],this.feedText);
-        /* this is only for android */
-        if(this.feedText.trim()=="")
-        {
-          this.feedText=this.feedText.trim();
+          this.feedText = this.removeLastInstance(strArray[i], this.feedText);
+          /* this is only for android */
+          if (this.feedText.trim() == "") {
+            this.feedText = this.feedText.trim();
+          }
+          //console.log("2="+this.feedText);
+          this.feedText = this.feedText + "@" + memberInfo.name + " ";
+          //console.log("3="+this.feedText);
+          mentionAdded = false;
         }
-        //console.log("2="+this.feedText);
-        this.feedText = this.feedText + "@" + memberInfo.name + " ";
-        //console.log("3="+this.feedText);
-        mentionAdded = false;
       }
     }
-  }
-  if (this.mentionUsers.length > 0) {
-    let insertFlag = true;
-    for (let i = 0; i < this.mentionUsers.length; i++) {
-      if (this.mentionUsers[i].id == memberInfo.id && add != true) {
+    if (this.mentionUsers.length > 0) {
+      let insertFlag = true;
+      for (let i = 0; i < this.mentionUsers.length; i++) {
+        if (this.mentionUsers[i].id == memberInfo.id && add != true) {
 
-        let removeStr = "@" + this.mentionUsers[i].name+ " ";
-        console.log(this.feedText + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
-
-        this.zone.run(() => {
+          let removeStr = "@" + this.mentionUsers[i].name + " ";
           console.log(this.feedText + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
-          this.feedText = this.feedText.replace(new RegExp(this.escapeRegExp(removeStr), 'g'), '');
-        });
-        insertFlag = false;
-        this.mentionUsers.splice(i, 1);
+
+          this.zone.run(() => {
+            console.log(this.feedText + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
+            this.feedText = this.feedText.replace(new RegExp(this.escapeRegExp(removeStr), 'g'), '');
+          });
+          insertFlag = false;
+          this.mentionUsers.splice(i, 1);
+        }
+        else if (this.mentionUsers[i].id == memberInfo.id) {
+          insertFlag = false;
+        }
       }
-      else if (this.mentionUsers[i].id == memberInfo.id) {
-        insertFlag = false;
+      if (insertFlag == true) {
+        this.mentionUsers.push(memberInfo);
+        if (mentionAdded) {
+          this.zone.run(() => {
+            this.feedText = this.feedText + "@" + memberInfo.name + " ";
+          });
+        }
       }
     }
-    if (insertFlag == true) {
+    else {
       this.mentionUsers.push(memberInfo);
       if (mentionAdded) {
         this.zone.run(() => {
@@ -314,15 +323,6 @@ public placeHolderText="What do you want to share with your colleagues?";
         });
       }
     }
-  }
-  else {
-    this.mentionUsers.push(memberInfo);
-    if (mentionAdded) {
-      this.zone.run(() => {
-        this.feedText = this.feedText + "@" + memberInfo.name + " ";
-      });
-    }
-  }
 
     this.showMentions = false;
     if (e != undefined) {
@@ -473,7 +473,7 @@ public placeHolderText="What do you want to share with your colleagues?";
   }
 
   createFeedPost(formData) {
-    this.apiInProgress=true;
+    this.apiInProgress = true;
 
     if (this.base64Image != "") {
       let commonMethod = this.commonMethod;
@@ -528,14 +528,14 @@ public placeHolderText="What do you want to share with your colleagues?";
                 }, (err) => {
                   // error
                   console.log("tt=" + JSON.stringify(err));
-                  this.apiInProgress=false;
+                  this.apiInProgress = false;
                   //commonMethod.hideLoader();
                 });
 
 
               },
               err => {
-                this.apiInProgress=false;
+                this.apiInProgress = false;
                 alertVar.present();
                 console.error("Error : " + err);
               },
@@ -546,7 +546,7 @@ public placeHolderText="What do you want to share with your colleagues?";
 
           }
           else {
-            this.apiInProgress=false;
+            this.apiInProgress = false;
             this.commonMethod.showNetworkError();
           }
 
@@ -629,67 +629,66 @@ public placeHolderText="What do you want to share with your colleagues?";
   //   return str.charCodeAt(str.length);
   // }
 
-  keyDownCheck(e){
-    this.oldFeedTextValue=this.feedText;
-    console.log("11ketdown"+this.feedText);
+  keyDownCheck(e) {
+    this.oldFeedTextValue = this.feedText;
+    console.log("11ketdown" + this.feedText);
   }
 
   valchange(e) {
-    console.log("11ketupn"+this.feedText);
-    if(this.oldFeedTextValue.length>this.feedText.length)
-    {
+    console.log("11ketupn" + this.feedText);
+    if (this.oldFeedTextValue.length > this.feedText.length) {
       console.log("back pressed");
     }
-    
+
     //let charKeyCode = this.getKeyCode(this.feedText.trim());
 
     //let keyCode = e.which || e.keyCode;
-        // console.log("==" + e.key);
-        // console.log("=="+e.keyCode);
-        // console.log("==" + JSON.stringify(e));
-        // console.log("-----"+keyCode);
-        // console.log("hjhjhjhjhjhjhjh"+charKeyCode);
+    // console.log("==" + e.key);
+    // console.log("=="+e.keyCode);
+    // console.log("==" + JSON.stringify(e));
+    // console.log("-----"+keyCode);
+    // console.log("hjhjhjhjhjhjhjh"+charKeyCode);
 
-        
 
-        //if (e.key != "Backspace") {   // only for ios
-        if( !(this.oldFeedTextValue.length>this.feedText.length))   // only for android
-        {
-          this.zone.run(() => {
-            if (this.feedText && this.feedText != "") {
-              let strArray = this.feedText.trim().split(" ");
-              // Display array values on page
-              for (var i = 0; i < strArray.length; i++) {
-                if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
-                  this.showMentions = true;
-                  let val = strArray[i].toString().substr(1);
-                  if (val.trim() != "") {
-                    let tempMentions = [];
-                    for (let l = 0; l < this.members.length; l++) {
-                      console.log("val change" + this.members + " " + this.members[i]);
-                      let tempUserName = this.members[l].name.toLowerCase().split(" ");
-                      if (this.members[l] != undefined && this.members[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
-                        //this.showMentions=false;
-                        this.selectUser(undefined, this.members[l], true);
-                      }
-                      else if (this.members[l] != undefined && this.members[l].id != this.userId && this.members[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
-                        tempMentions.push(this.members[l]);
-                      }
-                    }
-                    this.mentionMembers = tempMentions;
+
+    //if (e.key != "Backspace") {   // only for ios
+    if (!(this.oldFeedTextValue.length > this.feedText.length))   // only for android
+    {
+      this.zone.run(() => {
+        if (this.feedText && this.feedText != "") {
+          let strArray = this.feedText.trim().split(" ");
+          // Display array values on page
+          for (var i = 0; i < strArray.length; i++) {
+            if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
+              this.showMentions = true;
+              let val = strArray[i].toString().substr(1);
+              if (val.trim() != "") {
+                let tempMentions = [];
+                for (let l = 0; l < this.members.length; l++) {
+                  console.log("val change" + this.members + " " + this.members[i]);
+                  let tempUserName = this.members[l].name.toLowerCase().split(" ");
+                  if (this.members[l] != undefined && this.members[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
+                    //this.showMentions=false;
+                    this.selectUser(undefined, this.members[l], true);
+                  }
+                  else if (this.members[l] != undefined && this.members[l].id != this.userId && this.members[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
+                    tempMentions.push(this.members[l]);
                   }
                 }
-                else {
-                  this.showMentions = false;
-                }
+                this.mentionMembers = tempMentions;
               }
             }
             else {
               this.showMentions = false;
             }
-    
-          });
+          }
         }
+        else {
+          this.showMentions = false;
+        }
+
+      });
+    }
   }
 
   checkMentions() {

@@ -19,7 +19,7 @@ export class srviceMethodsCall {
 
     public loading;
 
-    constructor(private http: Http, public platform: Platform, public loadingCtrl: LoadingController, private network: Network, public alertCtrl: AlertController, public nativeStorage: NativeStorage,private sqlite: SQLite) {
+    constructor(private http: Http, public platform: Platform, public loadingCtrl: LoadingController, private network: Network, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite) {
 
     }
 
@@ -238,161 +238,141 @@ checkInternet(){
         });
     }
 
-    getUserPermissions(){
+    getUserPermissions() {
 
-        return new Promise((resolve,reject)=>{ 
+        return new Promise((resolve, reject) => {
 
-        let permissionObj={
-            "wo_access": {
-                "view_all": false,
-                "view_department": false,
-                "view_own": false,
-                "view_assigned_to": false,
-                "view_listing": false,
-                "can_create": false,
-                "priority": false,
-                "status": false,
-                "due_to_date": false,
-                "assigned_to_id": false,
-                "assignable": false,
-                "team": false,
-                "can_delete" :false,
-                "can_edit" :false,
-                "can_close":false
-            }
-        };
+            let permissionObj = {
+                "wo_access": {
+                    "view_all": false,
+                    "view_department": false,
+                    "view_own": false,
+                    "view_assigned_to": false,
+                    "view_listing": false,
+                    "can_create": false,
+                    "priority": false,
+                    "status": false,
+                    "due_to_date": false,
+                    "assigned_to_id": false,
+                    "assignable": false,
+                    "team": false,
+                    "can_delete": false,
+                    "can_edit": false,
+                    "can_close": false
+                }
+            };
 
-        this.nativeStorage.getItem('user_permissions').then(
-            permissions => {
-                let woPermissions=permissions["6"]?permissions["6"]:[];
-                let rootObj=permissions["root"]?permissions["root"]:[];
-                for(let i=0;i<woPermissions.length;i++)
-                {
-                    if(woPermissions[i].action=="index" && woPermissions[i].permitted==true)
-                    {
-                        permissionObj.wo_access.view_listing=true;
-                        for(let j=0;j<woPermissions[i].options.length;j++)
-                        {
-                            if(woPermissions[i].options[j].option=="all" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.view_all=true;
-                            }
-                            if(woPermissions[i].options[j].option=="department" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.view_department=true;
-                            }
-                            if(woPermissions[i].options[j].option=="own" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.view_own=true;
-                            }
-                            if(woPermissions[i].options[j].option=="assigned_to" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.view_assigned_to=true;
+            this.nativeStorage.getItem('user_permissions').then(
+                permissions => {
+                    let woPermissions = permissions["6"] ? permissions["6"] : [];
+                    let rootObj = permissions["root"] ? permissions["root"] : [];
+                    for (let i = 0; i < woPermissions.length; i++) {
+                        if (woPermissions[i].action == "index" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.view_listing = true;
+                            for (let j = 0; j < woPermissions[i].options.length; j++) {
+                                if (woPermissions[i].options[j].option == "all" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.view_all = true;
+                                }
+                                if (woPermissions[i].options[j].option == "department" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.view_department = true;
+                                }
+                                if (woPermissions[i].options[j].option == "own" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.view_own = true;
+                                }
+                                if (woPermissions[i].options[j].option == "assigned_to" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.view_assigned_to = true;
+                                }
                             }
                         }
-                    }
-                    if(woPermissions[i].action=="create" && woPermissions[i].permitted==true)
-                    {
-                        permissionObj.wo_access.can_create=true;
-                    }
-                    if(woPermissions[i].action=="destroy" && woPermissions[i].permitted==true)
-                    {
-                        permissionObj.wo_access.can_delete=true;
-                    }
-                    if(woPermissions[i].action=="edit_closed" && woPermissions[i].permitted==true)
-                    {                       
-                         permissionObj.wo_access.can_close=true;
-                    }
-                    if(woPermissions[i].action=="edit" && woPermissions[i].permitted==true)
-                    {
-                        permissionObj.wo_access.view_listing=true;
-                        permissionObj.wo_access.can_edit=true;
-                        for(let j=0;j<woPermissions[i].options.length;j++)
-                        {
-                            if(woPermissions[i].options[j].option=="priority" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.priority=true;
-                            }
-                            if(woPermissions[i].options[j].option=="status" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.status=true;
-                            }
-                            if(woPermissions[i].options[j].option=="due_to_date" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.due_to_date=true;
-                            }
-                            if(woPermissions[i].options[j].option=="assigned_to_id" &&  woPermissions[i].options[j].permitted==true)
-                            {
-                                permissionObj.wo_access.assigned_to_id=true;
+                        if (woPermissions[i].action == "create" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.can_create = true;
+                        }
+                        if (woPermissions[i].action == "destroy" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.can_delete = true;
+                        }
+                        if (woPermissions[i].action == "edit_closed" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.can_close = true;
+                        }
+                        if (woPermissions[i].action == "edit" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.view_listing = true;
+                            permissionObj.wo_access.can_edit = true;
+                            for (let j = 0; j < woPermissions[i].options.length; j++) {
+                                if (woPermissions[i].options[j].option == "priority" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.priority = true;
+                                }
+                                if (woPermissions[i].options[j].option == "status" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.status = true;
+                                }
+                                if (woPermissions[i].options[j].option == "due_to_date" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.due_to_date = true;
+                                }
+                                if (woPermissions[i].options[j].option == "assigned_to_id" && woPermissions[i].options[j].permitted == true) {
+                                    permissionObj.wo_access.assigned_to_id = true;
+                                }
                             }
                         }
+                        if (woPermissions[i].action == "assignable" && woPermissions[i].permitted == true) {
+                            permissionObj.wo_access.assignable = true;
+                        }
                     }
-                    if(woPermissions[i].action=="assignable" && woPermissions[i].permitted==true)
-                    {
-                        permissionObj.wo_access.assignable=true;
+
+                    for (let i = 0; i < rootObj.length; i++) {
+                        if ((rootObj[i].name == "Team" || rootObj[i].name == "team") && rootObj[i].permitted == true) {
+                            permissionObj.wo_access.team = true;
+                        }
                     }
+
+                    return resolve(permissionObj);
+                },
+                error => {
+                    return reject(false);
                 }
+            );
 
-                for(let i=0;i<rootObj.length;i++)
-                {
-                    if( (rootObj[i].name=="Team" || rootObj[i].name=="team") && rootObj[i].permitted==true  )
-                    {
-                        permissionObj.wo_access.team=true;
-                    }
-                }
-
-                return resolve(permissionObj);
-            },
-            error => {
-              return reject(false);
-            }
-          );
-
-        }); 
+        });
 
     }
 
-    updateMentionsDb(user_id,type,type_id)
-    {
+    updateMentionsDb(user_id, type, type_id) {
         this.sqlite.create({
             name: 'data.db',
             location: 'default'
-          }).then((db: SQLiteObject) => {
-  
-          console.log("SELECT * FROM user_mentions WHERE type='"+type+"' AND type_id='"+type_id+"' AND user_id='" + user_id + "'");
-  
-          db.executeSql("SELECT * FROM user_mentions WHERE type='"+type+"' AND type_id='"+type_id+"' AND user_id='" + user_id + "'", []).then((dataUserSQL) => {
-            console.log("user_mentions TABLE DATA: " + JSON.stringify(dataUserSQL));
-            let insert=true;
-            let total=0;
-            if (dataUserSQL.rows.length > 0) {
-              for (let k = 0; k < dataUserSQL.rows.length; k++) {
-                insert=false;
-                total=parseInt(dataUserSQL.rows.item(k).total);
-              }
-            }
-            total=total+1;
-  
-            if (insert==true) {
-              console.log("INSERT INTO user_mentions (type, type_id, user_id, total) VALUES ('"+type+"',"+type_id+"," + user_id + ","+total+")");
-              db.executeSql("INSERT INTO user_mentions (type, type_id, user_id, total) VALUES ('"+type+"',"+type_id+"," + user_id + ","+total+")", {}).then((data1) => {
-                console.log("INSERTED: user_mentions " + JSON.stringify(data1));
-              }, (error1) => {
-                console.log("INSERT ERROR: user_mentions" + JSON.stringify(error1));
-              });
-            }
-            else {
-              console.log("UPDATE user_mentions SET total=" + total + " WHERE type='"+type+"' AND type_id='"+type_id+"' AND user_id='" + user_id + "'");
-              db.executeSql("UPDATE user_mentions SET total=" + total + " WHERE type='"+type+"' AND type_id='"+type_id+"' AND user_id='" + user_id + "'", {}).then((data1) => {
-                console.log("UPDATED: user_mentions" + JSON.stringify(data1));
-              }, (error1) => {
-                console.log("UPDATED ERROR: user_mentions" + JSON.stringify(error1));
-              });
-            }
-          }, (errorUser) => {
-            console.log("1 ERROR: " + JSON.stringify(errorUser));
-          });
-  
+        }).then((db: SQLiteObject) => {
+
+            console.log("SELECT * FROM user_mentions WHERE type='" + type + "' AND type_id='" + type_id + "' AND user_id='" + user_id + "'");
+
+            db.executeSql("SELECT * FROM user_mentions WHERE type='" + type + "' AND type_id='" + type_id + "' AND user_id='" + user_id + "'", []).then((dataUserSQL) => {
+                console.log("user_mentions TABLE DATA: " + JSON.stringify(dataUserSQL));
+                let insert = true;
+                let total = 0;
+                if (dataUserSQL.rows.length > 0) {
+                    for (let k = 0; k < dataUserSQL.rows.length; k++) {
+                        insert = false;
+                        total = parseInt(dataUserSQL.rows.item(k).total);
+                    }
+                }
+                total = total + 1;
+
+                if (insert == true) {
+                    console.log("INSERT INTO user_mentions (type, type_id, user_id, total) VALUES ('" + type + "'," + type_id + "," + user_id + "," + total + ")");
+                    db.executeSql("INSERT INTO user_mentions (type, type_id, user_id, total) VALUES ('" + type + "'," + type_id + "," + user_id + "," + total + ")", {}).then((data1) => {
+                        console.log("INSERTED: user_mentions " + JSON.stringify(data1));
+                    }, (error1) => {
+                        console.log("INSERT ERROR: user_mentions" + JSON.stringify(error1));
+                    });
+                }
+                else {
+                    console.log("UPDATE user_mentions SET total=" + total + " WHERE type='" + type + "' AND type_id='" + type_id + "' AND user_id='" + user_id + "'");
+                    db.executeSql("UPDATE user_mentions SET total=" + total + " WHERE type='" + type + "' AND type_id='" + type_id + "' AND user_id='" + user_id + "'", {}).then((data1) => {
+                        console.log("UPDATED: user_mentions" + JSON.stringify(data1));
+                    }, (error1) => {
+                        console.log("UPDATED ERROR: user_mentions" + JSON.stringify(error1));
+                    });
+                }
+            }, (errorUser) => {
+                console.log("1 ERROR: " + JSON.stringify(errorUser));
+            });
+
         }).catch(e => console.log(e));
     }
 
@@ -400,64 +380,60 @@ checkInternet(){
         let mentionStr = "";
         if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
-            let oldMessage=false;
+            let oldMessage = false;
             mentionStr = "<span class='mention_style'>";
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
                     if (members[l].id == allChatMentions[k]) {
-                        if(val.search("@"+members[l].name)==-1)
-                        {
+                        if (val.indexOf("@" + members[l].name) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
-                            oldMessage=true;
+                            oldMessage = true;
                         }
                         let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        val = this.replaceAll(val,"@"+members[l].name,newStr);
+                        val = this.replaceAll(val, "@" + members[l].name, newStr);
                     }
                 }
             }
             mentionStr += "</span>";
 
-            if(oldMessage==true)
-            {
-                val=mentionStr + val;
+            if (oldMessage == true) {
+                val = mentionStr + val;
             }
-           // mentionStr += "</span>";
+            // mentionStr += "</span>";
         }
         return val;
     }
 
     getTextValueWithNames(allChatMentions, members, val) {
         let mentionStr = "";
-        let result={html:val,text:val};
+        let result = { html: val, text: val };
         if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
-            let oldMessage=false;
-            let tempNames="";
-            let tempVal=val;
+            let oldMessage = false;
+            let tempNames = "";
+            let tempVal = val;
             mentionStr = "<span class='mention_style'>";
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
                     if (members[l].id == allChatMentions[k]) {
-                        tempNames+=members[l].name+" ";
-                        if(val.toLowerCase().search("@"+members[l].name.toLowerCase())==-1)
-                        {
+                        tempNames += members[l].name + " ";
+                        if (val.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
-                            oldMessage=true;
+                            oldMessage = true;
                         }
                         let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        val = this.replaceAll(val,"@"+members[l].name,newStr);
+                        val = this.replaceAll(val, "@" + members[l].name, newStr);
                     }
                 }
             }
             mentionStr += "</span>";
 
-            result.text=tempNames+tempVal;
-            if(oldMessage==true)
-            {
-                val=mentionStr + val;
+            result.text = tempNames + tempVal;
+            if (oldMessage == true) {
+                val = mentionStr + val;
             }
-           // mentionStr += "</span>";
-           result.html=val;
+            // mentionStr += "</span>";
+            result.html = val;
         }
 
         return result;
@@ -466,11 +442,11 @@ checkInternet(){
     removeMentionsFromName(allChatMentions, members, val) {
         if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
-            
+
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
                     if (members[l].id == allChatMentions[k]) {
-                        let searchMask = "@"+members[l].name;
+                        let searchMask = "@" + members[l].name;
                         let regEx = new RegExp(searchMask, "ig");
                         var replaceMask = "";
                         val = val.replace(regEx, replaceMask);
@@ -483,13 +459,13 @@ checkInternet(){
 
     /* Define function for escaping user input to be treated as 
     a literal string within a regular expression */
-    escapeRegExp(string){
+    escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
-    
+
     /* Define functin to find and replace specified term with replacement string */
     replaceAll(str, term, replacement) {
-    return str.replace(new RegExp(this.escapeRegExp(term), 'g'), replacement);
+        return str.replace(new RegExp(this.escapeRegExp(term), 'g'), replacement);
     }
 
     showLoaderForDbSync() {
@@ -502,7 +478,7 @@ checkInternet(){
     }
 
 
-    getDataWithLoaderMsg(url, accessToken,msg) {
+    getDataWithLoaderMsg(url, accessToken, msg) {
 
         let headers = new Headers({
             'Content-Type': 'application/json',

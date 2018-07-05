@@ -213,8 +213,6 @@ export class MyMentionPage {
   }
 
   openDetail(comment_id, id, index) {
-
-
     let objData = { status: 'checked' };
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -263,7 +261,6 @@ export class MyMentionPage {
 
   }
   openGroupCaht(id, index) {
-
     if (this.foundRepos[index].content.content_type == "private_chat") {
       this.openPrivateChat(this.foundRepos[index].content.content_type_id, this.foundRepos[index].content.content_id, this.foundRepos[index].created_at, index);
     }
@@ -746,8 +743,6 @@ export class MyMentionPage {
     //alert(id);
     //alert(message_id);
     //alert(message_date);
-
-
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
