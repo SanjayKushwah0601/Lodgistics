@@ -50,15 +50,15 @@
   <ion-toolbar no-border-top *ngIf="searchQuery==''">
 
     <ion-segment [(ngModel)]="selectedTab">
-      <ion-segment-button value="h" (tap)="selectTab('h')">
+      <ion-segment-button value="h" (click)="selectTab('h')">
         High Priority
         <span [ngClass]="selectedTab == 'h'?'segment_badge':'segment_badge1'">{{total.high}}</span>
       </ion-segment-button>
-      <ion-segment-button value="m" (tap)="selectTab('m')">
+      <ion-segment-button value="m" (click)="selectTab('m')">
         Medium Priority
         <span [ngClass]="selectedTab == 'm'?'segment_badge':'segment_badge1'">{{total.medium}}</span>
       </ion-segment-button>
-      <ion-segment-button value="l" (tap)="selectTab('l')">
+      <ion-segment-button value="l" (click)="selectTab('l')">
         Low Priority
         <span [ngClass]="selectedTab == 'l'?'segment_badge':'segment_badge1'">{{total.low}}</span>
       </ion-segment-button>
@@ -98,10 +98,10 @@
 
       <ion-grid class="option-row close_wo" *ngIf="item.showOption">
         <ion-row class="speech-bubble">
-          <ion-col col-10 *ngIf="!item.closeInProgress" class="option-col align-center" (tap)="closeWoCall(item.id,j)">
+          <ion-col col-10 *ngIf="!item.closeInProgress" class="option-col align-center" (click)="closeWoCall(item.id,j)">
             <ion-icon name="ios-construct-outline" class="option-icon"></ion-icon> CLOSE WO
           </ion-col>
-          <ion-icon *ngIf="!item.closeInProgress" col-1 name="ios-close-outline" class="option-icon last-option-icon" (tap)="closeWo(j)"></ion-icon>
+          <ion-icon *ngIf="!item.closeInProgress" col-1 name="ios-close-outline" class="option-icon last-option-icon" (click)="closeWo(j)"></ion-icon>
           <ion-spinner *ngIf="item.closeInProgress" name="bubbles"></ion-spinner>
         </ion-row>
       </ion-grid>

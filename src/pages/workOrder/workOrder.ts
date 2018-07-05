@@ -60,9 +60,9 @@ export class WorkOrderPage {
   public showLoaderTodays = false;
   public broadcast_count = 0;
   public userPermissions: any;
-public fabButtonOpened=false;
+  public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer:FabContainer) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
 
     this.getAllMembersFromDb();
 
@@ -71,7 +71,7 @@ public fabButtonOpened=false;
         "view_listing": false,
         "can_create": false,
         "view_all": false,
-        "can_close":false
+        "can_close": false
       }
     };
     this.platform.ready().then(() => {
@@ -97,7 +97,7 @@ public fabButtonOpened=false;
         count => {
           thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
           thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-          thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+          thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
         },
         error => {
           return false;
@@ -153,11 +153,11 @@ public fabButtonOpened=false;
         let feedCount = notifications.feed_count;
         let messageCount = notifications.message_count;
         let woCount = 0;
-        
+
         this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount, wo_count: woCount })
           .then(
-          () => console.log('Stored user_notifications!'),
-          error => console.error('Error storing user_notifications', error)
+            () => console.log('Stored user_notifications!'),
+            error => console.error('Error storing user_notifications', error)
           );
       },
       error => {
@@ -344,14 +344,14 @@ public fabButtonOpened=false;
   }
 
   showDate(index) {
-    if (index == 0 || this.foundRepos.length<=0) {
+    if (index == 0 || this.foundRepos.length <= 0) {
       return true;
     }
-    
-  //console.log("index"+index);
-  //console.log(JSON.stringify(this.foundRepos));
-  //console.log("this.foundRepos[index - 1].created_at"+this.foundRepos[index - 1].created_at);
-  //console.log(this.foundRepos[index].created_at);
+
+    //console.log("index"+index);
+    //console.log(JSON.stringify(this.foundRepos));
+    //console.log("this.foundRepos[index - 1].created_at"+this.foundRepos[index - 1].created_at);
+    //console.log(this.foundRepos[index].created_at);
 
     let oldDate = new Date(this.foundRepos[index - 1].created_at);
     let newDate = new Date(this.foundRepos[index].created_at);
@@ -380,16 +380,12 @@ public fabButtonOpened=false;
     modal.present();
   }
   openOptions(i) {
-    if ( this.showPreviousSelected == "0" ||  this.showPreviousSelected != '') {
+    if (this.showPreviousSelected == "0" || this.showPreviousSelected != '') {
       this.woData[this.showPreviousSelected].showOption = false;
     }
-   
+
     this.showPreviousSelected = i;
-    this.woData[i].showOption=true;
-  }
-  closeWo(i) {
-    this.woData[i].showOption = false;
-    this.showPreviousSelected = "";
+    this.woData[i].showOption = true;
   }
 
   searchData() {
@@ -424,7 +420,7 @@ public fabButtonOpened=false;
     this.toggleMove();
     //this.getWoData();
     this.selectPriority(this.selectedTab);
-    let thisObj=this;
+    let thisObj = this;
     setTimeout(function () {
       thisObj.content.resize();
     }, 1000);
@@ -444,7 +440,7 @@ public fabButtonOpened=false;
     if (this.foundRepos.length > 0) {
       for (let i = 0; i < this.foundRepos.length; i++) {
         if (this.foundRepos[i].priority == status) {
-          
+
           temp.push(this.foundRepos[i]);
         }
       }
@@ -479,7 +475,7 @@ public fabButtonOpened=false;
         }
       }
       this.woData = temp;
-    }else{
+    } else {
       this.selectPriority(this.selectedTab);
     }
     this.content.resize();
@@ -498,7 +494,8 @@ public fabButtonOpened=false;
     });
     modal.present();
   }
-  closeWoCall(id,i) {
+
+  closeWoCall(id, i) {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -508,15 +505,15 @@ public fabButtonOpened=false;
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
-          this.woData[i].closeInProgress=true;
-          this.commonMethod.putDataWithoutLoder(closeWoUrl+"/"+id+"/close", objData, accessToken).subscribe(
+          this.woData[i].closeInProgress = true;
+          this.commonMethod.putDataWithoutLoder(closeWoUrl + "/" + id + "/close", objData, accessToken).subscribe(
             data => {
               this.closeWo(i);
-              this.woData[i].closeInProgress=false;
+              this.woData[i].closeInProgress = false;
               this.getWoData();
             },
             err => {
-              this.woData[i].closeInProgress=false;
+              this.woData[i].closeInProgress = false;
               console.log("Error 1: " + JSON.stringify(err.json()));
             },
             () => {
@@ -534,28 +531,33 @@ public fabButtonOpened=false;
     );
   }
 
+  closeWo(i) {
+    this.woData[i].showOption = false;
+    this.showPreviousSelected = "";
+  }
 
-  createFeedQuick(fab?: FabContainer){
+
+  createFeedQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     this.createFeed();
   }
 
-  createWorkOrderQuick(fab?: FabContainer){
+  createWorkOrderQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     this.createWorkOrder();
   }
 
-  sendMessage(fab?: FabContainer){
+  sendMessage(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -563,11 +565,11 @@ public fabButtonOpened=false;
     modal.present();
   }
 
-  openFabButton(){
-    if(this.fabButtonOpened==false){
-        this.fabButtonOpened=true;
-    }else{
-        this.fabButtonOpened=false;
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
     }
   }
 

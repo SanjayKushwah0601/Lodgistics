@@ -51,11 +51,13 @@
 
 
       <ion-item [ngClass]="res.message_obj.showSeelected?'color-down':''">
-         <h2><span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
-        <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && res.message_obj.work_order_id && res.message_obj.work_order_id>0"
-          (click)="allowWO?editWorkOrder(res.message_obj.id,res.message_obj.work_order_id,i):''" style="padding-left:0px;">
-          <span class="{{(res.message_obj.work_order.status && res.message_obj.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{res.message_obj.work_order_id}}</span>
-        </span></h2> 
+        <h2>
+          <span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
+          <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && res.message_obj.work_order_id && res.message_obj.work_order_id>0"
+            (click)="allowWO?editWorkOrder(res.message_obj.id,res.message_obj.work_order_id,i):''" style="padding-left:0px;">
+            <span class="{{(res.message_obj.work_order.status && res.message_obj.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{res.message_obj.work_order_id}}</span>
+          </span>
+        </h2>
         <p (press)="res.userInfo.is_system_user!='1'?openOptions(res.message_obj.id,i):''" class="self-msg" [ngClass]="res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'blue-border gray-background':!res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && groupInfo.highlight_message?'gray-background':res.message_obj.temp_data && res.message_obj.id!=groupInfo.message_id?'blue-border':res.message_obj.temp_data && res.message_obj.id==groupInfo.message_id && !groupInfo.highlight_message? 'blue-border':highlightReplyMessage==true && highlightReplyMessageId==res.message_obj.id?'gray-background':''"
           (click)="translate(res.message_obj.message,'es',i,res.message_obj.mentioned_user_ids)">
           <span class="chat-msg-box">
@@ -66,8 +68,8 @@
             </span>
 
             <span *ngIf="res.message_obj.image_url">
-              <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth"
-                [style.width.px]="imageWidth" class="img_right" />
+              <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth" [style.width.px]="imageWidth"
+                class="img_right" />
               <br/>
             </span>
             <span class="msg_margin msg-span img_right" data-tap-disabled=true [innerHTML]="updateHtml(res.message_obj.message,res.message_obj.mentioned_user_ids) | safeHtml"></span>
@@ -107,7 +109,7 @@
         </p>
 
         <h2 *ngIf="res.userInfo.is_system_user!='1'" style="padding-left:6px;">{{res.userInfo?res.userInfo.name:''}}
-            <span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
+          <span *ngIf="res.message_obj.room_number && res.message_obj.room_number>0" class="work-order-badge room_no_badge">Room #{{res.message_obj.room_number}}</span>
           <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && res.message_obj.work_order_id && res.message_obj.work_order_id>0"
             (click)="allowWO?editWorkOrder(res.message_obj.id,res.message_obj.work_order_id,i):''" class="{{(res.message_obj.work_order.status && res.message_obj.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{res.message_obj.work_order_id}}</span>
         </h2>
@@ -122,8 +124,8 @@
               </span>
 
               <span *ngIf="res.message_obj.image_url">
-                <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth"
-                  [style.width.px]="imageWidth" class="img_left" />
+                <img [src]="res.message_obj.image_url" (click)="showImage(res.message_obj.image_url)" [style.height.px]="imageWidth" [style.width.px]="imageWidth"
+                  class="img_left" />
                 <br/>
               </span>
 
@@ -205,9 +207,11 @@
 
 
           <textarea *ngIf="!isPrivateChat" type="text" placeholder="Start typing here" autocomplete="off" autocorrect="on" spellcheck="on"
-            autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+            autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)"
+            (keyup)="valchange($event)"></textarea>
           <textarea *ngIf="isPrivateChat" type="text" placeholder="Message {{groupInfo.name}}" autocomplete="off" autocorrect="on"
-            spellcheck="on" autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+            spellcheck="on" autocapitalize="on" [(ngModel)]="textMessage" (ngModelChange)="changeModelValue()" (keydown)="keyDownCheck($event)"
+            (keyup)="valchange($event)"></textarea>
 
         </ion-col>
         <ion-col col-3 align-self-end>
