@@ -1027,11 +1027,12 @@ ion-alert .alert-radio-group [ion-button][disabled] {
 
 .notify-alert {
     width: 100% !important;
-    height: 12% !important;
+    min-height: 16% !important;
     z-index: 9999; // background: red !important;
     color: black !important;
     top: 5px !important;
     background: transparent !important;
+    word-spacing: normal !important;
 }
 
 .notify-alert-icon {
@@ -1080,6 +1081,31 @@ ion-alert .alert-radio-group [ion-button][disabled] {
 .notify-alert .item-md {
     background: #428bca !important;
     border-radius: 5px;
+    word-spacing: normal !important;
+}
+.notify-alert .item-md {
+    margin: 3px 8px 13px 0 !important;
+}
+
+.notify-alert-message {
+    // word-spacing: normal !important;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+
+    display: block;
+    display: -webkit-box;
+    /* max-width: 400px; */
+    height: 100%;
+    padding-top: 5px;
+    margin: 0 auto;
+    /* font-size: 26px; */
+    line-height: 1.0;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 250px;
+    color: #fff;
 }
 
 .notify-alert .item-md p {
@@ -1089,6 +1115,7 @@ ion-alert .alert-radio-group [ion-button][disabled] {
 .notify-alert .card-md {
     background: transparent;
     box-shadow: none;
+    word-spacing: normal !important;
 }
 
 .notify-alert .list-md ion-item-options {
@@ -1531,7 +1558,7 @@ ion-menu .email_support_btn {
     border-top: 0.55px solid #c8c7cc;
     padding: 10px;
     padding-left: 0px;
-    bottom: 0px !important;
+    bottom: -2px !important;
     letter-spacing: 2px;
     color: #808080;
     font-size: 1.7rem;
@@ -1558,6 +1585,7 @@ ion-menu .notification_btn_wraper hr {
 
 ion-menu .learn_btn {
     width: 100%;
+    margin-bottom: -2px;
 }
 
 ion-menu .learn_btn .button-inner {

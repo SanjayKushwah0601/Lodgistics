@@ -127,7 +127,7 @@ export class FeedsPage {
 
       this.interval = window.setInterval(function () {
         /// call your function here
-        console.log("update notification count");
+        // console.log("update notification count");
         thisObj.nativeStorage.getItem('user_notifications').then(
           count => {
             thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
@@ -829,6 +829,8 @@ export class FeedsPage {
         else {
           this.commonMethod.showLoader();
           this.translationservice.translateText(sourceText, langCode).subscribe(data => {
+            console.log('4')
+            debugger
 
             if (data.detectedSourceLanguage == "en") {
               this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
@@ -837,6 +839,8 @@ export class FeedsPage {
             }
             else {
               this.translationservice.translateText(sourceText, 'en').subscribe(data => {
+                console.log('3')
+                debugger
 
                 this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
                 this.foundRepos[i].value[j].body = tempStr + data.translatedText;
@@ -885,6 +889,8 @@ export class FeedsPage {
     else {
       //this.commonMethod.showLoader();
       this.translationservice.translateText(sourceText, langCode).subscribe(data => {
+        console.log('2')
+        debugger
 
         if (data.detectedSourceLanguage == "en") {
           this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
@@ -893,6 +899,8 @@ export class FeedsPage {
         }
         else {
           this.translationservice.translateText(sourceText, 'en').subscribe(data => {
+            console.log('1')
+            debugger
             this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
             this.foundRepos[i].value[j].title = tempStr + data.translatedText;
             //this.commonMethod.hideLoader();

@@ -1937,8 +1937,9 @@ export class MyApp {
     //   alert(event.direction);
 
   }
-  updateHtml(text) {
+  updateHtml(text): string {
     text = text.replace(/\n/g, "<br/>");
+    // text = text.replace(/\n/g, " ");
     return text;
   }
 

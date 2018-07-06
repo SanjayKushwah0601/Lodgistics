@@ -161,9 +161,9 @@
 <ion-content class="notify-alert" *ngIf="showNotifyAlert" (click)="manageNotification(notificationData)">
   <ion-list class="notify-alert-div" style="height:100% !important;">
     <ion-card style="height:100% !important;">
-      <ion-item-sliding style="height:80% !important;">
-        <ion-item style="height:100% !important;">
-          <p class="notify-alert-message" [innerHTML]="updateHtml(notificationData.message)"></p>
+      <ion-item-sliding style="height:auto !important;">
+        <ion-item>
+          <div class="notify-alert-message" [innerHTML]="updateHtml(notificationData.message)"></div>
         </ion-item>
         <ion-item-options side="right" (ionSwipe)="logSwipe()">
 
