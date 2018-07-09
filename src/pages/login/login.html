@@ -1,7 +1,9 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      <div class="app_logo"><img src="assets/img/app-icon.png" /></div>
+      <div class="app_logo">
+        <img src="assets/img/app-icon.png" />
+      </div>
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -15,13 +17,16 @@
     <ion-list>
       <ion-item>
         <ion-label floating>EMAIL / USERNAME</ion-label>
-        <ion-input autocapitalize="on" type="text" autocomplete='off'  (ngModelChange)="valchange()" autocorrect="off" spellcheck="off" autocapitalize='off' formControlName="email"></ion-input>
+        <ion-input autocapitalize="on" type="text" autocomplete='off' (ngModelChange)="valchange()" autocorrect="off" spellcheck="off"
+          autocapitalize='off' formControlName="email"></ion-input>
 
         <p class="pcolor" *ngIf="email.touched && email.hasError('required')">
           require
           <small class="up">
-          <strong> <i></i></strong>
-        </small>
+            <strong>
+              <i></i>
+            </strong>
+          </small>
         </p>
 
       </ion-item>
@@ -29,8 +34,8 @@
 
       <ion-item>
         <ion-label floating>PASSWORD</ion-label>
-        <ion-input *ngIf="showPass" type="text"  (ngModelChange)="valchange()" formControlName="password" class="password-field"></ion-input>
-        <ion-input *ngIf="!showPass" type="password"  (ngModelChange)="valchange()" formControlName="password" class="password-field"></ion-input>
+        <ion-input *ngIf="showPass" type="text" (ngModelChange)="valchange()" formControlName="password" class="password-field"></ion-input>
+        <ion-input *ngIf="!showPass" type="password" (ngModelChange)="valchange()" formControlName="password" class="password-field"></ion-input>
       </ion-item>
       <p class="pcolor" *ngIf="password.hasError('required') && password.touched "></p>
 
@@ -39,9 +44,11 @@
 
       <div class="clearfix"></div>
 
-      <button ion-button class="margin-top" [disabled]="!loginForm.valid || showLoader" color="grey" full>{{showLoader?'':'SIGN IN'}}<ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner></button>
+      <button ion-button class="margin-top" [disabled]="!loginForm.valid || showLoader" color="grey" full>{{showLoader?'':'SIGN IN'}}
+        <ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner>
+      </button>
 
-      
+
 
 
       <div class="pull-left a1" (click)="showLoader?'':forgetPassword()">Forgot password?</div>

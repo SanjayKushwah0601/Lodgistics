@@ -55,13 +55,15 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { TranslationService } from '../providers/translation.service';
 import { TextMaskModule } from 'angular2-text-mask';
 import { CalendarModule } from "ion2-calendar";
-import {Ionic2MaskDirective} from "ionic2-mask-directive";
+import { Ionic2MaskDirective } from "ionic2-mask-directive";
 
 import { Buffer } from 'buffer';
 // import 'intl';
 // import 'intl/locale-data/jsonp/en';
 import { NewUserPage } from '../pages/newUser/newUser';
 import { PressDirective } from '../directives/press/press';
+import { Market } from '@ionic-native/market';
+import { UpdateAppPage } from '../pages/updateApp/updateApp';
 
 enableProdMode();
 
@@ -116,9 +118,10 @@ export class SafeHtmlPipe implements PipeTransform {
     TeamListingPage,
     InviteUsersPage,
     IntroInviteUsersPage,
-    SendMessagePage,NewUserPage,
+    SendMessagePage, NewUserPage,
     createFollowUpPage,
-    PressDirective
+    PressDirective,
+    UpdateAppPage
   ],
   imports: [
     BrowserModule,
@@ -173,7 +176,8 @@ export class SafeHtmlPipe implements PipeTransform {
     IntroInviteUsersPage,
     SendMessagePage,
     NewUserPage,
-    createFollowUpPage
+    createFollowUpPage,
+    UpdateAppPage
   ],
   providers: [
     StatusBar,
@@ -182,6 +186,7 @@ export class SafeHtmlPipe implements PipeTransform {
     Network,
     Badge,
     SQLite,
+    Market,
     // Deeplinks,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]

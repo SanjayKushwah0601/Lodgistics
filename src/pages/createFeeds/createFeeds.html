@@ -23,7 +23,7 @@
 
 <ion-content padding [attr.noScroll]="shouldScroll">
 
-  <!-- <ion-label style="min-height:40px;margin:0px;" (tap)="closekeyboard()"></ion-label> -->
+  <!-- <ion-label style="min-height:40px;margin:0px;" (click)="closekeyboard()"></ion-label> -->
 
   <form [formGroup]="feedForm">
 
@@ -34,7 +34,7 @@
                 <table class="results mentions_list">
                   <ng-container *ngFor="let memberInfo of mentionMembers">
                     <tr>
-                      <td *ngIf="memberInfo.is_system_user!='1'" (tap)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''"><span><img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''"/></span>            <label [ngClass]="showSelected(memberInfo.id)?'mention-select-text':''" [innerHtml]="updateName(memberInfo.name) | safeHtml"></label></td>
+                      <td *ngIf="memberInfo.is_system_user!='1'" (click)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''"><span><img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''"/></span>            <label [ngClass]="showSelected(memberInfo.id)?'mention-select-text':''" [innerHtml]="updateName(memberInfo.name) | safeHtml"></label></td>
                     </tr>
                   </ng-container>
               </table>

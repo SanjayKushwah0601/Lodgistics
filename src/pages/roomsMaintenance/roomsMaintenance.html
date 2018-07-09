@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
       <span start class="broadcast" *ngIf="broadcast_count>0">
-          <span (tap)="broadcastList()">
+          <span (click)="broadcastList()">
             <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
             <span class="broadcast_btn">
                 <img src="assets/img/broadcost-red-icon.png" />
@@ -37,7 +37,7 @@
       </ion-row>
       <ion-row class="row2" id="select_btn" [ngClass]="roomNo!=''?'start_pm':''">
         <ion-col col-12  *ngIf="roomNo==''">Select Room to Maintain</ion-col>
-        <ion-col col-12  *ngIf="roomNo!=''" (tap)="startPm()">Start PM</ion-col>
+        <ion-col col-12  *ngIf="roomNo!=''" (click)="startPm()">Start PM</ion-col>
       </ion-row>
       <ion-row class="row3">
         <ion-col col-12>
@@ -70,7 +70,7 @@
 
   <ion-list class="room_no">
     <ng-container *ngFor="let res of room; let i=index;">
-      <ion-item [ngClass]="roomNo==res.room_number?'room_selected':''" (tap)="roomNo==res.room_number?deSelectRoom():selectRoom(res.room_number,res.id)">
+      <ion-item [ngClass]="roomNo==res.room_number?'room_selected':''" (click)="roomNo==res.room_number?deSelectRoom():selectRoom(res.room_number,res.id)">
         {{res.room_number}} 
         <span *ngIf="i%5==0"><span class="badge badge-danger">30% done</span></span>
       </ion-item>
@@ -98,7 +98,7 @@
           <br/>
           <span>MESSAGING</span>
         </ion-col>
-        <ion-col col-3 (tap)="openMyMentionPage()" class="bottom-menu">
+        <ion-col col-3 (click)="openMyMentionPage()" class="bottom-menu">
           <ion-icon name="ios-at"></ion-icon>
           <br/>
           <span>MENTION</span>
@@ -123,7 +123,7 @@
           <br/>
           <span>MESSAGING</span>
         </ion-col>
-        <ion-col col-4 (tap)="openMyMentionPage()" class="bottom-menu">
+        <ion-col col-4 (click)="openMyMentionPage()" class="bottom-menu">
           <ion-icon name="ios-at"></ion-icon>
           <br/>
           <span>MENTION</span>

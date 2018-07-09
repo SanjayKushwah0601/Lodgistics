@@ -58,6 +58,7 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
+    <plugin name="cordova-plugin-market" spec="^1.2.0" />
     <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
 </widget>

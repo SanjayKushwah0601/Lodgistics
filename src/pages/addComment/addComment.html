@@ -7,8 +7,8 @@
     <textarea name="Text1" placeholder="Your comment" rows="4" [(ngModel)]="commentText" (ngModelChange)="changeModelValue()"></textarea>
 
     <div class="popup-buttons">
-      <button ion-button (tap)="dismiss()">CANCEL</button>
-      <button ion-button [disabled]="!commentText.trim()" (tap)="send()">SAVE</button>
+      <button ion-button (click)="dismiss()">CANCEL</button>
+      <button ion-button [disabled]="!commentText.trim()" (click)="send()">SAVE</button>
     </div>
 
   </div>

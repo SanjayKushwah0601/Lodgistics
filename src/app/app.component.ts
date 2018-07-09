@@ -41,7 +41,7 @@ import { Badge } from '@ionic-native/badge';
 import { sendMessageUrl } from '../services/configURLs';
 import { baseUrl } from '../services/configURLs';
 import { getBroadcastListUrl, getProfileUrl } from '../services/configURLs';
-import { getUserPermissionsUrl,updatePushNotificationSettings } from '../services/configURLs';
+import { getUserPermissionsUrl, updatePushNotificationSettings } from '../services/configURLs';
 import { TaskChecklistPage } from '../pages/taskChecklist/taskChecklist';
 import { TaskChecklistDetailPage } from '../pages/taskChecklistDetail/taskChecklistDetail';
 import { TeamListingPage } from '../pages/teamListing/teamListing';
@@ -50,6 +50,7 @@ import { TeamListingPage } from '../pages/teamListing/teamListing';
 import { NewUserPage } from '../pages/newUser/newUser';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { Device } from '@ionic-native/device';
+import { UpdateAppPage } from '../pages/updateApp/updateApp';
 
 (window as any).handleOpenURL = (url: string) => {
   (window as any).handleOpenURL_LastURL = url;
@@ -78,24 +79,24 @@ export class MyApp {
   public notificationData: any;
   public showNotifyAlert = false;
   public alertCall = false;
-  public showPage=true;
-  public showChar={first:false,secound:false,third:false,fourth:false};
+  public showPage = true;
+  public showChar = { first: false, secound: false, third: false, fourth: false };
   public userId = "";
   public userName = "";
-  public displayText1="";
-  public displayText2="";
-  public openSideMenuOpt=false;
-  public notificationStack=[];
-  public usersdata:any;
-  public resOne:any;
- public openPageByDeeplink=false;
-  public notificationsStatus=false;
-  
-  constructor(public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController, private badge: Badge, public modalCtrl: ModalController,public toastCtrl:ToastController,private emailComposer: EmailComposer,private device: Device) {//,private localNotifications: LocalNotifications
+  public displayText1 = "";
+  public displayText2 = "";
+  public openSideMenuOpt = false;
+  public notificationStack = [];
+  public usersdata: any;
+  public resOne: any;
+  public openPageByDeeplink = false;
+  public notificationsStatus = false;
+
+  constructor(public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController, private badge: Badge, public modalCtrl: ModalController, public toastCtrl: ToastController, private emailComposer: EmailComposer, private device: Device) {//,private localNotifications: LocalNotifications
     this.initializeApp();
 
-     // override open handler to navigate on further custom url scheme actions
-     (window as any).handleOpenURL = (url: string) => {
+    // override open handler to navigate on further custom url scheme actions
+    (window as any).handleOpenURL = (url: string) => {
       setTimeout(() => {
         this.handleOpenUrl(url);
       }, 0);
@@ -112,7 +113,7 @@ export class MyApp {
     this.userPermissions = {
       "wo_access": {
         "view_listing": false,
-        "team":false
+        "team": false
       }
     };
     events.subscribe('update:permiossion', () => {
@@ -187,12 +188,12 @@ export class MyApp {
 
 
     events.subscribe('show:LoaderPage', () => {
-      this.showPage=true;
-      this.showChar={first:false,secound:false,third:false,fourth:false};
+      this.showPage = true;
+      this.showChar = { first: false, secound: false, third: false, fourth: false };
       console.log("show:LoaderPage 1");
       this.userName = "";
-      this.displayText1="";
-      this.displayText2="";
+      this.displayText1 = "";
+      this.displayText2 = "";
       this.nativeStorage.getItem('user_auth').then(
         accessToken => {
           // alert("AAA" + JSON.stringify(accessToken));
@@ -230,21 +231,21 @@ export class MyApp {
 
   private handleOpenUrl(url: string) {
     // custom url parsing, etc...
-   let params = url.split("/");
-   let arrayLength=params.length;
-   if(arrayLength>3 && params[arrayLength-3]=="create"){
-    this.openPageByDeeplink=true;
-      let propertyToken=params[arrayLength-2];
-      let confirmationToken=params[arrayLength-1];
+    let params = url.split("/");
+    let arrayLength = params.length;
+    if (arrayLength > 3 && params[arrayLength - 3] == "create") {
+      this.openPageByDeeplink = true;
+      let propertyToken = params[arrayLength - 2];
+      let confirmationToken = params[arrayLength - 1];
       //alert(propertyToken+"="+confirmationToken);
-      this.nav.push(NewUserPage,{propertyToken:propertyToken,confirmationToken:confirmationToken});
-   }
+      this.nav.push(NewUserPage, { propertyToken: propertyToken, confirmationToken: confirmationToken });
+    }
 
-   console.log(JSON.stringify(params));
-   //this.nav.push(NewUserPage,{propertyToken:'',confirmationToken:''});
+    console.log(JSON.stringify(params));
+    //this.nav.push(NewUserPage,{propertyToken:'',confirmationToken:''});
     // navigate to page with reactive forms
     // this.navCtrl.push(MyReactiveFormsPage, { param: "my param" });
-   }
+  }
 
   manageNotification(notification) {
     //this.badge.decrease(1);
@@ -276,7 +277,7 @@ export class MyApp {
                       console.log("userProperties=" + hotels);
                       for (let i = 0; i < hotels.length; i++) {
                         if (hotels[i].token == notification.additionalData.type.property_token) {
-                          this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification,false);
+                          this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification, false);
                         }
                       }
 
@@ -324,7 +325,7 @@ export class MyApp {
                       for (let i = 0; i < hotels.length; i++) {
                         if (hotels[i].token == notification.additionalData.type.property_token) {
                           // this.hotelMenu.push({ name: hotels[i].name, token: hotels[i].token, created_at:hotels[i].created_at });
-                          this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification,false);
+                          this.changeHotel(notification.additionalData.type.property_token, hotels[i].name, hotels[i].created_at, notification, false);
                         }
                       }
 
@@ -429,7 +430,7 @@ export class MyApp {
             // });
 
             this.updateNotificationsStatus();
-            
+
             this.currentHotelName = accessToken.hotel_name;
             let alertVar = this.alertCtrl.create({
               title: 'Error!',
@@ -441,14 +442,14 @@ export class MyApp {
 
               this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: accessToken.property_token, hotel_created: accessToken.hotel_created, hotel_name: accessToken.hotel_name, user_id: accessToken.user_id, db_version: dbVersion })
                 .then(() => {
-                  this.changeHotel(accessToken.property_token, accessToken.hotel_name, accessToken.hotel_created, undefined,true);
+                  this.changeHotel(accessToken.property_token, accessToken.hotel_name, accessToken.hotel_created, undefined, true);
                 },
-                error => {
-                });
+                  error => {
+                  });
             }
             else {
               this.showLoaderPage(accessToken.user_id);
-              if(!this.openPageByDeeplink){
+              if (!this.openPageByDeeplink) {
                 this.rootPage = FeedsPage;
               }
             }
@@ -456,8 +457,8 @@ export class MyApp {
 
         },
         error => {
-          if(!this.openPageByDeeplink){
-            this.rootPage = LoginPage; 
+          if (!this.openPageByDeeplink) {
+            this.rootPage = LoginPage;
           }
           //this.rootPage = CreateHotelPage;
           return '';
@@ -479,29 +480,29 @@ export class MyApp {
             message: "Press back button again to exit",
             duration: 2000
           }).present();
-          setTimeout(()=>{
+          setTimeout(() => {
             rootScope['backButtonPressedOnceToExit'] = false;
-          },2000);
+          }, 2000);
         }
         return false;
-      },101);
+      }, 101);
 
 
 
-     // this.deeplinks.routeWithNavController(this.nav, {
+      // this.deeplinks.routeWithNavController(this.nav, {
       //  '/about-us': NewAccountPage,
-       // '/create/:hotelCode': NewAccountPage
-     // }).subscribe((match) => {
-          // match.$route - the route we matched, which is the matched entry from the arguments to route()
-          // match.$args - the args passed in the link
-          // match.$link - the full link data
-       //   console.log('Successfully matched route', match);
-        //}, (nomatch) => {
-          // nomatch.$link - the full link data
-         // console.error('Got a deeplink that didn\'t match', nomatch);
-       // });
+      // '/create/:hotelCode': NewAccountPage
+      // }).subscribe((match) => {
+      // match.$route - the route we matched, which is the matched entry from the arguments to route()
+      // match.$args - the args passed in the link
+      // match.$link - the full link data
+      //   console.log('Successfully matched route', match);
+      //}, (nomatch) => {
+      // nomatch.$link - the full link data
+      // console.error('Got a deeplink that didn\'t match', nomatch);
+      // });
 
-        
+
     });
   }
 
@@ -570,7 +571,7 @@ export class MyApp {
 
                 this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: accessToken.property_token, hotel_created: accessToken.hotel_created, hotel_name: accessToken.hotel_name, user_id: accessToken.user_id, db_version: dbVersion })
                   .then(() => { console.log('Stored item') },
-                  error => { console.error('Error storing item', error) }
+                    error => { console.error('Error storing item', error) }
                   );
 
               },
@@ -615,8 +616,7 @@ export class MyApp {
     }
   }
 
-  openLearningCenter()
-  {
+  openLearningCenter() {
     this.nav.setRoot(MyVideosPage);
   }
 
@@ -629,7 +629,7 @@ export class MyApp {
   //     }else{
   //       this.commonMethod.showLoader();
   //     }
-      
+
   //     let hotelCreatedDate = new Date(hotelCreated);
   //     let dd = ("0" + hotelCreatedDate.getDate()).slice(-2);
   //     let mm = ("0" + ((hotelCreatedDate.getMonth()) + 1)).slice(-2); //January is 0!
@@ -766,7 +766,7 @@ export class MyApp {
   //                                                           this.nav.setRoot(FeedsPage);
   //                                                         } else {
   //                                                           this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
-                        
+
   //                                                           this.openSpecificPage(notification);
   //                                                         }},
   //                                                         error => console.error('Error storing broadcast_count', error)
@@ -863,47 +863,46 @@ export class MyApp {
 
   // }
 
-  changeHotel(propertyToken, hotelName, hotelCreated, notification,updateNewVersion) {
+  changeHotel(propertyToken, hotelName, hotelCreated, notification, updateNewVersion) {
 
     if (this.commonMethod.checkNetwork()) {
-      if(updateNewVersion==true)
-      {
+      if (updateNewVersion == true) {
         this.commonMethod.showLoaderForDbSync();
-      }else{
+      } else {
         this.commonMethod.showLoader();
       }
 
       this.nativeStorage.getItem('user_auth').then(
         accessToken => {
 
-          let tokenValue={ access_token: accessToken.access_token, property_token: propertyToken };
-          
+          let tokenValue = { access_token: accessToken.access_token, property_token: propertyToken };
+
           if (this.commonMethod.checkNetwork()) {
             this.commonMethod.getDataWithoutLoder(getAllMembersUrl, tokenValue).timeout(60000).subscribe(
               data => {
                 //this.foundRepos = data.json();
-               this.usersdata = data.json();
+                this.usersdata = data.json();
 
                 console.log(this.usersdata);
                 this.commonMethod.getDataWithoutLoder(getBroadcastListUrl, tokenValue).subscribe(
                   data => {
                     this.resOne = data.json();
                     console.log(this.resOne);
-                    this.getUserPermissions(this.resOne,this.usersdata,propertyToken, hotelName, hotelCreated, notification,updateNewVersion,tokenValue);  
+                    this.getUserPermissions(this.resOne, this.usersdata, propertyToken, hotelName, hotelCreated, notification, updateNewVersion, tokenValue);
                   },
                   err => {
                     this.commonMethod.hideLoader();
-                
+
                     let alertVar = this.alertCtrl.create({
                       title: 'Error!',
                       subTitle: 'Invalid Details!',
                       buttons: ['OK']
                     }); alertVar.present();
-                    
+
                   },
                   () => {
                     console.log('getData completed');
-                
+
                   }
                 );
 
@@ -983,10 +982,9 @@ export class MyApp {
       if (notification.additionalData.foreground) {
         //this.notificationData = notification;
         this.notificationStack.push(notification);
-        if(this.showNotifyAlert==false)
-        {
+        if (this.showNotifyAlert == false) {
           this.showNotification();
-        }else{
+        } else {
           this.showNotifyAlert = true;
         }
 
@@ -1024,7 +1022,7 @@ export class MyApp {
           );
         });
 
-       
+
       }
 
     });
@@ -1042,7 +1040,7 @@ export class MyApp {
 
     pushObject.on('accept').subscribe(obj => {
       console.log('accept a notification', JSON.stringify(obj));
-      
+
       this.sendMessage(obj.additionalData.inlineReply, "", "", "");
     });
     pushObject.on('reject').subscribe(obj => console.log('reject a notification', JSON.stringify(obj)));
@@ -1114,21 +1112,21 @@ export class MyApp {
             else if (typeName == "wo_added") {
               this.commonMethod.hideLoader();
               let view = this.nav.getActive();
-              if(view.component.name == "LoginPage"){
+              if (view.component.name == "LoginPage") {
                 this.nav.setRoot(WorkOrderPage);
               }
               this.editWorkOrder(detail.work_order_id);
-              if(view.component.name == "FeedsPage"){
+              if (view.component.name == "FeedsPage") {
                 this.nav.setRoot(FeedsPage);
-              }else if(view.component.name == "MyMentionPage"){
+              } else if (view.component.name == "MyMentionPage") {
                 this.nav.setRoot(MyMentionPage);
-              }else if(view.component.name == "ChattingPage"){
+              } else if (view.component.name == "ChattingPage") {
                 this.nav.setRoot(ChattingPage);
-              }else if(view.component.name == "WorkOrderPage"){
+              } else if (view.component.name == "WorkOrderPage") {
                 this.nav.setRoot(WorkOrderPage);
-              }else if(view.component.name == "ProfilePage"){
+              } else if (view.component.name == "ProfilePage") {
                 this.nav.setRoot(FeedsPage);
-              }else if(view.component.name == "TaskChecklistPage"){
+              } else if (view.component.name == "TaskChecklistPage") {
                 this.nav.setRoot(TaskChecklistPage);
               }
               // this.nav.setRoot(WorkOrderPage, { id: detail.work_order_id });
@@ -1797,50 +1795,50 @@ export class MyApp {
           console.log('Stored item! dbversion');
           this.nativeStorage.setItem('prev_user_id', accessToken.user_id)
             .then(
-            () => {
+              () => {
 
-              if (this.cable == undefined) {
-              } else {
-                this.cable.disconnect();
-              }
+                if (this.cable == undefined) {
+                } else {
+                  this.cable.disconnect();
+                }
 
-              this.nativeStorage.setItem('prev_user_property_id', accessToken.property_token)
-                .then(
-                () => console.log('Stored prev_user_property_id!'),
-                error => console.error('Error storing prev_user_property_id', error)
-                );
+                this.nativeStorage.setItem('prev_user_property_id', accessToken.property_token)
+                  .then(
+                    () => console.log('Stored prev_user_property_id!'),
+                    error => console.error('Error storing prev_user_property_id', error)
+                  );
 
-              console.log('Stored item!');
-              this.nativeStorage.remove('user_auth')
-                .then(
-                () => {
-                  console.log('Removed item!');
-                  this.nativeStorage.remove('lastPage');
-                  this.nativeStorage.remove('groupInfo');
-                  this.nativeStorage.remove('user_properties');
-                  this.nativeStorage.remove('user_permissions');
-                  this.nativeStorage.remove('broadcast_count');
-
-                  this.nativeStorage.remove('feedData')
-                    .then(
+                console.log('Stored item!');
+                this.nativeStorage.remove('user_auth')
+                  .then(
                     () => {
-                      console.log('Removed feedData!');
+                      console.log('Removed item!');
+                      this.nativeStorage.remove('lastPage');
+                      this.nativeStorage.remove('groupInfo');
+                      this.nativeStorage.remove('user_properties');
+                      this.nativeStorage.remove('user_permissions');
+                      this.nativeStorage.remove('broadcast_count');
+
+                      this.nativeStorage.remove('feedData')
+                        .then(
+                          () => {
+                            console.log('Removed feedData!');
+                          },
+                          error => console.error('Error storing item', error)
+                        );
+
+                      this.nativeStorage.remove('wo_data').then(() => {
+                        console.log('Removed wo_data!');
+                      },
+                        error => console.error('Error remove wo_data', error)
+                      );
+                      this.nav.setRoot(LoginPage);
                     },
                     error => console.error('Error storing item', error)
-                    );
-
-                  this.nativeStorage.remove('wo_data').then(() => {
-                    console.log('Removed wo_data!');
-                  },
-                    error => console.error('Error remove wo_data', error)
                   );
-                  this.nav.setRoot(LoginPage);
-                },
-                error => console.error('Error storing item', error)
-                );
 
-            },
-            error => console.error('Error storing item', error)
+              },
+              error => console.error('Error storing item', error)
             );
         },
 
@@ -1895,7 +1893,7 @@ export class MyApp {
       notifications => {
         let feedCount = notifications.feed_count;
         let messageCount = notifications.message_count;
-        let woCount = notifications.wo_count?notifications.wo_count:0;
+        let woCount = notifications.wo_count ? notifications.wo_count : 0;
         if (data.notification_type == 'new_feed') {
           feedCount = feedCount + 1;
         }
@@ -1908,8 +1906,8 @@ export class MyApp {
 
         this.nativeStorage.setItem('user_notifications', { feed_count: feedCount, message_count: messageCount, wo_count: woCount })
           .then(
-          () => console.log('Stored user_notifications!'),
-          error => console.error('Error storing user_notifications', error)
+            () => console.log('Stored user_notifications!'),
+            error => console.error('Error storing user_notifications', error)
           );
       },
       error => {
@@ -1943,126 +1941,118 @@ export class MyApp {
     return text;
   }
 
-  toWordUperCase(str)
-  {
-      return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  toWordUperCase(str) {
+    return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
   }
 
-  showLoaderPage(userId)
-  {
-    let thisObj=this;
-              this.nativeStorage.getItem('show_feed_loader').then(
-                showLoader => {
-                  if(showLoader==true)
-                  {
-                    this.showPage=false;
-                    /* To manage loader on feed page */
-                    this.nativeStorage.setItem('show_feed_loader',false)
-                    .then(() => {
-                    },
-                    error => {
-                    });
-        
-                        this.sqlite.create({
-                          name: 'data.db',
-                          location: 'default'
-                        }).then((db: SQLiteObject) => {
-                    
-                          console.log("location----: " + JSON.stringify(db));
-                    
-                          db.executeSql("SELECT name FROM members WHERE user_id='"+userId+"'", {}).then((allMembers) => {
-                            console.log("SELECT user name FROM DB: " + JSON.stringify(allMembers));
-                    
-                            if (allMembers.rows.length > 0) {
-                              for (let i = 0; i < allMembers.rows.length; i++) {
-        
-                                let fullNAme=this.toWordUperCase(allMembers.rows.item(i).name).split(" ");
-                                this.userName=fullNAme[0]+"!";
-                                let d = new Date();
-                                let time = d.getHours(); 
-                                if(time>=5 && time<12)
-                                {
-                                  this.displayText1="Good";
-                                  this.displayText2="Morning,";
-                                }
-                                else if(time>=12 && time<17)
-                                {
-                                  this.displayText1="Good";
-                                  this.displayText2="Afternoon,";
-                                }
-                                else if(time>=17 && time<21)
-                                {
-                                  this.displayText1="Good";
-                                  this.displayText2="Evening,";
-                                }
-                                //else if(time>=21 && time<5)
-                                else
-                                {
-                                  this.displayText1="Hello,";
-                                  this.displayText2="";
-                                }
-                                
-                                setTimeout(function(){ 
-                                  thisObj.showChar.first=true; 
-                          
-                                  setTimeout(function(){ 
-                                    thisObj.showChar.secound=true; 
-                          
-                                    setTimeout(function(){ 
-                                      thisObj.showChar.third=true; 
-                                      
-                                      setTimeout(function(){ 
-                                        thisObj.showChar.fourth=true; 
-        
-                                        setTimeout(function(){ 
-                                          thisObj.showPage=true; 
-                                          //thisObj.content.resize();
-                                        }, 3500);
-        
-                                      }, 1000);
-                          
-                                    }, 500);
-                          
-                                  }, 500);
-                          
-                                }, 500);
-        
-                              }
-                            }else{
-                              thisObj.showPage=true; 
-                            }
-                    
-                          }, (error1) => {
-                            console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
-                          });
-                    
-                        }).catch(e => console.log(e));
-        
-        
-                     
-        
+  showLoaderPage(userId) {
+    let thisObj = this;
+    this.nativeStorage.getItem('show_feed_loader').then(
+      showLoader => {
+        if (showLoader == true) {
+          this.showPage = false;
+          /* To manage loader on feed page */
+          this.nativeStorage.setItem('show_feed_loader', false)
+            .then(() => {
+            },
+              error => {
+              });
+
+          this.sqlite.create({
+            name: 'data.db',
+            location: 'default'
+          }).then((db: SQLiteObject) => {
+
+            console.log("location----: " + JSON.stringify(db));
+
+            db.executeSql("SELECT name FROM members WHERE user_id='" + userId + "'", {}).then((allMembers) => {
+              console.log("SELECT user name FROM DB: " + JSON.stringify(allMembers));
+
+              if (allMembers.rows.length > 0) {
+                for (let i = 0; i < allMembers.rows.length; i++) {
+
+                  let fullNAme = this.toWordUperCase(allMembers.rows.item(i).name).split(" ");
+                  this.userName = fullNAme[0] + "!";
+                  let d = new Date();
+                  let time = d.getHours();
+                  if (time >= 5 && time < 12) {
+                    this.displayText1 = "Good";
+                    this.displayText2 = "Morning,";
                   }
-                },
-                error => {
-                  return '';
+                  else if (time >= 12 && time < 17) {
+                    this.displayText1 = "Good";
+                    this.displayText2 = "Afternoon,";
+                  }
+                  else if (time >= 17 && time < 21) {
+                    this.displayText1 = "Good";
+                    this.displayText2 = "Evening,";
+                  }
+                  //else if(time>=21 && time<5)
+                  else {
+                    this.displayText1 = "Hello,";
+                    this.displayText2 = "";
+                  }
+
+                  setTimeout(function () {
+                    thisObj.showChar.first = true;
+
+                    setTimeout(function () {
+                      thisObj.showChar.secound = true;
+
+                      setTimeout(function () {
+                        thisObj.showChar.third = true;
+
+                        setTimeout(function () {
+                          thisObj.showChar.fourth = true;
+
+                          setTimeout(function () {
+                            thisObj.showPage = true;
+                            //thisObj.content.resize();
+                          }, 3500);
+
+                        }, 1000);
+
+                      }, 500);
+
+                    }, 500);
+
+                  }, 500);
+
                 }
-              );
+              } else {
+                thisObj.showPage = true;
+              }
+
+            }, (error1) => {
+              console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
+            });
+
+          }).catch(e => console.log(e));
+
+
+
+
+        }
+      },
+      error => {
+        return '';
+      }
+    );
   }
 
-  openSideMenu()
-  {
-    this.openSideMenuOpt=this.openSideMenuOpt==true?false:true;
+  openSideMenu() {
+    this.openSideMenuOpt = this.openSideMenuOpt == true ? false : true;
   }
 
   openWebPage(webUrl) {
 
-    this.openSideMenuOpt=false;
+    this.openSideMenuOpt = false;
     this.menuCtrl.close();
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         let token = accessToken.access_token ? accessToken.access_token : '';
         let property_token = accessToken.property_token ? accessToken.property_token : '';
-        let url = baseUrl+webUrl + "?authorization=" + token + "&property_token=" + property_token;
+        let url = baseUrl + webUrl + "?authorization=" + token + "&property_token=" + property_token;
         console.log(url);
         let browser = this.iab.create(url, '_blank', 'location=no,closebuttoncaption=Back,toolbar=yes,EnableViewPortScale=yes,toolbarposition=top');
         console.log("link viewed");
@@ -2079,99 +2069,90 @@ export class MyApp {
     );
     //this.navCtrl.setRoot(WorkOrderPage,{id:id,page:'group_chat',group_data:this.groupInfo});
   }
-  openWoPage()
-  {
+  openWoPage() {
     this.nav.setRoot(WorkOrderPage);
   }
 
-  openMentionsPage(){
+  openMentionsPage() {
     this.nav.setRoot(MyMentionPage);
   }
 
-  openProfilePage()
-  {
+  openProfilePage() {
     this.nav.push(ProfilePage);
   }
 
-  openTeamPage()
-  {
+  openTeamPage() {
     this.nav.push(TeamListingPage);
   }
 
-  openTaskChecklistPage()
-  {
+  openTaskChecklistPage() {
     this.nav.setRoot(TaskChecklistPage);
   }
-  
+
   editWorkOrder(wo_no) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, {wo_no:wo_no});
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no });
     modal.onDidDismiss(data => {
-      
+
     });
     modal.present();
   }
 
-  openPM()
-  {
-    let thisObj=this;
+  openPM() {
+    let thisObj = this;
     setTimeout(() => {
       /* to solve android navigation issue */
-      thisObj.openSideMenuOpt=false;
+      thisObj.openSideMenuOpt = false;
     }, 1000);
     this.nav.setRoot(RoomsMaintenancePage);
   }
 
-  showNotification()
-  {
-    if(this.notificationStack.length>0)
-    {
-      console.log("Array length 1 ="+this.notificationStack.length);
+  showNotification() {
+    if (this.notificationStack.length > 0) {
+      console.log("Array length 1 =" + this.notificationStack.length);
       console.log(JSON.stringify(this.notificationStack));
       this.notificationData = this.notificationStack[0];
-      if(this.notificationStack.length>1)
-      {
-        this.notificationStack=this.notificationStack.splice(0,1);
-      }else{
-        this.notificationStack=[];
+      if (this.notificationStack.length > 1) {
+        this.notificationStack = this.notificationStack.splice(0, 1);
+      } else {
+        this.notificationStack = [];
       }
-      
-      console.log("Array length 2 ="+this.notificationStack.length);
-        this.zone.run(() => {
-          this.showNotifyAlert = true;
-        }); 
-        let thisObj=this;
-        setTimeout(() => {
-          thisObj.zone.run(() => {
-            thisObj.showNotifyAlert = false;
-            console.log("call showNotification");
-            thisObj.showNotification();
-          });
-        }, 15000);
+
+      console.log("Array length 2 =" + this.notificationStack.length);
+      this.zone.run(() => {
+        this.showNotifyAlert = true;
+      });
+      let thisObj = this;
+      setTimeout(() => {
+        thisObj.zone.run(() => {
+          thisObj.showNotifyAlert = false;
+          console.log("call showNotification");
+          thisObj.showNotification();
+        });
+      }, 15000);
 
     }
   }
 
-  insertData(resOne,usersdata,propertyToken, hotelName, hotelCreated, notification,updateNewVersion)
-  {
+  insertData(resOne, usersdata, propertyToken, hotelName, hotelCreated, notification, updateNewVersion) {
     let hotelCreatedDate = new Date(hotelCreated);
-      let dd = ("0" + hotelCreatedDate.getDate()).slice(-2);
-      let mm = ("0" + ((hotelCreatedDate.getMonth()) + 1)).slice(-2); //January is 0!
-      let yyyy = hotelCreatedDate.getFullYear();
+    let dd = ("0" + hotelCreatedDate.getDate()).slice(-2);
+    let mm = ("0" + ((hotelCreatedDate.getMonth()) + 1)).slice(-2); //January is 0!
+    let yyyy = hotelCreatedDate.getFullYear();
 
-      this.nativeStorage.getItem('user_auth').then(
-        accessToken => {
-          //accessToken.db_version
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        //accessToken.db_version
 
-          /* disconnect in app notification */
-          if (this.cable == undefined) {
-          } else {
-            this.cable.disconnect();
-          }
+        /* disconnect in app notification */
+        if (this.cable == undefined) {
+        } else {
+          this.cable.disconnect();
+        }
 
-          // alert(accessToken.db_version);
-          // console.log(accessToken.db_version);
-          this.nativeStorage.remove('user_auth')
-            .then(
+        // alert(accessToken.db_version);
+        // console.log(accessToken.db_version);
+        this.nativeStorage.remove('user_auth')
+          .then(
             () => {
               console.log('Removed item!');
               this.nativeStorage.remove('lastPage');
@@ -2179,10 +2160,10 @@ export class MyApp {
 
               this.nativeStorage.remove('feedData')
                 .then(
-                () => {
-                  console.log('Removed feedData!');
-                },
-                error => console.error('Error storing item', error)
+                  () => {
+                    console.log('Removed feedData!');
+                  },
+                  error => console.error('Error storing item', error)
                 );
 
               this.nativeStorage.remove('wo_data').then(() => {
@@ -2193,155 +2174,157 @@ export class MyApp {
 
               this.nativeStorage.setItem('user_auth', { access_token: accessToken.access_token, property_token: propertyToken, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: hotelName, user_id: accessToken.user_id, db_version: accessToken.db_version })
                 .then(
-                () => {
-                  console.log('Stored item!');
+                  () => {
+                    console.log('Stored item!');
 
-                  this.sqlite.deleteDatabase({
-                    name: 'data.db',
-                    location: 'default'
-                  })
-                    .then((db: SQLiteObject) => {
-                      console.log('DELETE DATABASE');
+                    this.sqlite.deleteDatabase({
+                      name: 'data.db',
+                      location: 'default'
+                    })
+                      .then((db: SQLiteObject) => {
+                        console.log('DELETE DATABASE');
 
-                      this.sqlite.create({
-                        name: 'data.db',
-                        location: 'default'
-                      }).then((db: SQLiteObject) => {
+                        this.sqlite.create({
+                          name: 'data.db',
+                          location: 'default'
+                        }).then((db: SQLiteObject) => {
 
-                        db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
-                          .then((dbRes) => {
+                          db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
+                            .then((dbRes) => {
 
-                            db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
-                              .then((dbUserRes) => {
-                                console.log("CREATE TABLE chat_group_users" + JSON.stringify(dbUserRes));
+                              db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
+                                .then((dbUserRes) => {
+                                  console.log("CREATE TABLE chat_group_users" + JSON.stringify(dbUserRes));
 
-                                db.executeSql("CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER, sender_id INTEGER,hotel_token TEXT, message TEXT, image TEXT, target_id INTEGER, type TEXT, deleted_at TEXT, created_at TEXT, updated_at TEXT, read_status INTEGER, mentioned_user_ids TEXT, parent_id TEXT, work_order_id INTEGER, work_order_url TEXT, work_order_status TEXT, work_order_closed_by_user_id INTEGER, work_order_closed_at TEXT, work_order_location_detail TEXT, work_order_description TEXT,room_number TEXT,room_id TEXT)", {}).then((data1) => {
-                                  console.log("MESSAGE TABLE CREATED: " + JSON.stringify(data1));
+                                  db.executeSql("CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER, sender_id INTEGER,hotel_token TEXT, message TEXT, image TEXT, target_id INTEGER, type TEXT, deleted_at TEXT, created_at TEXT, updated_at TEXT, read_status INTEGER, mentioned_user_ids TEXT, parent_id TEXT, work_order_id INTEGER, work_order_url TEXT, work_order_status TEXT, work_order_closed_by_user_id INTEGER, work_order_closed_at TEXT, work_order_location_detail TEXT, work_order_description TEXT,room_number TEXT,room_id TEXT)", {}).then((data1) => {
+                                    console.log("MESSAGE TABLE CREATED: " + JSON.stringify(data1));
 
-                                  db.executeSql('CREATE TABLE IF NOT EXISTS chat_groups(id INTEGER, name TEXT, hotel_token TEXT, created_by_id INTEGER,deleted_at TEXT,created_at TEXT,updated_at TEXT, image_url TEXT)', {})
-                                    .then((dbRes) => {
-                                      console.log("CREATE TABLE chat_groups" + JSON.stringify(dbRes));
+                                    db.executeSql('CREATE TABLE IF NOT EXISTS chat_groups(id INTEGER, name TEXT, hotel_token TEXT, created_by_id INTEGER,deleted_at TEXT,created_at TEXT,updated_at TEXT, image_url TEXT)', {})
+                                      .then((dbRes) => {
+                                        console.log("CREATE TABLE chat_groups" + JSON.stringify(dbRes));
 
-                                      db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
-                                        .then((dbRes) => {
-                                          console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
+                                        db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
+                                          .then((dbRes) => {
+                                            console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
 
-                                          /*  get member api call start */
-                                          this.nativeStorage.getItem('user_auth').then(
-                                            accessToken => {
+                                            /*  get member api call start */
+                                            this.nativeStorage.getItem('user_auth').then(
+                                              accessToken => {
 
-                                              this.subscribeAcNotification();
-
-                                              
-                                                
-                                                    //this.foundRepos = data.json();
-                                                    let users = this.usersdata;
-                                                    console.error(users);
+                                                this.subscribeAcNotification();
 
 
-                                                    for (let i = 0; i < users.length; i++) {
-                                                      let is_maintenance_dep = 0;
-                                                      for (let val = 0; val < users[i].departments.length; val++) {
-                                                        console.log("departments" + users[i].departments[val].name);
-                                                        if (users[i].departments[val].name == "Maintenance") {
-                                                          is_maintenance_dep = 1;
-                                                        }
-                                                      }
-                                                      console.log("departments maintainance" + is_maintenance_dep);
 
-                                                      let is_system_user = users[i].is_system_user == true ? 1 : 0;
-                                                      db.executeSql("INSERT INTO members (user_id, hotel_token, name, image, role, title,is_maintenance_dep, is_system_user) VALUES ('" + users[i].id + "','','" + users[i].name + "','" + users[i].avatar_img_url + "','" + users[i].role + "','" + users[i].title + "'," + is_maintenance_dep + "," + is_system_user + ")", {}).then((data1) => {
-                                                        console.log("INSERTED: " + JSON.stringify(data1));
-                                                      }, (error1) => {
-                                                        console.log("INSERT ERROR: " + JSON.stringify(error1));
-                                                      });
+                                                //this.foundRepos = data.json();
+                                                let users = this.usersdata;
+                                                console.error(users);
+
+
+                                                for (let i = 0; i < users.length; i++) {
+                                                  let is_maintenance_dep = 0;
+                                                  for (let val = 0; val < users[i].departments.length; val++) {
+                                                    console.log("departments" + users[i].departments[val].name);
+                                                    if (users[i].departments[val].name == "Maintenance") {
+                                                      is_maintenance_dep = 1;
                                                     }
+                                                  }
+                                                  console.log("departments maintainance" + is_maintenance_dep);
 
-                                                    this.nativeStorage.getItem('user_properties').then(
-                                                      properties => {
-                                                        var index;
-                                                        for (let i = 0; i < properties.length; i++) {
-                                                          if (properties[i].token == propertyToken) {
-                                                            index = i;
-                                                          }
-                                                        }
-                                                        this.events.publish('updateHotel:list', properties, index);
+                                                  let is_system_user = users[i].is_system_user == true ? 1 : 0;
+                                                  db.executeSql("INSERT INTO members (user_id, hotel_token, name, image, role, title,is_maintenance_dep, is_system_user) VALUES ('" + users[i].id + "','','" + users[i].name + "','" + users[i].avatar_img_url + "','" + users[i].role + "','" + users[i].title + "'," + is_maintenance_dep + "," + is_system_user + ")", {}).then((data1) => {
+                                                    console.log("INSERTED: " + JSON.stringify(data1));
+                                                  }, (error1) => {
+                                                    console.log("INSERT ERROR: " + JSON.stringify(error1));
+                                                  });
+                                                }
 
-                                                        this.events.publish('subscribeInAppNotification');
-                                                      },
-                                                      error => {
-                                                        console.log("userProperties error" + error);
+                                                this.nativeStorage.getItem('user_properties').then(
+                                                  properties => {
+                                                    var index;
+                                                    for (let i = 0; i < properties.length; i++) {
+                                                      if (properties[i].token == propertyToken) {
+                                                        index = i;
                                                       }
-                                                    );
+                                                    }
+                                                    this.events.publish('updateHotel:list', properties, index);
 
-                                                    this.currentHotelName = hotelName;
-                                                    this.showHotelMenu = false;
+                                                    this.events.publish('subscribeInAppNotification');
+                                                  },
+                                                  error => {
+                                                    console.log("userProperties error" + error);
+                                                  }
+                                                );
 
-                                                   
-                                                        let res = this.resOne;
-                                                        this.nativeStorage.setItem('broadcast_count', res.length)
-                                                          .then(
-                                                          () =>{ console.log('Stored broadcast_count!');
-                                                          if (notification == undefined || notification == 'undefined') {
-                                                            this.commonMethod.hideLoader();
-                                                            this.nav.setRoot(FeedsPage);
-                                                          } else {
-                                                            this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
-                        
-                                                            this.openSpecificPage(notification);
-                                                          }},
-                                                          error => console.error('Error storing broadcast_count', error)
-                                                          );
+                                                this.currentHotelName = hotelName;
+                                                this.showHotelMenu = false;
 
-                                            },
-                                            error => {
-                                              this.commonMethod.hideLoader();
-                                              return '';
-                                            }
-                                          );
-                                          /*  get member api call end */
 
-                                        }, (error) => {
-                                          console.error("Unable to execute sql user_mentions", error);
-                                        }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
+                                                let res = this.resOne;
+                                                this.nativeStorage.setItem('broadcast_count', res.length)
+                                                  .then(
+                                                    () => {
+                                                      console.log('Stored broadcast_count!');
+                                                      if (notification == undefined || notification == 'undefined') {
+                                                        this.commonMethod.hideLoader();
+                                                        this.nav.setRoot(FeedsPage);
+                                                      } else {
+                                                        this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
 
-                                    }, (error) => {
-                                      console.error("Unable to execute sql", error);
-                                    }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                                                        this.openSpecificPage(notification);
+                                                      }
+                                                    },
+                                                    error => console.error('Error storing broadcast_count', error)
+                                                  );
+
+                                              },
+                                              error => {
+                                                this.commonMethod.hideLoader();
+                                                return '';
+                                              }
+                                            );
+                                            /*  get member api call end */
+
+                                          }, (error) => {
+                                            console.error("Unable to execute sql user_mentions", error);
+                                          }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
+
+                                      }, (error) => {
+                                        console.error("Unable to execute sql", error);
+                                      }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+                                  }, (error) => {
+                                    console.error("Unable to execute sql", error);
+                                  }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
                                 }, (error) => {
                                   console.error("Unable to execute sql", error);
                                 }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                              }, (error) => {
-                                console.error("Unable to execute sql", error);
-                              }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
+                            }, (error) => {
+                              console.error("Unable to execute sql", error);
+                            }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                          }, (error) => {
-                            console.error("Unable to execute sql", error);
-                          }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        });
 
-                      });
-
-                    })
-                    .catch(e => console.log(e));
-                },
-                error => console.error('Error storing item', error)
+                      })
+                      .catch(e => console.log(e));
+                  },
+                  error => console.error('Error storing item', error)
                 );
 
             },
             error => console.error('Error storing item', error)
-            );
-        },
-        error => {
-          this.commonMethod.hideLoader();
-          return '';
-        }
-      );
+          );
+      },
+      error => {
+        this.commonMethod.hideLoader();
+        return '';
+      }
+    );
   }
 
-  getUserPermissions(resOne,usersdata,propertyToken, hotelName, hotelCreated, notification,updateNewVersion,tokenValue) {
+  getUserPermissions(resOne, usersdata, propertyToken, hotelName, hotelCreated, notification, updateNewVersion, tokenValue) {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -2356,14 +2339,15 @@ export class MyApp {
             data => {
               let res = data.json();
               console.log(JSON.stringify(res));
-              this.nativeStorage.setItem('user_permissions',res)
-              .then(
-              () =>{ console.log('Stored user_permissions!');
-              this.events.publish('update:permiossion');
-              this.insertData(resOne,usersdata,propertyToken, hotelName, hotelCreated, notification,updateNewVersion); 
-              },
-              error => console.error('Error storing user_permissions', error)
-              );
+              this.nativeStorage.setItem('user_permissions', res)
+                .then(
+                  () => {
+                    console.log('Stored user_permissions!');
+                    this.events.publish('update:permiossion');
+                    this.insertData(resOne, usersdata, propertyToken, hotelName, hotelCreated, notification, updateNewVersion);
+                  },
+                  error => console.error('Error storing user_permissions', error)
+                );
               //alert(this.userData); 
             },
             err => {
@@ -2386,10 +2370,9 @@ export class MyApp {
     );
   }
 
-  openReviewCheckList(detail){
-    if(detail.task_list_record_id>0)
-    {
-      this.nav.push(TaskChecklistDetailPage,{id:'',name:'',task_list_record_id:detail.task_list_record_id,finished_by_name:'',permission_to:'review',type:'view_review'});
+  openReviewCheckList(detail) {
+    if (detail.task_list_record_id > 0) {
+      this.nav.push(TaskChecklistDetailPage, { id: '', name: '', task_list_record_id: detail.task_list_record_id, finished_by_name: '', permission_to: 'review', type: 'view_review' });
 
       // let alertVar = this.alertCtrl.create({
       //   title: 'Error!',
@@ -2446,10 +2429,10 @@ export class MyApp {
     }
   }
 
-  updateNotifications(){
+  updateNotifications() {
 
-    let objData={
-      enabled: this.notificationsStatus?true:false
+    let objData = {
+      enabled: this.notificationsStatus ? true : false
     };
 
     let alertVar = this.alertCtrl.create({
@@ -2500,7 +2483,7 @@ export class MyApp {
 
   }
 
-  updateNotificationsStatus(){
+  updateNotificationsStatus() {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         let userId = accessToken.user_id;
@@ -2510,7 +2493,8 @@ export class MyApp {
           this.commonMethod.getDataWithoutLoder(getProfileUrl + "/" + userId, accessToken).subscribe(
             data => {
               let userData = data.json();
-              this.notificationsStatus=userData.push_notification_enabled;
+              this.notificationsStatus = userData.push_notification_enabled;
+              this.navigateToUpdateAppPage(false)
             },
             err => {
               console.error("Error : " + err);
@@ -2531,24 +2515,36 @@ export class MyApp {
     );
   }
 
-  sendEmail(){
+  /**
+   * Navigate user to update screen page, where user will be having an option to update his app
+   * 
+   * @param isForceUpdate required parameter to show or hide the dismiss button. 
+   * If it is true, user will no longer have the option to dismiss that screen.
+   */
+  navigateToUpdateAppPage(isForceUpdate: boolean) {
+    this.nav.push(UpdateAppPage, {
+      isForceUpdate: isForceUpdate
+    })
+  }
 
-    let emailText="Device information - <br>"; 
-    emailText+="Platform : "+this.device.platform+" <br>";
-    emailText+="Model : "+this.device.model+" <br>";
-    emailText+="Version : "+this.device.version+" <br>";
+  sendEmail() {
+
+    let emailText = "Device information - <br>";
+    emailText += "Platform : " + this.device.platform + " <br>";
+    emailText += "Model : " + this.device.model + " <br>";
+    emailText += "Version : " + this.device.version + " <br>";
     //console.log(emailText);
 
-        let email = {
-          to: 'support@lodgistics.freshdesk.com',
-          // cc: 'nikhil@lodgistics.com',
-         // bcc: ['john@doe.com', 'jane@doe.com'],
-          subject: '',
-          body: emailText,
-          isHtml: true
-        };
-        // Send a text message using default options
-        this.emailComposer.open(email);
+    let email = {
+      to: 'support@lodgistics.freshdesk.com',
+      // cc: 'nikhil@lodgistics.com',
+      // bcc: ['john@doe.com', 'jane@doe.com'],
+      subject: '',
+      body: emailText,
+      isHtml: true
+    };
+    // Send a text message using default options
+    this.emailComposer.open(email);
   }
 
 

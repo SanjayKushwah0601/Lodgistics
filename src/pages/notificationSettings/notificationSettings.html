@@ -35,7 +35,7 @@
         <ion-toggle [(ngModel)]="notificationData.unread_mention_notification_enabled"></ion-toggle>
       </ion-item>
       <div class="popup-buttons">
-        <button ion-button (tap)="update()" class="save_button">SAVE</button>
+        <button ion-button (click)="update()" class="save_button">SAVE</button>
       </div> -->
 
       <span *ngIf="spinner" class="api_data_loader"><ion-spinner name="bubbles"></ion-spinner> <span class="api_data_loader_text">Fetching notifications data...</span></span>
@@ -49,7 +49,7 @@
     </span>
 
     <div class="popup-buttons">
-      <button ion-button [disabled]="showLoader" (tap)="showLoader?'':update()" class="save_button">{{showLoader?'':'SAVE'}}<ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner></button>
+      <button ion-button [disabled]="showLoader" (click)="showLoader?'':update()" class="save_button">{{showLoader?'':'SAVE'}}<ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner></button>
     </div>
 
 

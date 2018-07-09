@@ -10,13 +10,13 @@
 <ion-content padding>
   <div class="welcome"> Welcome to {{hotelName}}. let's complete your account setup </div>
     <div class="profile">
-        <!-- <img (tap)="allowEdit?showGalleryPrompt():''" src="{{'assets/img/avatar.png'}}"/>
+        <!-- <img (click)="allowEdit?showGalleryPrompt():''" src="{{'assets/img/avatar.png'}}"/>
       <span class="caption_text">Add Image</span> -->
-        <!-- <img (tap)="allowEdit?showGalleryPrompt():''" src="{{(base64Image=='' && userData.avatar_img_url)?userData.avatar_img_url:'assets/img/avatar.png'}}"
+        <!-- <img (click)="allowEdit?showGalleryPrompt():''" src="{{(base64Image=='' && userData.avatar_img_url)?userData.avatar_img_url:'assets/img/avatar.png'}}"
         /> -->
         <!-- <span *ngIf="base64Image=='' && !userData.avatar_img_url" class="caption_text">Add Image</span>
-        <img (tap)="allowEdit?showGalleryPrompt():''" src="{{base64Image!=''?base64Image:userData.avatar_img_url}}" /> -->
-        <img (tap)="showGalleryPrompt()" src={{avatar_url}} />
+        <img (click)="allowEdit?showGalleryPrompt():''" src="{{base64Image!=''?base64Image:userData.avatar_img_url}}" /> -->
+        <img (click)="showGalleryPrompt()" src={{avatar_url}} />
 
     </div>
   <form [formGroup]="accountForm" (ngSubmit)="create()">
