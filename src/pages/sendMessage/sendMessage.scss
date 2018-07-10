@@ -580,7 +580,30 @@ page-sendMessage {
         .open-keyboard {
             height: 55%;
         }
-    } //iPhone 6,7,8,6S in portrait & landscape , Pixel 2 XL
+    }
+
+    // HTC-630
+    @media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 2) {
+        ion-content .scroll-content {
+            margin-top: 150px !important;
+        }
+        .close-icon {
+            margin-top: -11.5%;
+            margin-right: -2.5%;
+        }
+        ion-footer.openKeyboardWithSpellCheck {
+            bottom: 43.9% !important;
+        }
+        ion-footer.openKeyboard {
+            bottom: 39.7% !important;
+        }
+        .open-keyboard {
+            height: 55%;
+        }
+    }
+    
+    
+    //iPhone 6,7,8,6S in portrait & landscape , Pixel 2 XL
     @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
         //.scroll-content{    margin-bottom: 42px !important;}
         .close-icon {
