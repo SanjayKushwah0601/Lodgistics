@@ -118,6 +118,11 @@ export class FeedsPage {
       this.commonMethod.getUserPermissions().then(
         permissions => {
           this.userPermissions = permissions;
+
+          if (this.navParams.get('openWoPopup') as boolean) {
+            this.editWorkOrder(this.navParams.get('wo_id'))
+          }
+
         },
         error => {
           return false;

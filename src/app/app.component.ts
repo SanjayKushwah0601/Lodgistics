@@ -1046,7 +1046,10 @@ export class MyApp {
     pushObject.on('reject').subscribe(obj => console.log('reject a notification', JSON.stringify(obj)));
 
   }
+
+
   openSpecificPage(notification) {
+    debugger
     //TODO: Your logic here
     let view = this.nav.getActive();
     this.menuCtrl.close();
@@ -1146,6 +1149,12 @@ export class MyApp {
             } else if (typeName == "task_list_record") {
               this.commonMethod.hideLoader();
               this.openReviewCheckList(detail);
+            } else if (typeName == "wo_completed") {
+              this.commonMethod.hideLoader();
+              this.nav.setRoot(FeedsPage, {
+                openWoPopup: true,
+                wo_id: notification.additionalData.type.detail.work_order_id
+              });
             }
             else {
               this.commonMethod.hideLoader();
