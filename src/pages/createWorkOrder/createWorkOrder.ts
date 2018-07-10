@@ -54,6 +54,7 @@ export class CreateWorkOrderPage {
   public room_id = "";
   public maintenance_checklist_item_id = "";
   public selectOptions: any;
+  private canEditClosedWo: boolean = false;
 
   private tempWorkOrderStatus: string;
 
@@ -200,6 +201,7 @@ export class CreateWorkOrderPage {
   }
 
   processData() {
+    this.canEditClosedWo = this.params.get('can_edit_closed_wo') ? true : false
     this.id = this.params.get('id') ? this.params.get('id') : '';
     this.workOrderData.descriptions = this.params.get('value') ? this.params.get('value') : '';
     this.imageFromParent = this.params.get('image_url') ? this.params.get('image_url') : '';

@@ -830,7 +830,6 @@ export class FeedsPage {
           this.commonMethod.showLoader();
           this.translationservice.translateText(sourceText, langCode).subscribe(data => {
             console.log('4')
-            debugger
 
             if (data.detectedSourceLanguage == "en") {
               this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
@@ -840,7 +839,6 @@ export class FeedsPage {
             else {
               this.translationservice.translateText(sourceText, 'en').subscribe(data => {
                 console.log('3')
-                debugger
 
                 this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
                 this.foundRepos[i].value[j].body = tempStr + data.translatedText;
@@ -890,7 +888,6 @@ export class FeedsPage {
       //this.commonMethod.showLoader();
       this.translationservice.translateText(sourceText, langCode).subscribe(data => {
         console.log('2')
-        debugger
 
         if (data.detectedSourceLanguage == "en") {
           this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
@@ -900,7 +897,6 @@ export class FeedsPage {
         else {
           this.translationservice.translateText(sourceText, 'en').subscribe(data => {
             console.log('1')
-            debugger
             this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
             this.foundRepos[i].value[j].title = tempStr + data.translatedText;
             //this.commonMethod.hideLoader();
@@ -1035,6 +1031,18 @@ export class FeedsPage {
 
   createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
     let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      this.callTodaysFeedInBackground();
+    });
+    modal.present();
+  }
+
+  editWorkOrder(woId) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, {
+      wo_no: woId,
+      can_edit_closed_wo: this.userPermissions.wo_access.can_close
+    });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.callTodaysFeedInBackground();
@@ -1208,15 +1216,6 @@ export class FeedsPage {
         return '';
       }
     );
-  }
-
-  editWorkOrder(wo_no) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no });
-    modal.onDidDismiss(data => {
-      this.closekeyboard();
-      this.callTodaysFeedInBackground();
-    });
-    modal.present();
   }
 
   compareBroadcastDate(date) {
