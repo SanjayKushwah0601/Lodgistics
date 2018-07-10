@@ -3,7 +3,7 @@ import { NavController, AlertController, Platform, ModalController, NavParams, V
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
-import { baseUrl } from '../../services/configURLs';
+import { baseUrl, closeWoUrl } from '../../services/configURLs';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
@@ -54,6 +54,8 @@ export class CreateWorkOrderPage {
   public room_id = "";
   public maintenance_checklist_item_id = "";
   public selectOptions: any;
+
+  private tempWorkOrderStatus: string;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite) {
 
@@ -231,7 +233,10 @@ export class CreateWorkOrderPage {
                 this.workOrderData.maintainable_id = woData.maintainable_id;
                 this.updateCheckList();
                 this.workOrderData.maintenance_checklist_item_id = woData.maintenance_checklist_item_id;
-                this.workOrderData.closed=woData.closed;
+                this.workOrderData.closed = woData.closed;
+
+                // Store the initial work order status in a variable
+                this.tempWorkOrderStatus = woData.status;
                 //let foundRepos = data.json();
                 //console.log("==" + JSON.stringify(foundRepos));
 
@@ -720,7 +725,13 @@ export class CreateWorkOrderPage {
               console.log(foundRepos);
               this.commonMethod.hideLoader();
               //this.viewCtrl.dismiss();
-              this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
+              if (this.tempWorkOrderStatus != this.workOrderData.status && this.workOrderData.status.toLocaleUpperCase() === 'closed'.toLocaleUpperCase()) {
+                // TODO: call close work order api
+                this.closeWoCall(accessToken, foundRepos.id, foundRepos.id, foundRepos.work_order_url, foundRepos.status)
+              } else {
+                this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
+              }
+
             },
             err => {
               this.commonMethod.hideLoader();
@@ -743,6 +754,36 @@ export class CreateWorkOrderPage {
         return '';
       }
     );
+  }
+
+
+  /**
+   * To close work order...
+   */
+  closeWoCall(accessToken, id, workOrderId, workOrderUrl, workOrderStatus) {
+    let objData = {};
+    if (this.commonMethod.checkNetwork()) {
+      //this.woData[i].closeInProgress = true;
+      this.commonMethod.putData(closeWoUrl + "/" + id + "/close", objData, accessToken).subscribe(
+        data => {
+          console.log("ResponseCloseWO: " + JSON.stringify(data.json()));
+          this.viewCtrl.dismiss({ id: id, work_order_id: workOrderId, work_order_url: workOrderUrl, work_order_status: workOrderStatus });
+          //this.closeWo(i);
+          //this.woData[i].closeInProgress = false;
+          //this.getWoData();
+        },
+        err => {
+          // this.woData[i].closeInProgress = false;
+          console.log("Error 1: " + JSON.stringify(err.json()));
+        },
+        () => {
+          console.log('getData completed');
+        }
+      );
+    }
+    else {
+      this.commonMethod.showNetworkError();
+    }
   }
 
   confirmCloseWorkOrder() {

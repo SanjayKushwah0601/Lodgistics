@@ -372,13 +372,18 @@ export class WorkOrderPage {
     }
   }
 
-  editWorkOrder(wo_no) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no });
+  /**
+   * 
+   * @param workOrderId 
+   */
+  editWorkOrder(workOrderId) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: workOrderId });
     modal.onDidDismiss(data => {
       this.getWoData();
     });
     modal.present();
   }
+
   openOptions(i) {
     if (this.showPreviousSelected == "0" || this.showPreviousSelected != '') {
       this.woData[this.showPreviousSelected].showOption = false;
