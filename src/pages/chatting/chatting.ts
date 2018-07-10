@@ -192,11 +192,11 @@ export class ChattingPage {
 
                     if (insertFlag == true) {
                       insertGroupFlag = true;
-                      insertChatGroupsData = insertChatGroupsData + "('" + this.foundRepos.groups[i].chat.id + "','" + this.foundRepos.groups[i].chat.name + "','','" + this.foundRepos.groups[i].chat.owner_id + "','','" + this.foundRepos.groups[i].chat.created_at + "','','" + this.foundRepos.groups[i].chat.image_url + "'),";
+                      insertChatGroupsData = insertChatGroupsData + "('" + this.foundRepos.groups[i].chat.id + "','" + this.foundRepos.groups[i].chat.name.replace(/'/g, "&#39;") + "','','" + this.foundRepos.groups[i].chat.owner_id + "','','" + this.foundRepos.groups[i].chat.created_at + "','','" + this.foundRepos.groups[i].chat.image_url + "'),";
                     }
                     else {
                       //updateGroupFlag = true;
-                      updateChatGroupsData = updateChatGroupsData + "when id = " + this.foundRepos.groups[i].chat.id + " then '" + this.foundRepos.groups[i].chat.name + "' ";
+                      updateChatGroupsData = updateChatGroupsData + "when id = " + this.foundRepos.groups[i].chat.id + " then '" + this.foundRepos.groups[i].chat.name.replace(/'/g, "&#39;") + "' ";
                       updateImageChatGroupsData = updateImageChatGroupsData + "when id = " + this.foundRepos.groups[i].chat.id + " then '" + this.foundRepos.groups[i].chat.image_url + "' ";
 
                       if (i == this.foundRepos.groups.length - 1) {
