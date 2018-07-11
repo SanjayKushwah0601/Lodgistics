@@ -63,7 +63,7 @@ page-feeds {
     .card-ios p,
     .card-md p {
         font-size: 28px;
-        color: #000000;
+        color: #000000 !important;
         line-height: 33px;
         font-family: 'open_sanslight';
         word-break: break-word;
@@ -743,6 +743,11 @@ page-feeds {
         margin-top: 0%;
         margin-bottom: 0%;
     }
+    .user-title {
+        font-size: 10px !important;
+        line-height: 2;
+        color: gray;
+    }
     @media(max-width:749px) {
         .grid .button-ios,
         .grid .button-md {
@@ -788,7 +793,7 @@ page-feeds {
         }
         .card-ios p,
         .card-md p {
-            font-size: 15px;
+            font-size: 15px !important;
             line-height: 18px;
             margin-top: 2px;
         }

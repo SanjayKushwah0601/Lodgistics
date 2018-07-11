@@ -288,7 +288,7 @@
                 <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0"
                   (click)="editWorkOrder(item.work_order_id)" class="{{(item.work_order && item.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{item.work_order_id}}</span>
               </h2>
-              <p *ngIf="item.created_by.title">{{item.created_by.title}}</p>
+              <div class="user-title" *ngIf="item.created_by.title">{{item.created_by.title}}</div>
               <p *ngIf="!item.created_by.title">
                 <br>
               </p>
