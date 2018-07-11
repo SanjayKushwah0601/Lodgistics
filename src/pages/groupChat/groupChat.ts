@@ -116,7 +116,7 @@ export class GroupChatPage {
   public addedUsers = [];
   public actionSheet: any;
   public alert: any;
-  public oldMsgTextValue="";
+  public oldMsgTextValue = "";
 
   constructor(public platform: Platform, public navCtrl: NavController, private keyboard: Keyboard, public zone: NgZone, public navParams: NavParams, public nativeStorage: NativeStorage, private sqlite: SQLite, public alertCtrl: AlertController, public commonMethod: srviceMethodsCall, public translationservice: TranslationService, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, private clipboard: Clipboard, public modalCtrl: ModalController, public events: Events, private iab: InAppBrowser) {
 
@@ -807,7 +807,7 @@ export class GroupChatPage {
                         queryStrt += obj[i].message.replace(/'/g, "&#39;") + "','";
                         queryStrt += (obj[i].image_url && obj[i].image_url != null && obj[i].image_url != 'null') ? obj[i].image_url : emptyText;
                         queryStrt += "','" + this.groupID + "','" + this.messageType + "','','" + obj[i].created_at + "','','" + obj[i].read;
-                        queryStrt += "','" + obj[i].mentioned_user_ids.toString() + "','" + obj[i].responding_to_chat_message_id + "','" + obj[i].work_order_id + "','" + obj[i].work_order_url + "','" + woStatus + "'," + workOrderClosedByUserId + ",'" + workOrderClosedAt + "','" + workOrderLocationDetail + "','" + workOrderDescription  + "','" + obj[i].room_number + "','" + obj[i].room_id + "')";
+                        queryStrt += "','" + obj[i].mentioned_user_ids.toString() + "','" + obj[i].responding_to_chat_message_id + "','" + obj[i].work_order_id + "','" + obj[i].work_order_url + "','" + woStatus + "'," + workOrderClosedByUserId + ",'" + workOrderClosedAt + "','" + workOrderLocationDetail + "','" + workOrderDescription + "','" + obj[i].room_number + "','" + obj[i].room_id + "')";
                         //console.log("=="+queryStrt);
                         db.executeSql(queryStrt, {}).then((data1) => {
                           console.log("MESSAGE INSERTED: " + JSON.stringify(data1));
@@ -924,7 +924,7 @@ export class GroupChatPage {
     }).then((db: SQLiteObject) => {
 
       let selectChatQuery = "";
-    
+
       if (this.callFirstTime) {
         selectChatQuery = "SELECT * FROM chat_messages WHERE target_id= '" + this.groupID + "' AND type='" + this.messageType + "' ORDER BY created_at DESC";
       } else {
@@ -1019,8 +1019,8 @@ export class GroupChatPage {
                 "location_detail": allGroupMessages.rows.item(i).work_order_location_detail,
                 "description": allGroupMessages.rows.item(i).work_order_description
               },
-              "room_number":allGroupMessages.rows.item(i).room_number,
-              "room_id":allGroupMessages.rows.item(i).room_id
+              "room_number": allGroupMessages.rows.item(i).room_number,
+              "room_id": allGroupMessages.rows.item(i).room_id
             }
 
             console.log("showNewId  " + this.showNewId);
@@ -1270,9 +1270,8 @@ export class GroupChatPage {
           this.zone.run(() => {
             this.textMessage = this.removeLastInstance(strArray[i], this.textMessage);
             /* this is only for android */
-            if(this.textMessage.trim()=="")
-            {
-              this.textMessage=this.textMessage.trim();
+            if (this.textMessage.trim() == "") {
+              this.textMessage = this.textMessage.trim();
             }
             this.textMessage = this.textMessage + "@" + memberInfo.name + " ";
             this.mentionMembers = this.items;
@@ -1346,8 +1345,8 @@ export class GroupChatPage {
   }
 
 
-  translate(sourceText, langCode, index,mentioned_user_ids) {
- let allChatMentions = [];
+  translate(sourceText, langCode, index, mentioned_user_ids) {
+    let allChatMentions = [];
     if (mentioned_user_ids != '' && mentioned_user_ids != null) {
       allChatMentions = mentioned_user_ids;
     }
@@ -1678,7 +1677,7 @@ export class GroupChatPage {
     this.platform.ready().then(() => {
       this.platform.registerBackButtonAction(() => {
 
-      },100);
+      }, 100);
     });
 
     this.navbar.backButtonClick = (e: UIEvent) => {
@@ -1691,41 +1690,41 @@ export class GroupChatPage {
         // this.navCtrl.pop();
         this.nativeStorage.getItem("lastPage")
           .then(
-          pageDetail => {
-            if (pageDetail.pageName) {
-              // if (pageDetail.index) {
-              //   if(pageDetail.index!=-1){
-              //   this.navCtrl.popTo(pageDetail.index);
-              //   }else{
-              //     this.navCtrl.setRoot(FeedsPage);
-              //   }
-              // } else 
+            pageDetail => {
+              if (pageDetail.pageName) {
+                // if (pageDetail.index) {
+                //   if(pageDetail.index!=-1){
+                //   this.navCtrl.popTo(pageDetail.index);
+                //   }else{
+                //     this.navCtrl.setRoot(FeedsPage);
+                //   }
+                // } else 
 
-              if (pageDetail.pageName == MyMentionPage.name) {
-                this.navCtrl.setRoot(MyMentionPage);
-              } else if (pageDetail.pageName == FeedsPage.name) {
-                this.navCtrl.setRoot(FeedsPage);
-              } else if (pageDetail.pageName == ProfilePage.name) {
-                //this.navCtrl.setRoot(ProfilePage);
-                this.navCtrl.pop({});
+                if (pageDetail.pageName == MyMentionPage.name) {
+                  this.navCtrl.setRoot(MyMentionPage);
+                } else if (pageDetail.pageName == FeedsPage.name) {
+                  this.navCtrl.setRoot(FeedsPage);
+                } else if (pageDetail.pageName == ProfilePage.name) {
+                  //this.navCtrl.setRoot(ProfilePage);
+                  this.navCtrl.pop({});
+                }
+                else if (pageDetail.pageName == MyVideosPage.name) {
+                  //this.navCtrl.setRoot(ProfilePage);
+                  this.navCtrl.pop({});
+                } else if (pageDetail.pageName == CreateFeedsPage.name) {
+                  this.navCtrl.push(CreateFeedsPage);
+                } else if (pageDetail.pageName == WorkOrderPage.name) {
+                  this.navCtrl.setRoot(WorkOrderPage);
+                } else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
+                  this.navCtrl.setRoot(TaskChecklistPage);
+                } else {
+                  this.navCtrl.setRoot(ChattingPage);
+                }
               }
-              else if (pageDetail.pageName == MyVideosPage.name) {
-                //this.navCtrl.setRoot(ProfilePage);
-                this.navCtrl.pop({});
-              } else if (pageDetail.pageName == CreateFeedsPage.name) {
-                this.navCtrl.push(CreateFeedsPage);
-              } else if (pageDetail.pageName == WorkOrderPage.name) {
-                this.navCtrl.setRoot(WorkOrderPage);
-              } else if (pageDetail.pageName == TaskChecklistPage.name || pageDetail.pageName == TaskChecklistDetailPage.name) {
-                this.navCtrl.setRoot(TaskChecklistPage);
-              } else {
+              else {
                 this.navCtrl.setRoot(ChattingPage);
               }
-            }
-            else {
-              this.navCtrl.setRoot(ChattingPage);
-            }
-          }),
+            }),
           error => {
             this.navCtrl.setRoot(ChattingPage);
           };
@@ -1844,11 +1843,10 @@ export class GroupChatPage {
           let yOffset = document.getElementById(elementId).offsetTop;
           console.log("ack == B");
 
-          if(yOffset==0)
-          {
+          if (yOffset == 0) {
             console.log("scroll bottom");
             this.content.scrollToBottom(300);
-          }else{
+          } else {
             this.content.scrollTo(100, yOffset - 100, 100);
           }
           console.log("ack == C");
@@ -1893,6 +1891,51 @@ export class GroupChatPage {
       let text = this.allMessages[i].message_obj.message.replace(/<\/?a[^>]*>/g, "");
       this.clipboard.copy(text);
     }
+  }
+
+  showContextOptions(index: number) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: '',
+      cssClass: 'feed_action_items',
+    });
+
+    // res.message_obj.id,res.message_obj.message,i,res.message_obj.image_url,res.message_obj.mentioned_user_ids,res.message_obj.room_id
+    actionSheet.addButton({
+      text: 'Copy',
+      icon: 'ios-copy-outline',
+      handler: () => {
+        console.log('ActionSheet Copy');
+        this.coptyText(this.allMessages[index].message_obj.id, index)
+      }
+    });
+    actionSheet.addButton({
+      text: 'Reply',
+      icon: 'ios-undo-outline',
+      handler: () => {
+        console.log('ActionSheet Reply');
+        this.replyOnMessage(this.allMessages[index].message_obj.id, index)
+      }
+    });
+
+    if (this.userPermissions.wo_access && this.userPermissions.wo_access.can_create &&
+      !(this.allMessages[index].message_obj.work_order_id && this.allMessages[index].message_obj.work_order_id > 0)) {
+      // TODO: show wo button
+      actionSheet.addButton({
+        text: 'Create WO',
+        icon: 'ios-construct-outline',
+        handler: () => {
+          console.log('ActionSheet Create WO');
+          this.confirmWorkOrder(this.allMessages[index].message_obj.id, this.allMessages[index].message_obj.message, index,
+            this.allMessages[index].message_obj.image_url, this.allMessages[index].message_obj.mentioned_user_ids,
+            this.allMessages[index].message_obj.room_id)
+        }
+      });
+    }
+
+    actionSheet.addButton({ text: 'Cancel', 'role': 'cancel' });
+
+    actionSheet.present();
+
   }
 
   replyOnMessage(id, i) {
@@ -2212,7 +2255,7 @@ export class GroupChatPage {
     e.preventDefault();
   }
 
-  confirmWorkOrder(id, value, i, image_url, mentioned_user_ids,room_id) {
+  confirmWorkOrder(id, value, i, image_url, mentioned_user_ids, room_id) {
     if (this.allowWO == true) {
       this.showOptions = false;
       if (this.allMessages[i].message_obj != "undefined" && this.allMessages[i].message_obj != null && this.allMessages[i].message_obj.id == id) {
@@ -2234,7 +2277,7 @@ export class GroupChatPage {
               text: 'Yes',
               handler: data => {
                 console.log('Yes clicked');
-                this.createWorkOrder(id, value, image_url, mentioned_user_ids, i,room_id);
+                this.createWorkOrder(id, value, image_url, mentioned_user_ids, i, room_id);
               }
             }
           ]
@@ -2244,8 +2287,8 @@ export class GroupChatPage {
     }
   }
 
-  createWorkOrder(id, value, image_url, mentioned_user_ids, i,room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, pageName: 'chat',room_id:room_id });
+  createWorkOrder(id, value, image_url, mentioned_user_ids, i, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, pageName: 'chat', room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.isPopupOpen = false;
@@ -2279,59 +2322,59 @@ export class GroupChatPage {
     });
   }
 
-  keyDownCheck(e){
-    this.oldMsgTextValue=this.textMessage;
-    console.log("11ketdown"+this.textMessage);
+  keyDownCheck(e) {
+    this.oldMsgTextValue = this.textMessage;
+    console.log("11ketdown" + this.textMessage);
   }
 
   valchange(e) {
-    
-        console.log("==" + e.key);
-        //console.log("=="+e.keyCode);
-        //console.log("==" + JSON.stringify(e));
-        //if (e.key != "Backspace") {   // only for ios
-        if( !(this.oldMsgTextValue.length>this.textMessage.length))   // only for android
-        {
-          this.zone.run(() => {
-            //this.textMessage = this.textMessage;
-    
-            //this.mentionMembers=this.items;
-            if (this.textMessage && this.textMessage.trim() != "") {
-              let strArray = this.textMessage.trim().split(" ");
-              // Display array values on page
-              for (var i = 0; i < strArray.length; i++) {
-                if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
-                  this.showMentions = true;
-                  let val = strArray[i].toString().substr(1);
-                  if (val.trim() != "") {
-                    let tempMentions = [];
-                    for (let l = 0; l < this.items.length; l++) {
-    
-                      let tempUserName = this.items[l].name.toLowerCase().split(" ");
-                      if (this.items[l] != undefined && this.items[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
-                        //this.showMentions=false;
-                        this.selectUser(undefined, this.items[l], true);
-                        tempMentions = this.items;
-                      }
-                      else if (this.items[l] != undefined && this.items[l].id != this.userId && this.items[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
-                        tempMentions.push(this.items[l]);
-                      }
-                    }
-                    this.mentionMembers = tempMentions;
+
+    console.log("==" + e.key);
+    //console.log("=="+e.keyCode);
+    //console.log("==" + JSON.stringify(e));
+    //if (e.key != "Backspace") {   // only for ios
+    if (!(this.oldMsgTextValue.length > this.textMessage.length))   // only for android
+    {
+      this.zone.run(() => {
+        //this.textMessage = this.textMessage;
+
+        //this.mentionMembers=this.items;
+        if (this.textMessage && this.textMessage.trim() != "") {
+          let strArray = this.textMessage.trim().split(" ");
+          // Display array values on page
+          for (var i = 0; i < strArray.length; i++) {
+            if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
+              this.showMentions = true;
+              let val = strArray[i].toString().substr(1);
+              if (val.trim() != "") {
+                let tempMentions = [];
+                for (let l = 0; l < this.items.length; l++) {
+
+                  let tempUserName = this.items[l].name.toLowerCase().split(" ");
+                  if (this.items[l] != undefined && this.items[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
+                    //this.showMentions=false;
+                    this.selectUser(undefined, this.items[l], true);
+                    tempMentions = this.items;
+                  }
+                  else if (this.items[l] != undefined && this.items[l].id != this.userId && this.items[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
+                    tempMentions.push(this.items[l]);
                   }
                 }
-                else {
-                  this.showMentions = false;
-                }
+                this.mentionMembers = tempMentions;
               }
             }
             else {
               this.showMentions = false;
             }
-    
-    
-          });
+          }
         }
+        else {
+          this.showMentions = false;
+        }
+
+
+      });
+    }
   }
 
   getAllSystemUsersFromDb() {
@@ -2414,8 +2457,8 @@ export class GroupChatPage {
       });
     });
   }
-  editWorkOrder(id,wo_no,i) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, {wo_no:wo_no,id:id});
+  editWorkOrder(id, wo_no, i) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no, id: id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.isPopupOpen = false;
