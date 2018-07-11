@@ -33,17 +33,23 @@
 </ion-fab>
 <ion-header>
   <ion-navbar>
-    <span start class="broadcast" *ngIf="broadcast_count>0">
-      <span (click)="broadcastList()">
-        <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
-        <span class="broadcast_btn">
-          <img src="assets/img/broadcost-red-icon.png" />
+    <ion-buttons left>
+      <button ion-button left (click)="broadcastList()">
+        <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span>
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+              <img src="assets/img/broadcost-red-icon.png" />
+            </span>
+            ({{broadcast_count}})</span>
         </span>
-        ({{broadcast_count}})</span>
-    </span>
-    <button ion-button menuToggle end>
-      <ion-icon name="menu"></ion-icon>
-    </button>
+      </button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button menuToggle right>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>{{(tempFoundRepos.length>0)?'CHECKLISTS':isChecklistDataLoaded?'CHECKLIST ACTIVITY':''}}</ion-title>
   </ion-navbar>
 
