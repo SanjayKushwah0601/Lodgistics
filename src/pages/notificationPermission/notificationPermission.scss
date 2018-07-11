@@ -1,0 +1,44 @@
+page-notificationPermission {
+    .back-button.show-back-button {
+        display: none !important;
+    }
+    .logo {
+        width: 70px;
+        height: 70px;
+        text-align: center;
+        align-items: center;
+        margin-top: 50px;
+    }
+    .heading {
+        color: dimgrey;
+    }
+    .description {
+        padding: 0px 40px 0px 40px;
+        text-align: center;
+        justify-content: center;
+        font-size: 1.2em;
+        color: grey;
+    }
+    .button-dismiss {
+        text-transform: capitalize;
+    }
+    button {
+        margin: 0px !important;
+        border-radius: 0px !important;
+    }
+    ion-content {
+        font-family: 'open_sanslight';
+    }
+    h4 {
+        font-family: 'open_sanssemibold';
+    }
+    .notification_btn {
+        background: #02B9E7;
+        border-radius: 25px !important;
+        padding: 15px 30px;
+    }
+    .button-full {
+        background-color: transparent !important;
+        color: #000 !important;
+    }
+}

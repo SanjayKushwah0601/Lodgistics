@@ -61,9 +61,11 @@ import { Buffer } from 'buffer';
 // import 'intl';
 // import 'intl/locale-data/jsonp/en';
 import { NewUserPage } from '../pages/newUser/newUser';
+import { DateLabelStr } from './dateLabel.pipe.ts';
 import { PressDirective } from '../directives/press/press';
 import { Market } from '@ionic-native/market';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
+import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
 
 enableProdMode();
 
@@ -79,10 +81,10 @@ export class SafeHtmlPipe implements PipeTransform {
 
 @NgModule({
   declarations: [
-    PressDirective,
     MyApp,
     SafeHtmlPipe,
     RichTextComponent,
+    DateLabelStr,
     Ionic2MaskDirective,
     TutorialPage,
     LoginPage,
@@ -121,7 +123,8 @@ export class SafeHtmlPipe implements PipeTransform {
     SendMessagePage, NewUserPage,
     createFollowUpPage,
     PressDirective,
-    UpdateAppPage
+    UpdateAppPage,
+    NotificationPermissionPage
   ],
   imports: [
     BrowserModule,
@@ -177,7 +180,8 @@ export class SafeHtmlPipe implements PipeTransform {
     SendMessagePage,
     NewUserPage,
     createFollowUpPage,
-    UpdateAppPage
+    UpdateAppPage,
+    NotificationPermissionPage
   ],
   providers: [
     StatusBar,

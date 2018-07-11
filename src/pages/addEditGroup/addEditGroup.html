@@ -89,6 +89,9 @@
           </ion-label>
           <ion-avatar item-left>
             <img src="{{res.avatar_img_url}}" class="active">
+            <span *ngIf="(res.inGroup==true || userId==res.id)" class="avatar_checkmark_box">
+              <ion-icon class="avatar_checkmark" name="ios-checkmark"></ion-icon>
+            </span>
           </ion-avatar>
         </ion-item>
       </span>
@@ -103,6 +106,9 @@
           </ion-label>
           <ion-avatar item-left>
             <img src="{{res.avatar_img_url}}" class="active">
+            <span *ngIf="(res.inGroup==true || userId==res.id)" class="avatar_checkmark_box">
+              <ion-icon class="avatar_checkmark" name="ios-checkmark"></ion-icon>
+            </span>
           </ion-avatar>
         </ion-item>
       </span>

@@ -210,14 +210,13 @@ page-addeditgroup {
     ion-input,
     ion-textarea {
         color: #757575;
-    }
-    .was-in-group img {
-        border: 2px solid #ec1455;
-    }
-    .was-in-group .label-ios,
-    .was-in-group .label-md {
-        color: #ec1455;
-    }
+    } // .was-in-group img {
+    //     border: 2px solid #ec1455;
+    // }
+    // .was-in-group .label-ios,
+    // .was-in-group .label-md {
+    //     color: #ec1455;
+    // }
     .back-button.show-back-button {
         margin-top: 0% !important;
     }
@@ -412,6 +411,27 @@ page-addeditgroup {
         background-repeat: repeat-x;
         background-position: 0 -2px;
         content: "";
+    }
+    .avatar_checkmark {
+        font-size: 4em;
+        margin-left: 25%;
+        margin-top: -22%;
+    }
+    .avatar_checkmark_box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        position: absolute;
+        top: 10px;
+        margin: 8px 16px 8px 0;
+        background-color: #808080;
+        border: 2px solid #02B9E7;
+        opacity: 0.5;
+    }
+    .avatar_checkmark_box .ion-ios-checkmark:before,
+    .avatar_checkmark_box .ion-md-checkmark:before {
+        color: #02B9E7;
     }
     @media(max-width:749px) {
         .label-ios[stacked],

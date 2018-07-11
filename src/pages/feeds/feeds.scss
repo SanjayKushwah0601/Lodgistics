@@ -83,7 +83,7 @@ page-feeds {
     .item-ios h2,
     .item-md h2 {
         font-size: 20px;
-        color: #757575;
+        color: #000000;
         font-family: 'open-sans';
     }
     .item-ios p,
@@ -138,11 +138,16 @@ page-feeds {
         border-radius: 4px;
         padding: 5px 5px 4px 5px;
         ;
-        margin-top: 8%;
-        margin-bottom: 8%;
+        margin-top: 4%;
+        margin-bottom: 4%;
         background-color: #BDBDBD;
         color: #fff;
         font-weight: bold;
+        width: 100%;
+        background: transparent;
+        color: #000;
+        border: none;
+        font-size: 17px !important;
     }
     .txt-update {
         float: left;
@@ -393,7 +398,7 @@ page-feeds {
         font-family: 'open_sanslight';
     }
     .scroll-content span .gifshow:first-child {
-        margin-top: -15px !important;
+        margin-top: 0px !important;
     }
     .button-inner {
         justify-content: flex-start !important;
@@ -709,6 +714,35 @@ page-feeds {
             opacity: 1;
         }
     }
+    .item-divider-ios,
+    .item-divider-md {
+        color: inherit;
+        background-color: transparent;
+    }
+    ion-item-divider {
+        min-height: 0px;
+    }
+    .date_label_divider {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+    }
+    .feed_item_divider {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        min-height: 0px;
+        background-color: transparent;
+    }
+    ion-item-divider[sticky] {
+        top: 0%;
+        border: none;
+    } //  .card-ios p.user_title, .card-md p.user_title{ font-size: 10px !important; }
+    //  .card-ios h2.user_name, .card-md h2.user_name{ color: #000; }
+    .today_label {
+        margin-top: 0%;
+        margin-bottom: 0%;
+    }
     @media(max-width:749px) {
         .grid .button-ios,
         .grid .button-md {
@@ -737,7 +771,7 @@ page-feeds {
         }
         .item-ios p,
         .item-md p {
-            font-size: 11px !important;
+            font-size: 10px !important;
             line-height: 22px !important;
             letter-spacing: 0.5px;
         }
