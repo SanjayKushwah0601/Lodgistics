@@ -106,7 +106,7 @@
         </ion-row>
       </ion-grid>
 
-      <ion-card class="item_sub2" style="width:100%;margin:0px;" (click)="editWorkOrder(item.id)" (press)="userPermissions.wo_access.can_close?openOptions(j):''">
+      <ion-card class="item_sub2" style="width:100%;margin:0px;" (click)="editWorkOrder(item.id)" (long-press)="userPermissions.wo_access.can_close?showContextOptions(item.id, j):''">
         <ion-row class="card-header">
           <ion-col class="left_text middel_text col_middel">
             <span *ngIf="item.due_days>0">

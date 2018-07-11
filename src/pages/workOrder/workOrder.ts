@@ -1,5 +1,5 @@
 import { Component, ViewChild, trigger, transition, style, animate, state, NgZone } from '@angular/core';
-import { NavController, AlertController, Platform, Content, ModalController, FabContainer } from 'ionic-angular';
+import { NavController, AlertController, Platform, Content, ModalController, FabContainer, ActionSheetController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { getWoListUrl } from '../../services/configURLs';
 import { closeWoUrl } from '../../services/configURLs';
@@ -62,7 +62,9 @@ export class WorkOrderPage {
   public userPermissions: any;
   public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage,
+    public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController,
+    public platform: Platform, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController) {
 
     this.getAllMembersFromDb();
 
@@ -393,6 +395,42 @@ export class WorkOrderPage {
     this.woData[i].showOption = true;
   }
 
+  closeWo(i) {
+    this.woData[i].showOption = false;
+    this.showPreviousSelected = "";
+  }
+
+
+  /**
+   * Method will be called on lond press on any work order
+   * 
+   * @param id work order id
+   * @param index index position of the work order in the list
+   */
+  showContextOptions(id, index) {
+    this.actionSheetCtrl.create({
+      title: '',
+      cssClass: 'feed_action_items',
+      buttons: [
+        {
+          text: 'Close WO',
+          icon: 'ios-construct-outline',
+          handler: () => {
+            console.log('Close work order is clicked');
+            this.closeWoCall(id, index)
+          }
+        }, {
+          text: 'Cancel',
+          role: 'destructive',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    }).present();
+  }
+
+
   searchData() {
     //this.showFilterData = true;
     this.keyboard.close();
@@ -511,13 +549,15 @@ export class WorkOrderPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           this.woData[i].closeInProgress = true;
-          this.commonMethod.putDataWithoutLoder(closeWoUrl + "/" + id + "/close", objData, accessToken).subscribe(
+          this.commonMethod.putData(closeWoUrl + "/" + id + "/close", objData, accessToken).subscribe(
             data => {
+              this.commonMethod.hideLoader()
               this.closeWo(i);
               this.woData[i].closeInProgress = false;
               this.getWoData();
             },
             err => {
+              this.commonMethod.hideLoader()
               this.woData[i].closeInProgress = false;
               console.log("Error 1: " + JSON.stringify(err.json()));
             },
@@ -534,11 +574,6 @@ export class WorkOrderPage {
         return '';
       }
     );
-  }
-
-  closeWo(i) {
-    this.woData[i].showOption = false;
-    this.showPreviousSelected = "";
   }
 
 
