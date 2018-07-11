@@ -1893,13 +1893,16 @@ export class GroupChatPage {
     }
   }
 
+  /**
+  * Method will be called on lond press on any message
+  * 
+  * @param index index position of the work order in the list
+  */
   showContextOptions(index: number) {
     let actionSheet = this.actionSheetCtrl.create({
       title: '',
       cssClass: 'feed_action_items',
     });
-
-    // res.message_obj.id,res.message_obj.message,i,res.message_obj.image_url,res.message_obj.mentioned_user_ids,res.message_obj.room_id
     actionSheet.addButton({
       text: 'Copy',
       icon: 'ios-copy-outline',

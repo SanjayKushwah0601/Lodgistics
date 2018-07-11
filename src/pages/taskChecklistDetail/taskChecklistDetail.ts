@@ -1,5 +1,5 @@
 import { Component, ViewChild, trigger, transition, style, animate, state, NgZone } from '@angular/core';
-import { NavController, AlertController, Platform, NavParams, Content, ModalController, Navbar, Events } from 'ionic-angular';
+import { NavController, AlertController, Platform, NavParams, Content, ModalController, Navbar, Events, ActionSheetController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -62,7 +62,9 @@ export class TaskChecklistDetailPage {
   public showFooter = true;
   public spinner = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController,
+    public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public actionSheetCtrl: ActionSheetController,
+    public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events) {
 
     this.userPermissions = {
       "wo_access": {
@@ -628,6 +630,31 @@ export class TaskChecklistDetailPage {
     });
     this.isPopupOpen = true;
     modal.present();
+  }
+
+  /**
+   * Method will be called on lond press on any checklist details click
+   * 
+   * @param mainIndex position of the work order in the list
+   * @param subIndex 
+   * @param itemId 
+   * @param commentText 
+   */
+  showContextOptions(mainIndex, subIndex, itemId, commentText) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: '',
+      cssClass: 'feed_action_items',
+    });
+    actionSheet.addButton({
+      text: 'Comment',
+      icon: 'ios-text-outline',
+      handler: () => {
+        console.log('ActionSheet Comment');
+        this.addComment(mainIndex, subIndex, itemId, commentText)
+      }
+    });
+    actionSheet.addButton({ text: 'Cancel', 'role': 'cancel' });
+    actionSheet.present();
   }
 
   openOptions(id, j, k) {

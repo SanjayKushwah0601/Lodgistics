@@ -87,7 +87,7 @@
 
           <ion-grid>
             <ion-row>
-              <ion-col col-10 (long-press)="!reviewMode?openOptions(item.id,j,k):''" class="sub_items_box">
+              <ion-col col-10 (long-press)="!reviewMode?showContextOptions(j,k,item.id,item.comment):''" class="sub_items_box">
                 <span class="left_content">{{item.title}}</span>
                 <span *ngIf="item.comment">
                   <div class="content_text">{{item.comment}}</div>
