@@ -43,8 +43,13 @@ export class SendMessagePage {
   public filterUser: any;
   public filterGroup: any;
   public searchText = "";
+  private groupInfo: any;
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage, public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File, public alertCtrl: AlertController, private sqlite: SQLite) {
+  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone,
+    modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage,
+    public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File,
+    public alertCtrl: AlertController, private sqlite: SQLite) {
+
     this.keyboard.disableScroll(true);
     this.messageText = '';
     this.foundRepos = { groups: [], privates: [] };
@@ -93,6 +98,9 @@ export class SendMessagePage {
     this.viewCtrl.dismiss('');
   }
 
+  /**
+   * Method will be called if user selects only one user/group
+   */
   send() {
     if (this.base64Image) {
       this.uploadImageOnAws(this.base64Image);
@@ -101,6 +109,147 @@ export class SendMessagePage {
     }
     this.keyboard.close();
     this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Method will be called if user selects more than one user/group
+   */
+  createGroup() {
+    console.log('Create Group')
+
+    let allIds = [];
+
+    let groupName = ''
+
+    for (let i = 0; i < this.allUsers.length; i++) {
+      allIds.push(this.allUsers[i].id);
+      if (i == 0) {
+        groupName = this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
+      } else {
+        groupName += '_' + this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
+      }
+
+    }
+
+    console.log(groupName)
+
+    let objData = {};
+    objData = { 'chat': { 'name': 'groupName', 'user_ids': allIds, 'is_private': false } };
+
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        let alertVar = this.alertCtrl.create({
+          title: 'Error!',
+          subTitle: 'Invalid Details!',
+          buttons: ['OK']
+        });
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.postData(addEditGroupUrl, objData, accessToken).subscribe(
+            data => {
+              this.foundRepos = data.json();
+              this.events.publish('hide:keyboard');
+              this.keyboard.close();
+              this.groupInfo = this.foundRepos;
+              this.commonMethod.hideLoader();
+              this.openGroupCaht();
+            },
+            err => {
+              this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              this.commonMethod.hideLoader();
+              console.log('getData completed');
+            }
+          );
+        }
+        else {
+          this.commonMethod.showNetworkError();
+        }
+
+      })
+  }
+
+  openGroupCaht() {
+    let insertChatGroupUsersQuery = 'INSERT INTO chat_group_users (group_id, user_id, is_admin, deleted_at, created_at) VALUES ';
+    let updateChatGroupsData = "";
+    let updateChatGroupUsersQuery = "UPDATE chat_group_users SET group_id = (case ";
+    let updateChatGroupUsersGroupIdData = "";
+    let updateChatGroupUsersUserIdData = "Else group_id End), user_id = (case ";
+    let insertChatGroupUsersData = "";
+
+    this.sqlite.create({
+      name: 'data.db',
+      location: 'default'
+    }).then((db: SQLiteObject) => {
+      let allExistingUserIds = [];
+
+      db.executeSql("SELECT * FROM chat_group_users WHERE group_id='" + this.groupInfo.id + "'", []).then((dataUserSQL) => {
+        console.log("GROUP USER TABLE DATA: " + JSON.stringify(dataUserSQL));
+        if (dataUserSQL.rows.length > 0) {
+          for (let k = 0; k < dataUserSQL.rows.length; k++) {
+            allExistingUserIds.push({
+              user_id: dataUserSQL.rows.item(k).user_id
+            });
+          }
+        }
+
+        for (let k = 0; k < this.groupInfo.users.length; k++) {
+          let insertUserFlag = true;
+          for (let l = 0; l < allExistingUserIds.length; l++) {
+            if (this.groupInfo.users[k].id == allExistingUserIds[l].user_id) {
+              insertUserFlag = false;
+            }
+          }
+          if (insertUserFlag == true) {
+            insertChatGroupUsersData = insertChatGroupUsersData + "('" + this.groupInfo.id + "','" + this.groupInfo.users[k].id + "','0','','" + this.groupInfo.users[k].joined_at + "'),";
+            console.log("insertChatGroupUsersData  " + insertChatGroupUsersData);
+          }
+          else {
+
+            updateChatGroupUsersGroupIdData = updateChatGroupUsersGroupIdData + "when user_id='" + this.groupInfo.users[k].id + "' AND group_id='" + this.groupInfo.id + "' then '" + this.groupInfo.id + "' ";
+            updateChatGroupUsersUserIdData = updateChatGroupUsersUserIdData + "when user_id='" + this.groupInfo.users[k].id + "' AND group_id='" + this.groupInfo.id + "' then '" + this.groupInfo.users[k].id + "' ";
+          }
+
+        }
+
+        if (insertChatGroupUsersData != "") {
+          db.executeSql(insertChatGroupUsersQuery + insertChatGroupUsersData.substring(0, insertChatGroupUsersData.length - 1), {}).then((dataUser1) => {
+            console.log("Data  == GROUP USER INSERTED: " + JSON.stringify(dataUser1));
+            /*this.navCtrl.push(GroupChatPage, { groupInfo: this.groupInfo }).then(() => {
+              // first we find the index of the current view controller:
+              const index = this.viewCtrl.index;
+              // then we remove it from the navigation stack
+              this.navCtrl.remove(index);
+            });*/
+          }, (errorUser1) => {
+            console.log("Data  == GROUP USER INSERT ERROR: " + JSON.stringify(errorUser1));
+          });
+        } else {
+          /*this.navCtrl.push(GroupChatPage, { groupInfo: this.groupInfo }).then(() => {
+            // first we find the index of the current view controller:
+            const index = this.viewCtrl.index;
+            // then we remove it from the navigation stack
+            this.navCtrl.remove(index);
+          });*/
+        }
+
+        if (updateChatGroupUsersGroupIdData != "") {
+          console.log("chat_group_users Data  == " + updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)");
+          db.executeSql(updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)", {}).then((dataUser1) => {
+          }, (errorUser1) => {
+            console.log("GROUP USER UPDATED ERROR: " + JSON.stringify(errorUser1));
+          });
+        }
+
+      }, (errorUser) => {
+        console.log("1 ERROR: " + JSON.stringify(errorUser));
+      });
+    });
+
+
   }
 
   updateValue(event: Event): void {
@@ -287,7 +436,11 @@ export class SendMessagePage {
 
       actionSheet.addButton({
         text: name, handler: () => {
-          thisObj.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
+          if (this.allUsers && this.allUsers.length > 0) {
+            this.allUsers.push({ type: 'group', id: id, name: name, user_id: user_id })
+          } else {
+            this.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
+          }
           thisObj.mentionUsers = [];
           let tempUsers = [];
 
@@ -320,7 +473,11 @@ export class SendMessagePage {
 
       actionSheet.addButton({
         text: name, handler: () => {
-          thisObj.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+          if (this.allUsers && this.allUsers.length > 0) {
+            this.allUsers.push({ type: 'private', id: id, name: name, user_id: user_id })
+          } else {
+            this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+          }
           thisObj.mentionUsers = [];
           let tempUsers = [];
           for (let j = 0; j < thisObj.dbMembers.length; j++) {
@@ -502,11 +659,22 @@ export class SendMessagePage {
 
       for (let i = 0; i < this.allUsers.length; i++) {
 
+
         if (this.allUsers[i].id != null && this.allUsers[i].id > 0) {
-          let objData = { 'chat_message': { message: messageText, chat_id: this.allUsers[i].id, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: '' } };
+          let objData = {
+            'chat_message': {
+              message: messageText, chat_id: this.allUsers[i].id,
+              mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: ''
+            }
+          };
           this.sendMsgToUser(objData);
         } else {
-          let objData = { 'chat_message': { message: messageText, chat_id: this.allUsers[i].id, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: '' } };
+          let objData = {
+            'chat_message': {
+              message: messageText, chat_id: this.allUsers[i].id, mentioned_user_ids: mentionId,
+              image_url: image_url, responding_to_chat_message_id: ''
+            }
+          };
           this.createChatChanel(objData, this.allUsers[i].user_id);
         }
       }
@@ -796,8 +964,17 @@ export class SendMessagePage {
     this.showList = true;
     //console.log(this.foundRepos.groups.length);
     //console.log(this.foundRepos.privates.length);
-    this.filterGroup = this.getFilteredList(this.foundRepos.groups);
-    this.filterUser = this.getFilteredList(this.foundRepos.privates);
+    if (!this.allUsers) {
+      this.filterGroup = this.getFilteredList(this.foundRepos.groups);
+      this.filterUser = this.getFilteredList(this.foundRepos.privates);
+    } else if (this.allUsers && this.allUsers[0].type == 'private') {
+      this.filterGroup = []
+      this.filterUser = this.getFilteredList(this.foundRepos.privates);
+    } else {
+      this.filterGroup = this.getFilteredList(this.foundRepos.groups);
+      this.filterUser = []
+    }
+
   }
 
   getFilteredList(data) {
@@ -825,7 +1002,12 @@ export class SendMessagePage {
     // let id=this.foundRepos.privates[i].chat.id;
     // let user_id=this.foundRepos.privates[i].target_user.id;
     // let userInfo=this.foundRepos.privates[i].target_user;
-    this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+    if (this.allUsers && this.allUsers.length > 0) {
+      this.allUsers.push({ type: 'private', id: id, name: name, user_id: user_id })
+    } else {
+      this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+    }
+
     this.mentionUsers = [];
     let tempUsers = [];
     for (let j = 0; j < this.dbMembers.length; j++) {
@@ -845,7 +1027,12 @@ export class SendMessagePage {
     // let id=this.foundRepos.groups[i].chat.id;
     // let user_id=this.foundRepos.groups[i].chat.id;
     // let group_users=this.foundRepos.groups[i].chat.users;
-    this.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
+
+    if (this.allUsers && this.allUsers.length > 0) {
+      this.allUsers.push({ type: 'group', id: id, name: name, user_id: user_id })
+    } else {
+      this.allUsers = [{ type: 'group', id: id, name: name, user_id: user_id }];
+    }
     this.mentionUsers = [];
     let tempUsers = [];
     for (let i = 0; i < group_users.length; i++) {

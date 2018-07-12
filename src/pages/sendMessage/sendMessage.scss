@@ -47,6 +47,7 @@ page-sendMessage {
         font-weight: 500;
         font-size: 14px;
         color: #757575;
+        background: white;
     }
     .grid-img ion-row {
         border-bottom: 1px solid #DEDEDE;
@@ -557,6 +558,19 @@ page-sendMessage {
         overflow-x: auto;
         min-height: 56px !important;
     }
+    ion-content .scroll-content {
+        margin-top: 90px !important;
+    }
+
+    span.selected-user span:after {
+        content:", ";
+        color:#666;
+    }
+
+    span.selected-user span:last-child:after {
+        content:"";
+    }
+
     @media(max-width:749px) {
         textarea {
             font-size: 24px;
@@ -565,7 +579,7 @@ page-sendMessage {
     } //iPhone 5,5S,5se in portrait & landscape & Moto G
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
         ion-content .scroll-content {
-            margin-top: 150px !important;
+            // margin-top: 150px !important;
         }
         .close-icon {
             margin-top: -11.5%;
@@ -585,7 +599,7 @@ page-sendMessage {
     // HTC-630
     @media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 2) {
         ion-content .scroll-content {
-            margin-top: 150px !important;
+            // margin-top: 150px !important;
         }
         .close-icon {
             margin-top: -11.5%;
@@ -665,7 +679,7 @@ page-sendMessage {
     } // pixel
     @media only screen and (min-width: 411px) and (max-width: 767px) {
         ion-content .scroll-content {
-            margin-top: 150px !important;
+            // margin-top: 150px !important;
         }
         .close-icon {
             margin-top: -11.5%;
