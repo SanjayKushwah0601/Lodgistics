@@ -15,8 +15,8 @@ export class NotificationPermissionPage {
 
   isForceUpdate: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams,public events: Events) {
+    
   }
 
   ionViewDidLoad() {

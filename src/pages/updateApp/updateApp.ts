@@ -15,9 +15,12 @@ import { Market } from '@ionic-native/market';
 export class UpdateAppPage {
 
   isForceUpdate: boolean = false;
+  public message="";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private market: Market) {
-    this.isForceUpdate = navParams.get('isForceUpdate') as boolean
+    this.isForceUpdate = navParams.get('isForceUpdate') as boolean;
+    this.message = navParams.get('message');
+    
     console.log('ionViewDidLoad UpdateAppPage');
   }
 

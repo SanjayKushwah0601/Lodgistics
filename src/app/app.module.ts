@@ -66,6 +66,7 @@ import { PressDirective } from '../directives/press/press';
 import { Market } from '@ionic-native/market';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
+import { HeaderScrollerDirective } from '../directives/header-scroller/header-scroller';
 
 enableProdMode();
 
@@ -124,7 +125,8 @@ export class SafeHtmlPipe implements PipeTransform {
     createFollowUpPage,
     PressDirective,
     UpdateAppPage,
-    NotificationPermissionPage
+    NotificationPermissionPage,
+    HeaderScrollerDirective
   ],
   imports: [
     BrowserModule,

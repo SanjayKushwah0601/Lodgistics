@@ -1606,6 +1606,12 @@ ion-fab .ion-md-add:before {
     font-weight: 400;
 }
 
+.log_footer_icon{ height: 26px;
+  width: 28px;
+  vertical-align: middle;
+  margin-top: 10%; }
+
+
 @media(max-width:749px) {
     ion-footer ion-col span {
         font-size: 9px;

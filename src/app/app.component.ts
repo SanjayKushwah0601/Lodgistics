@@ -33,9 +33,9 @@ import { getAllMembersUrl } from '../services/configURLs';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { viewWorkOrderUrl } from '../services/configURLs';
 import { dbVersion } from '../providers/appConfig';
-import { hotelSwitchMsg } from '../providers/appConfig';
+import { hotelSwitchMsg, appCurrentVersion, platformName } from '../providers/appConfig';
 import ActionCable from 'actioncable';
-import { webSocketBaseUrl } from '../services/configURLs';
+import { webSocketBaseUrl, checkForAppUpdateUrl  } from '../services/configURLs';
 import { retry } from 'rxjs/operator/retry';
 import { Badge } from '@ionic-native/badge';
 import { sendMessageUrl } from '../services/configURLs';
@@ -90,7 +90,7 @@ export class MyApp {
   public usersdata: any;
   public resOne: any;
   public openPageByDeeplink = false;
-  public notificationsStatus = false;
+  public notificationsStatus = true;
 
   constructor(public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController, private badge: Badge, public modalCtrl: ModalController, public toastCtrl: ToastController, private emailComposer: EmailComposer, private device: Device) {//,private localNotifications: LocalNotifications
     this.initializeApp();
@@ -124,6 +124,12 @@ export class MyApp {
     events.subscribe('update:updateNotificationsStatus', () => {
       console.log("update:updateNotificationsStatus");
       this.updateNotificationsStatus();
+    });
+
+    events.subscribe('update:enableNotificationsStatus', () => {
+      this.notificationsStatus=true;
+      console.log("update:enableNotificationsStatus");
+      //this.updateNotifications(); // function is commeneted because this will automatic call when notificationsStatus variable value will change
     });
 
     /* If you are updating Work order page title then please also update on in app.html */
@@ -459,6 +465,7 @@ export class MyApp {
         error => {
           if (!this.openPageByDeeplink) {
             this.rootPage = LoginPage;
+this.checkAppUpdate();
           }
           //this.rootPage = CreateHotelPage;
           return '';
@@ -2503,7 +2510,7 @@ export class MyApp {
             data => {
               let userData = data.json();
               this.notificationsStatus = userData.push_notification_enabled;
-              this.navigateToUpdateAppPage(false)
+              this.checkAppUpdate();
             },
             err => {
               console.error("Error : " + err);
@@ -2530,10 +2537,12 @@ export class MyApp {
    * @param isForceUpdate required parameter to show or hide the dismiss button. 
    * If it is true, user will no longer have the option to dismiss that screen.
    */
-  navigateToUpdateAppPage(isForceUpdate: boolean) {
+  navigateToUpdateAppPage(isForceUpdate: boolean,message) {
     this.nav.push(UpdateAppPage, {
-      isForceUpdate: isForceUpdate
-    })
+      isForceUpdate: isForceUpdate,
+      message: message,
+    });
+    //this.nav.push(NotificationPermissionPage);
   }
 
   sendEmail() {
@@ -2554,6 +2563,56 @@ export class MyApp {
     };
     // Send a text message using default options
     this.emailComposer.open(email);
+  }
+
+ checkAppUpdate(){
+
+    let alertVar = this.alertCtrl.create({
+        title: 'Error!',
+        subTitle: 'Invalid Details!',
+        buttons: ['OK']
+      });
+
+    /*  get member api call start */
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(checkForAppUpdateUrl+"?platform="+platformName+"&version="+appCurrentVersion, accessToken).subscribe(
+            data => {
+              //this.foundRepos = data.json();
+              let res = data.json();
+              console.error("new version info "+res);
+              if(res.prompt_for_upgrade){
+                let forceUpdate=res.update_mandatory?true:false;
+                this.navigateToUpdateAppPage(forceUpdate,res.message?res.message:'');
+              }
+            },
+            err => {
+              //this.commonMethod.hideLoader();
+              alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              //this.commonMethod.hideLoader();
+              console.log('check for update completed');
+            }
+          );
+
+        }
+        else {
+          this.commonMethod.hideLoader();
+          this.commonMethod.showNetworkError();
+        }
+
+      },
+      error => {
+        this.commonMethod.hideLoader();
+        return '';
+      }
+    );
+    /*  get member api call end */
+
+
   }
 
 
