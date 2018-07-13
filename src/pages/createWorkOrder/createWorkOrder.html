@@ -116,7 +116,7 @@
         </tr>  -->
             <tr>
                 <td class="td-img-box">
-                    <div *ngIf="!img[0]" class="img-icon" (click)="(!workOrderData.closed)?showGalleryPrompt('0'):''">
+                    <div *ngIf="!img[0]" [ngClass]="workOrderData.closed?'dissable-img img-icon':'img-icon'" (click)="(!workOrderData.closed)?showGalleryPrompt('0'):''">
                         <ion-icon tappable ios="ios-camera" md="md-camera" class="camera-image-icon"></ion-icon>
                         <ion-label>Attach Photo</ion-label>
                     </div>
@@ -126,7 +126,7 @@
                     </div>
                 </td>
                 <td class="td-img-box">
-                    <div *ngIf="!img[1]" class="img-icon" (click)="(!workOrderData.closed)?showGalleryPrompt('1'):''">
+                    <div *ngIf="!img[1]" [ngClass]="workOrderData.closed?'dissable-img img-icon':'img-icon'" (click)="(!workOrderData.closed)?showGalleryPrompt('1'):''">
                         <ion-icon tappable ios="ios-camera" md="md-camera" class="camera-image-icon"></ion-icon>
                         <ion-label>Attach Photo</ion-label>
                     </div>
@@ -144,7 +144,8 @@
                         <button tappable ion-button (click)="dismiss()">Cancel</button>
                         <button *ngIf="wo_no==''" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
                             (click)="createWorkOrder()">Create WO</button>
-                        <button *ngIf="wo_no!='' && userPermissions.wo_access.can_edit" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id  || (workOrderData.closed && canEditClosedWo && workOrderData.status=='closed'))"
+                        <button *ngIf="(wo_no!='' && userPermissions.wo_access.can_edit) && ( !workOrderData.closed || (workOrderData.closed && workOrderData.status!='closed') )"
+                            tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id  || (workOrderData.closed && canEditClosedWo && workOrderData.status=='closed'))"
                             (click)="updateWorkOrder()">{{workOrderData.status=='closed'?'Close WO':'Update WO'}}</button>
                     </div>
                 </td>

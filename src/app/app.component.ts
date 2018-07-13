@@ -35,7 +35,7 @@ import { viewWorkOrderUrl } from '../services/configURLs';
 import { dbVersion } from '../providers/appConfig';
 import { hotelSwitchMsg, appCurrentVersion, platformName } from '../providers/appConfig';
 import ActionCable from 'actioncable';
-import { webSocketBaseUrl, checkForAppUpdateUrl  } from '../services/configURLs';
+import { webSocketBaseUrl, checkForAppUpdateUrl } from '../services/configURLs';
 import { retry } from 'rxjs/operator/retry';
 import { Badge } from '@ionic-native/badge';
 import { sendMessageUrl } from '../services/configURLs';
@@ -51,6 +51,7 @@ import { NewUserPage } from '../pages/newUser/newUser';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { Device } from '@ionic-native/device';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
+import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
 
 (window as any).handleOpenURL = (url: string) => {
   (window as any).handleOpenURL_LastURL = url;
@@ -127,7 +128,7 @@ export class MyApp {
     });
 
     events.subscribe('update:enableNotificationsStatus', () => {
-      this.notificationsStatus=true;
+      this.notificationsStatus = true;
       console.log("update:enableNotificationsStatus");
       //this.updateNotifications(); // function is commeneted because this will automatic call when notificationsStatus variable value will change
     });
@@ -457,6 +458,7 @@ export class MyApp {
               this.showLoaderPage(accessToken.user_id);
               if (!this.openPageByDeeplink) {
                 this.rootPage = FeedsPage;
+                this.checkAppUpdate();
               }
             }
           }
@@ -465,7 +467,7 @@ export class MyApp {
         error => {
           if (!this.openPageByDeeplink) {
             this.rootPage = LoginPage;
-this.checkAppUpdate();
+            this.checkAppUpdate();
           }
           //this.rootPage = CreateHotelPage;
           return '';
@@ -1056,7 +1058,6 @@ this.checkAppUpdate();
 
 
   openSpecificPage(notification) {
-    debugger
     //TODO: Your logic here
     let view = this.nav.getActive();
     this.menuCtrl.close();
@@ -2023,6 +2024,7 @@ this.checkAppUpdate();
 
                           setTimeout(function () {
                             thisObj.showPage = true;
+                            thisObj.notificationPermission();
                             //thisObj.content.resize();
                           }, 3500);
 
@@ -2037,6 +2039,7 @@ this.checkAppUpdate();
                 }
               } else {
                 thisObj.showPage = true;
+                thisObj.notificationPermission();
               }
 
             }, (error1) => {
@@ -2283,6 +2286,7 @@ this.checkAppUpdate();
                                                       if (notification == undefined || notification == 'undefined') {
                                                         this.commonMethod.hideLoader();
                                                         this.nav.setRoot(FeedsPage);
+                                                        this.checkAppUpdate();
                                                       } else {
                                                         this.nativeStorage.setItem('lastPage', { "pageName": FeedsPage.name, "index": this.nav.getActive().index });
 
@@ -2510,7 +2514,6 @@ this.checkAppUpdate();
             data => {
               let userData = data.json();
               this.notificationsStatus = userData.push_notification_enabled;
-              this.checkAppUpdate();
             },
             err => {
               console.error("Error : " + err);
@@ -2537,7 +2540,7 @@ this.checkAppUpdate();
    * @param isForceUpdate required parameter to show or hide the dismiss button. 
    * If it is true, user will no longer have the option to dismiss that screen.
    */
-  navigateToUpdateAppPage(isForceUpdate: boolean,message) {
+  navigateToUpdateAppPage(isForceUpdate: boolean, message) {
     this.nav.push(UpdateAppPage, {
       isForceUpdate: isForceUpdate,
       message: message,
@@ -2565,26 +2568,25 @@ this.checkAppUpdate();
     this.emailComposer.open(email);
   }
 
- checkAppUpdate(){
-
+  checkAppUpdate() {
     let alertVar = this.alertCtrl.create({
-        title: 'Error!',
-        subTitle: 'Invalid Details!',
-        buttons: ['OK']
-      });
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
 
     /*  get member api call start */
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
-          this.commonMethod.getDataWithoutLoder(checkForAppUpdateUrl+"?platform="+platformName+"&version="+appCurrentVersion, accessToken).subscribe(
+          this.commonMethod.getDataWithoutLoder(checkForAppUpdateUrl + "?platform=" + platformName + "&version=" + appCurrentVersion, accessToken).subscribe(
             data => {
               //this.foundRepos = data.json();
               let res = data.json();
-              console.error("new version info "+res);
-              if(res.prompt_for_upgrade){
-                let forceUpdate=res.update_mandatory?true:false;
-                this.navigateToUpdateAppPage(forceUpdate,res.message?res.message:'');
+              console.error("new version info " + res);
+              if (res.prompt_for_upgrade) {
+                let forceUpdate = res.update_mandatory ? true : false;
+                this.navigateToUpdateAppPage(forceUpdate, res.message ? res.message : '');
               }
             },
             err => {
@@ -2613,6 +2615,31 @@ this.checkAppUpdate();
     /*  get member api call end */
 
 
+  }
+
+  notificationPermission() {
+
+    this.push.hasPermission()
+      .then((res: any) => {
+
+        if (res.isEnabled) {
+          console.log('We have permission to send push notifications');
+
+          this.nativeStorage.getItem('show_notification_permission')
+            .then(resp => {
+              if (resp) {
+                this.nav.push(NotificationPermissionPage)
+              }
+            }, error => {
+              this.nav.push(NotificationPermissionPage)
+            });
+
+
+        } else {
+          console.log('We do not have permission to send push notifications');
+        }
+
+      });
   }
 
 

@@ -170,7 +170,6 @@ export class FeedsPage {
         this.showLoader = false;
         this.reachedOnLastDate = false;
         this.callDateFilter = true;
-
         this.foundRepos = feedData.data;
         //this.findTotalFeed();
         this.filterDate = new Date(feedData.lastDate);
@@ -721,6 +720,79 @@ export class FeedsPage {
 
 
   //   }
+
+  testMethod() {
+    let data = {
+      "id": 12112,
+      "title": "TITLE1",
+      "body": "The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service.\n@Gaurav M @Abhishek @Akanksha A @Chetan D",
+      "created_at": "2018-07-13T05:52:02.927-04:00",
+      "updated_at": "2018-07-13T05:52:02.927-04:00",
+      "mentioned_user_ids": [
+        452,
+        416,
+        415,
+        414
+      ],
+      "image_url": "https://lodgistics-images.s3.us-east-2.amazonaws.com/photos/upload/e0b2df75-0eef-4410-8bdb-9271c0333449_413_1531475503132_9k=",
+      "image_width": 600,
+      "image_height": 800,
+      "work_order_id": null,
+      "room_number": null,
+      "broadcast_start": null,
+      "broadcast_end": null,
+      "follow_up_start": null,
+      "follow_up_end": null,
+      "comments_count": 0,
+      "created_by": {
+        "id": 413,
+        "name": "Animesh Jain",
+        "role": "Admin",
+        "title": "Admin",
+        "avatar": "/assets/adminre_theme_v120/image/avatar/avatar.png",
+        "avatar_img_url": "/assets/adminre_theme_v120/image/avatar/avatar.png"
+      },
+      "work_order_url": null,
+      "work_order": null,
+      "created_by_system": false,
+      "room_id": null,
+      "completed_at": null,
+      "completed_by": null
+    }
+
+    this.testHTML(data.body, data.mentioned_user_ids)
+  }
+
+  testHTML(val, mentioned_user_ids) {
+    let allChatMentions = [];
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
+    }
+
+    debugger
+    console.log('Before: ' + val)
+    let newValue = this.commonMethod.getTextValueWithNames(allChatMentions, this.members, val);
+    console.log('After getTextValueWithNames: ' + newValue.text)
+    console.log('After getTextValueWithNames: ' + newValue.html)
+    if (newValue.text != "" && newValue.text.length > this.textLengthValue) {
+      val = newValue.text.substring(0, this.textLengthValue);
+      console.log('After insideIf: ' + val)
+      var newValueWrap = this.commonMethod.getTextValue(allChatMentions, this.members, val);
+      console.log('After getTextValue: ' + newValueWrap)
+      if (newValueWrap != "") {
+        val = newValueWrap + "....";
+      }
+      // val = val + "....";
+    } else if (newValue.html != "") {
+      if (newValue.html != "") {
+        val = newValue.html;
+      }
+    }
+    val = val.replace(/text-decoration-line/g, "text-decoration");
+    console.log(val)
+    return val;
+  }
+
   updateHtml(val, mentioned_user_ids, i, j) {
     let allChatMentions = [];
     if (mentioned_user_ids != '' && mentioned_user_ids != null) {
@@ -884,7 +956,7 @@ export class FeedsPage {
   translateTitle(sourceText, langCode, i, j) {
     sourceText = sourceText.replace(/\n/g, "<br/>");
     let tempStr = "";
-    console.log("sourceText=" + sourceText);
+    console.log("sourceTextTitle=" + sourceText);
 
     if (this.foundRepos[i].value[j].temp_title_data != undefined && this.foundRepos[i].value[j].temp_title_data != "") {
       this.foundRepos[i].value[j].title = this.foundRepos[i].value[j].temp_title_data;

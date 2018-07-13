@@ -627,7 +627,8 @@ page-taskChecklist {
     span.txt-update.msg {
         text-align: center;
         color: #757575;
-        margin-left: 4%;
+        width: 100%;
+		position: absolute;
     }
     .card-footer .col {
         border: none;

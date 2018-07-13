@@ -84,7 +84,7 @@
         </ion-col>
       </ion-row>
     </ion-card>
-    <span class="txt-update msg" *ngIf="showLabels && foundRepos.length==0">You have no pending checklist item to take action on.</span>
+    <span class="txt-update msg" *ngIf="showLabels && foundRepos.length==0">You have no checklists assigned.</span>
   </ion-scroll>
 
   <ng-container *ngIf="(foundRepos.length>0 || foundRepos!='')">
@@ -102,7 +102,7 @@
         <span class="timeline_loader_text">Fetching Checklist records...</span>
       </span>
       <div id="timelineContent">
-        <span class="txt-update msg" *ngIf="taskListData.length<=0 && !spinner && showEmptyMsgForActivity">You have no pending checklist item to take action on.</span>
+        <span class="txt-update msg" *ngIf="taskListData.length<=0 && !spinner && showEmptyMsgForActivity">You have no checklists assigned.</span>
 
 
         <ng-container *ngFor="let item of taskListData; let j=index">
