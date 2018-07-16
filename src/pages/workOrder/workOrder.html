@@ -133,9 +133,9 @@
           </ion-col>
 
           <ion-col class="right_text">
-            <div>
+            <!-- <div>
               <ion-icon class="icon_comment" name="ios-chatbubbles-outline"></ion-icon>
-            </div>
+            </div> -->
           </ion-col>
 
         </ion-row>
@@ -217,8 +217,9 @@
   <ion-grid>
     <ion-row>
       <ion-col col-2.4 (click)="openFeedPage()" class="bottom-menu">
-        <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
-        <ion-icon name="ios-home-outline"></ion-icon>
+          <span *ngIf="feedNotificationCount>0" class="footer_badge"></span>
+        <!-- <ion-icon name="home-outline"></ion-icon> -->
+        <img class="log_footer_icon" src="assets/img/log-icon.svg" />
       </ion-col>
       <ion-col col-2.4 (click)="openChatPage()" class="bottom-menu">
         <span *ngIf="messagesNotificationCount>0" class="footer_badge"></span>

@@ -50,7 +50,7 @@ export class TranslationService {
   translateText(sourceText, targetLanguageCode) {
 
     let obj = { target: targetLanguageCode, q: sourceText };
-    return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ", obj)
+    return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyBtj_cHE5NzzBWYprdW7L15xzI98ajbFw4", obj) //AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ
       .map(response => {
         let data = response.json().data.translations[0];
         data.translatedText = data.translatedText.replace(new RegExp("@ ", 'g'), "@");

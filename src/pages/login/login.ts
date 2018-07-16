@@ -18,6 +18,7 @@ import { dbVersion } from '../../providers/appConfig';
 import ActionCable from 'actioncable';
 import { getUserPermissionsUrl } from '../../services/configURLs';
 import { getBroadcastListUrl } from '../../services/configURLs';
+import { NotificationPermissionPage } from '../notificationPermission/notificationPermission';
 
 @Component({
   selector: 'page-login',
@@ -38,12 +39,12 @@ export class LoginPage {
   public room: any;
   public publicArea: any;
   public equipment: any;
-  public permissionData:any;
+  public permissionData: any;
   public cable: any;
-  public notification:any;
-  public showLoader=false;
+  public notification: any;
+  public showLoader = false;
 
-  constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, private device: Device, public platform: Platform, public events: Events, public navParams: NavParams,public zone: NgZone ) {
+  constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, private device: Device, public platform: Platform, public events: Events, public navParams: NavParams, public zone: NgZone) {
 
     this.notification = this.navParams.get('notification');
     this.loginForm = _FB.group({
@@ -104,26 +105,25 @@ export class LoginPage {
     });
 
     if (this.commonMethod.checkNetwork()) {
-      this.showLoader=true;
+      this.showLoader = true;
       this.commonMethod.postDataWithoutLoder(getLoginUrl, objData, '').subscribe(
         data => {
           this.foundRepos = data.json();
-          let properties=this.foundRepos.user.properties;
+          let properties = this.foundRepos.user.properties;
 
           /* To manage loader on feed page */
-          this.nativeStorage.setItem('show_feed_loader',true)
-          .then(() => {
-          },
-          error => {
-          });
+          this.nativeStorage.setItem('show_feed_loader', true)
+            .then(() => {
+            },
+              error => {
+              });
 
           this.nativeStorage.getItem('prev_user_id').then(
             prevUserId => {
-              console.log("prevUserId=" + prevUserId+"  this.foundRepos "+this.foundRepos);
-              
-              var index=0;
-              if( this.notification!=undefined && (prevUserId > 0 && prevUserId == this.foundRepos.user.id) )
-              {
+              console.log("prevUserId=" + prevUserId + "  this.foundRepos " + this.foundRepos);
+
+              var index = 0;
+              if (this.notification != undefined && (prevUserId > 0 && prevUserId == this.foundRepos.user.id)) {
                 for (let i = 0; i < properties.length; i++) {
                   if (properties[i].token == this.notification.additionalData.type.property_token) {
                     index = i;
@@ -131,43 +131,43 @@ export class LoginPage {
                 }
               }
 
-              this.nativeStorage.setItem('user_properties',properties)
-              .then(
-              () => console.log('Stored user_properties!'),
-              error => console.error('Error storing user_properties', error)
-              );
-     
-              this.nativeStorage.setItem('user_notifications',{feed_count:0,message_count:0})
-              .then(
-              () => console.log('Stored user_notifications!'),
-              error => console.error('Error storing user_notifications', error)
-              );
-              
+              this.nativeStorage.setItem('user_properties', properties)
+                .then(
+                  () => console.log('Stored user_properties!'),
+                  error => console.error('Error storing user_properties', error)
+                );
+
+              this.nativeStorage.setItem('user_notifications', { feed_count: 0, message_count: 0 })
+                .then(
+                  () => console.log('Stored user_notifications!'),
+                  error => console.error('Error storing user_notifications', error)
+                );
+
               this.loginStep2(index);
             },
             error => {
               //this.events.publish('updateHotel:list', properties,0);
               //this.events.publish('subscribeInAppNotification');
-    
-              this.nativeStorage.setItem('user_properties',properties)
-              .then(
-              () => console.log('Stored user_properties!'),
-              error => console.error('Error storing user_properties', error)
-              );
-     
-              this.nativeStorage.setItem('user_notifications',{feed_count:0,message_count:0})
-              .then(
-              () => console.log('Stored user_notifications!'),
-              error => console.error('Error storing user_notifications', error)
-              );
-              
+
+              this.nativeStorage.setItem('user_properties', properties)
+                .then(
+                  () => console.log('Stored user_properties!'),
+                  error => console.error('Error storing user_properties', error)
+                );
+
+              this.nativeStorage.setItem('user_notifications', { feed_count: 0, message_count: 0 })
+                .then(
+                  () => console.log('Stored user_notifications!'),
+                  error => console.error('Error storing user_notifications', error)
+                );
+
               this.loginStep2(0);
             });
-          
+
         },
         err => {
           //this.commonMethod.hideLoader();
-          this.showLoader=false;
+          this.showLoader = false;
           console.log("Error 1: " + JSON.stringify(err.json()));
           let res = err.json();
           if (typeof (res.errors.message) !== undefined) {
@@ -202,60 +202,57 @@ export class LoginPage {
 
   }
 
-  loginStep2(propertyIndex)
-  {
+  loginStep2(propertyIndex) {
     this.nativeStorage.getItem('prev_db_version').then(
       prev_db_version => {
         if (prev_db_version != null && prev_db_version != undefined && prev_db_version != dbVersion) {
           this.nativeStorage.setItem('prev_db_version', dbVersion).then(() => {
-            this.loginStep3(propertyIndex,true,true);
+            this.loginStep3(propertyIndex, true, true);
           },
-          error=> {
-          });
-        }else{
-          this.loginStep3(propertyIndex,false,false);
+            error => {
+            });
+        } else {
+          this.loginStep3(propertyIndex, false, false);
         }
-      },error => {
+      }, error => {
         console.log("prev_db_version error" + error);
         this.nativeStorage.setItem('prev_user_id', '0')
-            .then(
+          .then(
             () => {
 
               this.nativeStorage.setItem('prev_user_property_id', '')
                 .then(
-                () => {
-                  console.log('Stored prev_user_property_id!'); 
-                  this.sqlite.create({
-                    name: 'data.db',
-                    location: 'default'
-                  }).then((db: SQLiteObject) => {
-                    this.loginStep3(propertyIndex,true,false); 
-                  });
-                },
-                error => console.error('Error storing prev_user_property_id', error)
+                  () => {
+                    console.log('Stored prev_user_property_id!');
+                    this.sqlite.create({
+                      name: 'data.db',
+                      location: 'default'
+                    }).then((db: SQLiteObject) => {
+                      this.loginStep3(propertyIndex, true, false);
+                    });
+                  },
+                  error => console.error('Error storing prev_user_property_id', error)
                 );
             },
             error => console.error('Error storing prev_user_id', error)
-            );
+          );
       });
   }
 
-  loginStep3(propertyIndex,deleteDb,updateNewVersion)
-  {
+  loginStep3(propertyIndex, deleteDb, updateNewVersion) {
     this.nativeStorage.getItem('prev_user_property_id').then(
       prevUserPropertyId => {
 
         this.nativeStorage.getItem('prev_user_id').then(
           prevUserId => {
             console.log("prevUserId=" + prevUserId);
-    
-            if ( deleteDb || (prevUserId > 0 && ((prevUserId != this.foundRepos.user.id) || (prevUserPropertyId && prevUserPropertyId!=this.foundRepos.user.properties[propertyIndex].token))) ) {
-              
+
+            if (deleteDb || (prevUserId > 0 && ((prevUserId != this.foundRepos.user.id) || (prevUserPropertyId && prevUserPropertyId != this.foundRepos.user.properties[propertyIndex].token)))) {
+
               //If DB chaged from old verion  
-              if(updateNewVersion==true)
-              {
+              if (updateNewVersion == true) {
                 //this.commonMethod.hideLoader();
-                this.showLoader=false;
+                this.showLoader = false;
                 this.commonMethod.showLoaderForDbSync();
               }
 
@@ -265,78 +262,78 @@ export class LoginPage {
               })
                 .then((db: SQLiteObject) => {
                   console.log('DELETE DATABASE');
-    
+
                   this.sqlite.create({
                     name: 'data.db',
                     location: 'default'
                   }).then((db: SQLiteObject) => {
-        
-                    db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
-                    .then((dbRes) => {
-        
-                      db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
-                      .then((dbUserRes) => {
-                        console.log("CREATE TABLE chat_group_users" + JSON.stringify(dbUserRes));
-        
-                        db.executeSql("CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER, sender_id INTEGER,hotel_token TEXT, message TEXT, image TEXT, target_id INTEGER, type TEXT, deleted_at TEXT, created_at TEXT, updated_at TEXT, read_status INTEGER, mentioned_user_ids TEXT, parent_id TEXT, work_order_id INTEGER, work_order_url TEXT, work_order_status TEXT, work_order_closed_by_user_id INTEGER, work_order_closed_at TEXT, work_order_location_detail TEXT, work_order_description TEXT,room_number TEXT,room_id TEXT)", {}).then((data1) => {
-                          console.log("MESSAGE TABLE CREATED: " + JSON.stringify(data1));
-        
-                          db.executeSql('CREATE TABLE IF NOT EXISTS chat_groups(id INTEGER, name TEXT, hotel_token TEXT, created_by_id INTEGER,deleted_at TEXT,created_at TEXT,updated_at TEXT, image_url TEXT)', {})
-                          .then((dbRes) => {
-                            console.log("CREATE TABLE chat_groups" + JSON.stringify(dbRes));
 
-                            db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
-                            .then((dbRes) => {
-                              console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
-                              this.processLogin(propertyIndex,updateNewVersion);
+                    db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
+                      .then((dbRes) => {
+
+                        db.executeSql('CREATE TABLE IF NOT EXISTS chat_group_users(group_id INTEGER, user_id INTEGER, is_admin INTEGER, deleted_at TEXT, created_at TEXT)', {})
+                          .then((dbUserRes) => {
+                            console.log("CREATE TABLE chat_group_users" + JSON.stringify(dbUserRes));
+
+                            db.executeSql("CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER, sender_id INTEGER,hotel_token TEXT, message TEXT, image TEXT, target_id INTEGER, type TEXT, deleted_at TEXT, created_at TEXT, updated_at TEXT, read_status INTEGER, mentioned_user_ids TEXT, parent_id TEXT, work_order_id INTEGER, work_order_url TEXT, work_order_status TEXT, work_order_closed_by_user_id INTEGER, work_order_closed_at TEXT, work_order_location_detail TEXT, work_order_description TEXT,room_number TEXT,room_id TEXT)", {}).then((data1) => {
+                              console.log("MESSAGE TABLE CREATED: " + JSON.stringify(data1));
+
+                              db.executeSql('CREATE TABLE IF NOT EXISTS chat_groups(id INTEGER, name TEXT, hotel_token TEXT, created_by_id INTEGER,deleted_at TEXT,created_at TEXT,updated_at TEXT, image_url TEXT)', {})
+                                .then((dbRes) => {
+                                  console.log("CREATE TABLE chat_groups" + JSON.stringify(dbRes));
+
+                                  db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
+                                    .then((dbRes) => {
+                                      console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
+                                      this.processLogin(propertyIndex, updateNewVersion);
+
+                                    }, (error) => {
+                                      console.error("Unable to execute sql user_mentions", error);
+                                    }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
+
+                                }, (error) => {
+                                  console.error("Unable to execute sql", error);
+                                }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
                             }, (error) => {
-                              console.error("Unable to execute sql user_mentions", error);
-                            }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
-        
+                              console.error("Unable to execute sql", error);
+                            }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
                           }, (error) => {
                             console.error("Unable to execute sql", error);
-                          }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));  
-        
-                        }, (error) => {
-                          console.error("Unable to execute sql", error);
-                        }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));  
-        
+                          }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+
                       }, (error) => {
                         console.error("Unable to execute sql", error);
                       }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-        
-        
-                    }, (error) => {
-                      console.error("Unable to execute sql", error);
-                    }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-        
+
                   });
-    
+
                 })
                 .catch(e => console.log(e));
             }
             else {
-              this.processLogin(propertyIndex,updateNewVersion);
+              this.processLogin(propertyIndex, updateNewVersion);
             }
           },
           error => {
             console.log("prevUserId error 2" + error);
-            this.processLogin(propertyIndex,updateNewVersion);
+            this.processLogin(propertyIndex, updateNewVersion);
           }
         );
 
       },
       error => {
         console.log("prevUserId error 1" + error);
-        this.processLogin(propertyIndex,updateNewVersion);
+        this.processLogin(propertyIndex, updateNewVersion);
       });
 
-    
+
   }
 
 
-  processLogin(propertyIndex,updateNewVersion) {
+  processLogin(propertyIndex, updateNewVersion) {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -350,13 +347,13 @@ export class LoginPage {
 
     this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
       .then(
-      () => {
-        console.log('processLogin Stored item!'); 
-        this.events.publish('updateHotel:list', this.foundRepos.user.properties,propertyIndex);
-        this.events.publish('subscribeInAppNotification');
-        this.events.publish('update:updateNotificationsStatus');
-      },
-      error => console.error('Error storing item', error)
+        () => {
+          console.log('processLogin Stored item!');
+          this.events.publish('updateHotel:list', this.foundRepos.user.properties, propertyIndex);
+          this.events.publish('subscribeInAppNotification');
+          this.events.publish('update:updateNotificationsStatus');
+        },
+        error => console.error('Error storing item', error)
       );
 
 
@@ -370,173 +367,173 @@ export class LoginPage {
 
           // db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
           //   .then((dbRes) => {
-              this.nativeStorage.getItem('prev_db_version').then(
-                prev_db_version => {
-                  // alert(prev_db_version);
-                  if (prev_db_version != null && prev_db_version != undefined && prev_db_version == dbVersion) {
-                    this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
-                      .then(() => this.insertDb(db, alertVar,updateNewVersion),
-                      error => console.error('Error storing item', error)
-                      );
-                  }
-                  else {
-                    this.nativeStorage.getItem('user_auth').then(
-                      accessToken => {
-                        /* If user login redirect to feed page */
-                        if (accessToken.access_token && accessToken.access_token != '') {
+          this.nativeStorage.getItem('prev_db_version').then(
+            prev_db_version => {
+              // alert(prev_db_version);
+              if (prev_db_version != null && prev_db_version != undefined && prev_db_version == dbVersion) {
+                this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
+                  .then(() => this.insertDb(db, alertVar, updateNewVersion),
+                    error => console.error('Error storing item', error)
+                  );
+              }
+              else {
+                this.nativeStorage.getItem('user_auth').then(
+                  accessToken => {
+                    /* If user login redirect to feed page */
+                    if (accessToken.access_token && accessToken.access_token != '') {
 
-                          if (accessToken.db_version != null && accessToken.db_version != undefined) {
-                            //parseFloat(accessToken.db_version)<dbVersion
-                            // if (accessToken.db_version <= 0.1) {
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                      if (accessToken.db_version != null && accessToken.db_version != undefined) {
+                        //parseFloat(accessToken.db_version)<dbVersion
+                        // if (accessToken.db_version <= 0.1) {
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_by_user_id INTEGER", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added work_order_closed_by_user_id");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_by_user_id INTEGER", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added work_order_closed_by_user_id");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_at TEXT", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added work_order_closed_at");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_at TEXT", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added work_order_closed_at");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_location_detail TEXT", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added work_order_location_detail");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_location_detail TEXT", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added work_order_location_detail");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_description TEXT", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added work_order_description");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_description TEXT", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added work_order_description");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
-                            //   .then((dbRes) => {
-                            //     console.log("is_system_user added");
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
+                        //   .then((dbRes) => {
+                        //     console.log("is_system_user added");
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
-                            //   .then((dbRes) => {
-                            //     console.log("chat_messages added");
-                            //     this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
-                            //     .then(() => this.insertDb(dbRes, db, alertVar),
-                            //     error => console.error('Error storing item', error)
-                            //     );
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql", error);
-                            //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                            // }
-                            // else {
-                            //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_id INTEGER", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN room_id TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("room_id added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                                
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN room_number TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("room_number added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-  
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_by_user_id INTEGER", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added work_order_closed_by_user_id");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-  
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_at TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added work_order_closed_at");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-  
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_location_detail TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added work_order_location_detail");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-  
-                            //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_description TEXT", {})
-                            //     .then((dbRes) => {
-                            //       console.log("chat_messages added work_order_description");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
+                        //   .then((dbRes) => {
+                        //     console.log("chat_messages added");
+                        //     this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
+                        //     .then(() => this.insertDb(dbRes, db, alertVar),
+                        //     error => console.error('Error storing item', error)
+                        //     );
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql", error);
+                        //   }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        // }
+                        // else {
+                        //   db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_id INTEGER", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN room_id TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("room_id added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN room_number TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("room_number added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_url TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_status TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //     db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
-                            //     .then((dbRes) => {
-                            //       console.log("is_system_user added");
-                            //     }, (error) => {
-                            //       console.error("Unable to execute sql", error);
-                            //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
-                                 
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_by_user_id INTEGER", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added work_order_closed_by_user_id");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   db.executeSql("ALTER TABLE members ADD COLUMN is_maintenance_dep INTEGER", {}).then((dbRes) => {
-                            //     db.executeSql("UPDATE members SET is_maintenance_dep = 0;", {}).then((dbRes) => {
-                            //       this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
-                            //         .then(() => this.insertDb(dbRes, db, alertVar),
-                            //         error => console.error('Error storing item', error)
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_closed_at TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added work_order_closed_at");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //         );
-                            //     });
-                            //   }, (error) => {
-                            //     console.error("Unable to execute sql alter ", error);
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_location_detail TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added work_order_location_detail");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
-                            //   });
-
-                            // }
-
-                          }
-                        }
-                      });
+                        //     db.executeSql("ALTER TABLE chat_messages ADD COLUMN work_order_description TEXT", {})
+                        //     .then((dbRes) => {
+                        //       console.log("chat_messages added work_order_description");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
 
-                  }
-                });
-              // this.insertDb(dbRes,db,alertVar);
-            // }, (error) => {
-            //   console.error("Unable to execute sql", error);
-            // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                        //     db.executeSql("ALTER TABLE members ADD COLUMN is_system_user INTEGER", {})
+                        //     .then((dbRes) => {
+                        //       console.log("is_system_user added");
+                        //     }, (error) => {
+                        //       console.error("Unable to execute sql", error);
+                        //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+
+                        //   db.executeSql("ALTER TABLE members ADD COLUMN is_maintenance_dep INTEGER", {}).then((dbRes) => {
+                        //     db.executeSql("UPDATE members SET is_maintenance_dep = 0;", {}).then((dbRes) => {
+                        //       this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
+                        //         .then(() => this.insertDb(dbRes, db, alertVar),
+                        //         error => console.error('Error storing item', error)
+
+                        //         );
+                        //     });
+                        //   }, (error) => {
+                        //     console.error("Unable to execute sql alter ", error);
+
+                        //   });
+
+                        // }
+
+                      }
+                    }
+                  });
+
+
+              }
+            });
+          // this.insertDb(dbRes,db,alertVar);
+          // }, (error) => {
+          //   console.error("Unable to execute sql", error);
+          // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
         }, (error) => {
 
@@ -544,16 +541,16 @@ export class LoginPage {
           // db.executeSql('CREATE TABLE IF NOT EXISTS members(user_id INTEGER, hotel_token TEXT, name TEXT, image TEXT, role TEXT,title TEXT, is_maintenance_dep INTEGER, is_system_user INTEGER)', {})
           //   .then((dbRes) => {
 
-              this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
-                .then(() => this.insertDb(db, alertVar,updateNewVersion),
-                error => console.error('Error storing item', error)
+          this.nativeStorage.setItem('user_auth', { access_token: this.foundRepos.access_token, property_token: this.foundRepos.user.properties[propertyIndex].token, hotel_created: yyyy + '-' + mm + '-' + dd, hotel_name: this.foundRepos.user.properties[propertyIndex].name, user_id: this.foundRepos.user.id, db_version: dbVersion })
+            .then(() => this.insertDb(db, alertVar, updateNewVersion),
+              error => console.error('Error storing item', error)
 
-                );
+            );
 
-              // this.insertDb(dbRes,db,alertVar);
-            // }, (error) => {
-            //   console.error("Unable to execute sql", error);
-            // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+          // this.insertDb(dbRes,db,alertVar);
+          // }, (error) => {
+          //   console.error("Unable to execute sql", error);
+          // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
 
 
         });
@@ -563,7 +560,7 @@ export class LoginPage {
 
 
   }
-  insertDb(db, alertVar,updateNewVersion) {
+  insertDb(db, alertVar, updateNewVersion) {
 
     //console.log("TABLE CREATED: " + JSON.stringify(dbRes));
 
@@ -606,7 +603,7 @@ export class LoginPage {
                   }
                   console.log("departments maintainance" + is_maintenance_dep);
 
-                  let is_system_user=this.users[i].is_system_user==true?1:0;
+                  let is_system_user = this.users[i].is_system_user == true ? 1 : 0;
                   if (insertFlag == true) {
                     db.executeSql("INSERT INTO members (user_id, hotel_token, name, image, role, title,is_maintenance_dep, is_system_user) VALUES ('" + this.users[i].id + "','','" + this.users[i].name + "','" + this.users[i].avatar_img_url + "','" + this.users[i].role + "','" + this.users[i].title + "'," + is_maintenance_dep + "," + is_system_user + ")", {}).then((data1) => {
 
@@ -641,96 +638,96 @@ export class LoginPage {
                 //           db.executeSql('CREATE TABLE IF NOT EXISTS user_mentions (type TEXT, type_id INTEGER, user_id INTEGER,total INTEGER)', {})
                 //           .then((dbRes) => {
                 //             console.log("CREATE TABLE user_mentions" + JSON.stringify(dbRes));
-                            
-                          /* strat api call get Broadcast List */
-                          if (this.commonMethod.checkNetwork()) {
-                            this.showLoader=true;
-                            this.commonMethod.getDataWithoutLoder(getBroadcastListUrl, accessToken).subscribe(
-                              data => {
-                                let res = data.json();
-                                this.nativeStorage.setItem('broadcast_count', res.length)
-                                  .then(
-                                  () => console.log('Stored broadcast_count!'),
-                                  error => console.error('Error storing broadcast_count', error)
-                                  );
-                              },
-                              err => {
-                                if(updateNewVersion){
-                                  this.commonMethod.hideLoader();  
-                                }
-                                //this.commonMethod.hideLoader();
-                                this.showLoader=false;
-                                alertVar.present();
-                              },
-                              () => {
-                                console.log('getData completed');
-                              }
-                            );
 
-                            this.commonMethod.getDataWithoutLoder(locationsUrl, accessToken).subscribe(
-                              data => {
-                                let foundRepos = data.json();
-                                console.log("==" + JSON.stringify(foundRepos));
+                /* strat api call get Broadcast List */
+                if (this.commonMethod.checkNetwork()) {
+                  this.showLoader = true;
+                  this.commonMethod.getDataWithoutLoder(getBroadcastListUrl, accessToken).subscribe(
+                    data => {
+                      let res = data.json();
+                      this.nativeStorage.setItem('broadcast_count', res.length)
+                        .then(
+                          () => console.log('Stored broadcast_count!'),
+                          error => console.error('Error storing broadcast_count', error)
+                        );
+                    },
+                    err => {
+                      if (updateNewVersion) {
+                        this.commonMethod.hideLoader();
+                      }
+                      //this.commonMethod.hideLoader();
+                      this.showLoader = false;
+                      alertVar.present();
+                    },
+                    () => {
+                      console.log('getData completed');
+                    }
+                  );
 
-                                this.locationType = foundRepos.location_types;
-                                this.room = foundRepos.Room;
-                                this.publicArea = foundRepos.PublicArea;
-                                this.equipment = foundRepos.Equipment;
+                  this.commonMethod.getDataWithoutLoder(locationsUrl, accessToken).subscribe(
+                    data => {
+                      let foundRepos = data.json();
+                      console.log("==" + JSON.stringify(foundRepos));
 
-                                this.nativeStorage.setItem('wo_data', { locationType: this.locationType, room: this.room, publicArea: this.publicArea, equipment: this.equipment })
-                                  .then(
-                                  () => { 
-                                    console.log('Stored wo_data!'); 
-                                    this.getUserPermissions(updateNewVersion);
-                                    //this.commonMethod.hideLoader(); 
-                                  },
-                                  error => { console.error('Error storing wo_data', error); this.navCtrl.setRoot(FeedsPage); }
-                                  );
+                      this.locationType = foundRepos.location_types;
+                      this.room = foundRepos.Room;
+                      this.publicArea = foundRepos.PublicArea;
+                      this.equipment = foundRepos.Equipment;
 
-                              },
-                              err => {
-                                this.showLoader=false;
-                                alertVar.present();
-                              },
-                              () => {
-                                console.log('getData completed');
-                              }
-                            );
+                      this.nativeStorage.setItem('wo_data', { locationType: this.locationType, room: this.room, publicArea: this.publicArea, equipment: this.equipment })
+                        .then(
+                          () => {
+                            console.log('Stored wo_data!');
+                            this.getUserPermissions(updateNewVersion);
+                            //this.commonMethod.hideLoader(); 
+                          },
+                          error => { console.error('Error storing wo_data', error); this.navCtrl.setRoot(FeedsPage); }
+                        );
 
-                          }
-                          else {
-                            this.showLoader=false;
-                            //this.commonMethod.hideLoader();
-                            if(updateNewVersion){
-                              this.commonMethod.hideLoader();  
-                            }
-                            this.commonMethod.showNetworkError();
-                          }
-                          /* end api call to get Broadcast List */
+                    },
+                    err => {
+                      this.showLoader = false;
+                      alertVar.present();
+                    },
+                    () => {
+                      console.log('getData completed');
+                    }
+                  );
 
-                  //       }, (error) => {
-                  //         console.error("Unable to execute sql user_mentions", error);
-                  //       }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
+                }
+                else {
+                  this.showLoader = false;
+                  //this.commonMethod.hideLoader();
+                  if (updateNewVersion) {
+                    this.commonMethod.hideLoader();
+                  }
+                  this.commonMethod.showNetworkError();
+                }
+                /* end api call to get Broadcast List */
 
-                  //       }, (error1) => {
-                  //         console.log("MESSAGE TABLE CREATE ERROR: " + JSON.stringify(error1));
-                  //       });
+                //       }, (error) => {
+                //         console.error("Unable to execute sql user_mentions", error);
+                //       }).catch(e => console.log('Executed SQL Error= user_mentions' + JSON.stringify(e)));
 
-                  //     }, (error) => {
-                  //       console.error("Unable to execute sql", error);
-                  //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+                //       }, (error1) => {
+                //         console.log("MESSAGE TABLE CREATE ERROR: " + JSON.stringify(error1));
+                //       });
 
-                  // }, (error) => {
-                  //   console.error("Unable to execute sql", error);
-                  // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e))).catch(e => console.log(e));
+                //     }, (error) => {
+                //       console.error("Unable to execute sql", error);
+                //     }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
+                // }, (error) => {
+                //   console.error("Unable to execute sql", error);
+                // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e))).catch(e => console.log(e));
 
               },
               err => {
                 //this.commonMethod.hideLoader();
-                if(updateNewVersion){
-                  this.commonMethod.hideLoader();  
+                if (updateNewVersion) {
+                  this.commonMethod.hideLoader();
                 }
-                this.showLoader=false;
+                this.showLoader = false;
                 alertVar.present();
                 console.error("Error : " + err);
               },
@@ -743,20 +740,20 @@ export class LoginPage {
           }
           else {
             //this.commonMethod.hideLoader();
-            if(updateNewVersion){
-              this.commonMethod.hideLoader();  
+            if (updateNewVersion) {
+              this.commonMethod.hideLoader();
             }
-            this.showLoader=false;
+            this.showLoader = false;
             this.commonMethod.showNetworkError();
           }
 
         },
         error => {
           //this.commonMethod.hideLoader();
-          if(updateNewVersion){
-            this.commonMethod.hideLoader();  
+          if (updateNewVersion) {
+            this.commonMethod.hideLoader();
           }
-          this.showLoader=false;
+          this.showLoader = false;
           return '';
         }
       );
@@ -799,46 +796,48 @@ export class LoginPage {
           this.commonMethod.getDataWithoutLoder(getUserPermissionsUrl, accessToken).subscribe(
             data => {
               let res = data.json();
-              this.permissionData=res;
+              this.permissionData = res;
               console.log(JSON.stringify(res));
-              this.nativeStorage.setItem('user_permissions',this.permissionData)
-              .then(
-              () =>{ console.log('Stored user_permissions!');
-              this.events.publish('update:permiossion');
-              this.nativeStorage.getItem('prev_user_id').then(
-                prevUserId => {
-                  console.log("prevUserId=" + prevUserId +"  "+ this.foundRepos.user.id) ;
-          
-                  
-                  if(this.notification==undefined || (prevUserId > 0 && prevUserId != this.foundRepos.user.id)){
-                    this.showLoader=false;
-                    //this.commonMethod.hideLoader();
-                    this.navCtrl.setRoot(FeedsPage);}
-                    else{
-                      this.showLoader=false;
-                     //this.commonMethod.hideLoader();
-                      
-                      this.events.publish('login:Notification', this.notification);
-                    }
-                    if(updateNewVersion){
-                      this.commonMethod.hideLoader();  
-                    }
-                },
-                error => {
-                  this.showLoader=false;
-                  if(updateNewVersion){
-                    this.commonMethod.hideLoader();  
-                  }
-                  //this.commonMethod.hideLoader();
-                  this.navCtrl.setRoot(FeedsPage);
-                });
-              },
-              error => console.error('Error storing user_permissions', error)
-              );
+              this.nativeStorage.setItem('user_permissions', this.permissionData)
+                .then(
+                  () => {
+                    console.log('Stored user_permissions!');
+                    this.events.publish('update:permiossion');
+                    this.nativeStorage.getItem('prev_user_id').then(
+                      prevUserId => {
+                        console.log("prevUserId=" + prevUserId + "  " + this.foundRepos.user.id);
+
+
+                        if (this.notification == undefined || (prevUserId > 0 && prevUserId != this.foundRepos.user.id)) {
+                          this.showLoader = false;
+                          //this.commonMethod.hideLoader();
+                          this.navCtrl.setRoot(FeedsPage);
+                        }
+                        else {
+                          this.showLoader = false;
+                          //this.commonMethod.hideLoader();
+
+                          this.events.publish('login:Notification', this.notification);
+                        }
+                        if (updateNewVersion) {
+                          this.commonMethod.hideLoader();
+                        }
+                      },
+                      error => {
+                        this.showLoader = false;
+                        if (updateNewVersion) {
+                          this.commonMethod.hideLoader();
+                        }
+                        //this.commonMethod.hideLoader();
+                        this.navCtrl.setRoot(FeedsPage);
+                      });
+                  },
+                  error => console.error('Error storing user_permissions', error)
+                );
               //alert(this.userData); 
             },
             err => {
-              this.showLoader=false;
+              this.showLoader = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -848,9 +847,9 @@ export class LoginPage {
           );
         }
         else {
-          this.showLoader=false;
-          if(updateNewVersion){
-            this.commonMethod.hideLoader();  
+          this.showLoader = false;
+          if (updateNewVersion) {
+            this.commonMethod.hideLoader();
           }
           this.commonMethod.showNetworkError();
         }
@@ -862,10 +861,10 @@ export class LoginPage {
     );
   }
   valchange() {
-    
-        this.zone.run(() => {
-          this.password = this.password;
-          this.email=this.email;
-        });
-      }
+
+    this.zone.run(() => {
+      this.password = this.password;
+      this.email = this.email;
+    });
+  }
 }

@@ -68,11 +68,10 @@ page-taskChecklistDetail {
     }
     .row_box {
         max-width: 100%;
-        white-space: normal;
-        padding: 0px 3px;
+        white-space: normal; // padding: 0px 3px;
     }
     .row_box .row {
-        margin-left: 3px;
+        // margin-left: 3px;
     }
     .row ion-col.col {
         padding: 0px;
@@ -135,7 +134,7 @@ page-taskChecklistDetail {
         padding-left: 15px;
         padding-right: 15px;
         width: 96% !important;
-        margin-left: 2% !important;
+        margin-left: 1% !important;
         margin-right: 2% !important;
     }
     .card-ios p,

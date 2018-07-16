@@ -44,6 +44,7 @@ export class SendMessagePage {
   public filterGroup: any;
   public searchText = "";
   private groupInfo: any;
+  private keyboardHeight = 0;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone,
     modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage,
@@ -61,6 +62,7 @@ export class SendMessagePage {
       console.log('keyboard is shown');
       this.zone.run(() => {
         this.isKeyboardOpen = true;
+        this.keyboardHeight = data.keyboardHeight
         if (data.keyboardHeight > 230) {
           this.classnameForFooter = "openKeyboardWithSpellCheck";
         } else {
@@ -75,6 +77,7 @@ export class SendMessagePage {
     this.keyboard.onKeyboardHide().subscribe(data => {
       console.log('keyboard is hiode');
       this.events.publish('hide:keyboard');
+      this.keyboardHeight = 0;
       this.zone.run(() => {
         this.isKeyboardOpen = false;
         //this.deviceHeight = (platform.height() - 150);
@@ -327,6 +330,7 @@ export class SendMessagePage {
   }
 
   closekeyboard() {
+    debugger
     this.classnameForFooter = "closeKeyboard";
     this.showOverlay = false;
     //this.isKeyboardOpen=false;
@@ -768,6 +772,7 @@ export class SendMessagePage {
 
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
+    debugger
 
     if (this.showMentions == true && this.messageText != "") {
       let strArray = this.messageText.trim().split(" ");
@@ -821,7 +826,9 @@ export class SendMessagePage {
     }
 
     this.showMentions = false;
-    //e.preventDefault();
+    if (e != undefined) {
+      e.preventDefault();
+    }
   }
 
   showSelected(id) {

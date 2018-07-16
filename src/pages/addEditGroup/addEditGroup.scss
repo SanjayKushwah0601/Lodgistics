@@ -107,6 +107,7 @@ page-addeditgroup {
     }
     .active img {
         border: 2px solid #02B9E7;
+        opacity: 0.5;
     }
     .active .label-ios,
     .active .label-md {
@@ -425,9 +426,7 @@ page-addeditgroup {
         position: absolute;
         top: 10px;
         margin: 8px 16px 8px 0;
-        background-color: #808080;
         border: 2px solid #02B9E7;
-        opacity: 0.5;
     }
     .avatar_checkmark_box .ion-ios-checkmark:before,
     .avatar_checkmark_box .ion-md-checkmark:before {

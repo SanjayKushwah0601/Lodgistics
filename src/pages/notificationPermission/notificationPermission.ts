@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 /**
  * Generated class for the UpdateAppPage page.
@@ -15,8 +16,11 @@ export class NotificationPermissionPage {
 
   isForceUpdate: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, private nativeStorage: NativeStorage) {
+    this.nativeStorage.setItem('show_notification_permission', false)
+      .then(resp => {
+      }, error => {
+      });
   }
 
   ionViewDidLoad() {

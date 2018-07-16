@@ -499,7 +499,7 @@ page-workOrder {
         font-weight: 500;
         line-height: 4rem;
         text-transform: capitalize;
-        color: #aeaeae;
+        color: #222;
         background-color: transparent;
         opacity: 0.7;
         transition: 100ms all linear;
@@ -561,8 +561,8 @@ page-workOrder {
         margin-left: 2px;
     }
     .segment_badge1 {
-        border: 1px solid #aeaeae;
-        color: #aeaeae;
+        border: 1px solid #222;
+        color: #222;
         line-height: 1.5;
         background: none;
         height: 18px;
@@ -593,7 +593,7 @@ page-workOrder {
     .segment-button.segment-activated {
         //border-color: #02B9E7;
         opacity: 1;
-        color: #222;
+        color: #02B9E7;
     }
     .segment-ios .segment-button:hover:not(.segment-activated) {
         background-color: #f1f1f1;

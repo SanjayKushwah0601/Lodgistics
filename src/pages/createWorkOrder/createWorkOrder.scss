@@ -164,7 +164,13 @@ page-createWorkOrder {
         height: 4vh;
         margin-left: 0px !important;
     }
-    //iPhone 5 & 5S in portrait & landscape
+    .dissable-img {
+        color: #999;
+        opacity: 0.5;
+    }
+    [next-input] {
+        border: none !important;
+    } //iPhone 5 & 5S in portrait & landscape
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
         td {
             width: 50%;
@@ -189,8 +195,7 @@ page-createWorkOrder {
         .datetime-ios {
             padding: 2px 8px 2px 8px;
         }
-    }
-    //iPhone 6 in portrait & landscape
+    } //iPhone 6 in portrait & landscape
     @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
         td {
             width: 50%;
@@ -251,8 +256,7 @@ page-createWorkOrder {
         .box {
             font-size: 14px;
         }
-    }
-    //s7 emulator
+    } //s7 emulator
     @media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
         .label-ios,
         .label-md {
@@ -267,8 +271,7 @@ page-createWorkOrder {
         .button-md {
             font-size: 14px;
         }
-    }
-    // s7 device
+    } // s7 device
     @media only screen and (-webkit-min-device-pixel-ratio: 4) and (min-device-width: 360px) and (max-device-width: 640px) {
         td {
             padding-top: 2%;
@@ -291,8 +294,7 @@ page-createWorkOrder {
             width: 130px;
             height: 75px;
         }
-    }
-    //note 6
+    } //note 6
     @media only screen and (-webkit-min-device-pixel-ratio: 3) and (min-device-width: 412px) and (max-device-width: 690px) {
         .box {
             font-size: 20px;

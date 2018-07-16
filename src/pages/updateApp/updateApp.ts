@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { Market } from '@ionic-native/market';
 
 /**
@@ -15,9 +15,12 @@ import { Market } from '@ionic-native/market';
 export class UpdateAppPage {
 
   isForceUpdate: boolean = false;
+  public message = "";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private market: Market) {
-    this.isForceUpdate = navParams.get('isForceUpdate') as boolean
+  constructor(public navCtrl: NavController, public navParams: NavParams, private market: Market, public plt: Platform) {
+    this.isForceUpdate = navParams.get('isForceUpdate') as boolean;
+    this.message = navParams.get('message');
+
     console.log('ionViewDidLoad UpdateAppPage');
   }
 
@@ -36,7 +39,14 @@ export class UpdateAppPage {
    * Method will be called when user presses 'Update App' button on the screen.
    */
   private updateApp() {
-    this.market.open('com.lodgistics.connect');
+    if (this.plt.is('ios')) {
+      // This will only print when on iOS
+      console.log('I am an iOS device!');
+      this.market.open('id1263478956');
+    } else {
+      this.market.open('com.lodgistics.connect');
+    }
+    this.navCtrl.pop();
   }
 
 }

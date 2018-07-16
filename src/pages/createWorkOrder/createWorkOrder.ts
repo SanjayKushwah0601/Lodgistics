@@ -828,10 +828,12 @@ export class CreateWorkOrderPage {
           let objData = {};
           this.commonMethod.putData(updateWoDataUrl + "/" + this.wo_no + "/close", objData, accessToken).subscribe(
             data => {
-              let foundRepos = data.json();
+              let res = data.json();
+              let foundRepos = res.chat_message.work_order;
               console.log(foundRepos);
               this.commonMethod.hideLoader();
-              this.viewCtrl.dismiss();
+              //this.viewCtrl.dismiss();
+              this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
             },
             err => {
               this.commonMethod.hideLoader();
