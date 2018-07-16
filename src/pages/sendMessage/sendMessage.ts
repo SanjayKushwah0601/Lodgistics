@@ -124,14 +124,26 @@ export class SendMessagePage {
 
     let groupName = ''
 
+    console.log(this.allUsers)
     for (let i = 0; i < this.allUsers.length; i++) {
-      allIds.push(this.allUsers[i].id);
-      if (i == 0) {
-        groupName = this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
-      } else {
-        groupName += '_' + this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
+      if (this.allUsers[i].user_id) {
+        allIds.push(this.allUsers[i].user_id as number);
+        if (i == 0) {
+          groupName = this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
+        } else {
+          groupName += '_' + this.allUsers[i].name.substring(0, this.allUsers[i].name.indexOf(" "));
+        }
       }
+    }
 
+    if (allIds.length == 0) {
+      let alertVar = this.alertCtrl.create({
+        title: 'Error!',
+        subTitle: 'All the user ids are blanck',
+        buttons: ['OK']
+      });
+      alertVar.present()
+      return;
     }
 
     console.log(groupName)
