@@ -167,6 +167,9 @@ page-createWorkOrder {
     .dissable-img {
         color: #999;
         opacity: 0.5;
+    }
+    [next-input] {
+        border: none !important;
     } //iPhone 5 & 5S in portrait & landscape
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
         td {

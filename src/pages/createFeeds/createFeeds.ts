@@ -147,7 +147,7 @@ export class CreateFeedsPage {
     }
 
 
-    let objData = { 'feed': { title: this.feedTitle.trim(), body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
+    let objData = { 'feed': { title: this.feedTitle.trim().toUpperCase(), body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',

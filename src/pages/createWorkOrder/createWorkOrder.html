@@ -28,7 +28,7 @@
                     <ion-label>{{workOrderData.maintainable_type}}
                         <span class="required">*</span>
                     </ion-label>
-                    <ion-select *ngIf="workOrderData.maintainable_type!='Other Location'" [disabled]="wo_no!=''" tappable [(ngModel)]="workOrderData.maintainable_id"
+                    <ion-select *ngIf="workOrderData.maintainable_type!='Other'" [disabled]="wo_no!=''" tappable [(ngModel)]="workOrderData.maintainable_id"
                         placeholder="Select" (ngModelChange)="updateCheckList()">
                         <ng-container *ngIf="workOrderData.maintainable_type=='Room'">
                             <ion-option *ngFor="let rooms of room;" value="{{rooms.id}}">{{rooms.room_number}}</ion-option>
@@ -40,7 +40,7 @@
                             <ion-option *ngFor="let equipments of equipment;" value="{{equipments.id}}">{{equipments.name}}</ion-option>
                         </ng-container>
                     </ion-select>
-                    <ion-input class="other_input" *ngIf="workOrderData.maintainable_type=='Other Location'" type="text" value="{{workOrderData.maintainable_id}}"
+                    <ion-input class="other_input" *ngIf="workOrderData.maintainable_type=='Other'" type="text" value="{{workOrderData.maintainable_id}}"
                         [(ngModel)]="workOrderData.maintainable_id" placeholder=""></ion-input>
                 </td>
             </tr>
@@ -139,8 +139,8 @@
             <tr>
                 <td colspan="2">
                     <div class="popup-buttons" class="{{wo_no!=''?'float_left':'float_right'}}">
-                        <button *ngIf="wo_no!='' && userPermissions.wo_access.can_delete" (click)="confirmCloseWorkOrder()" class="delete_wo" tappable
-                            ion-button>Delete WO#{{wo_no}}</button>
+                        <!-- <button *ngIf="wo_no!='' && userPermissions.wo_access.can_delete" (click)="confirmCloseWorkOrder()" class="delete_wo" tappable
+                            ion-button>Delete WO#{{wo_no}}</button> -->
                         <button tappable ion-button (click)="dismiss()">Cancel</button>
                         <button *ngIf="wo_no==''" tappable ion-button [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
                             (click)="createWorkOrder()">Create WO</button>
