@@ -166,7 +166,7 @@ export class CreateWorkOrderPage {
       priority: 'm',
       status: 'open',
       due_to_date: '',
-      assigned_to_id: '',
+      assigned_to_id: '-2',
       maintainable_type: 'Room',
       maintainable_id: '',
       maintenance_checklist_item_id: "",
