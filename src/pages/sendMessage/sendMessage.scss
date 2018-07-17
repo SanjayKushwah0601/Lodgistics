@@ -50,7 +50,7 @@ page-sendMessage {
         background: white;
     }
     .grid-img ion-row {
-        border-bottom: 1px solid #DEDEDE;
+        // border-bottom: 1px solid #DEDEDE;
     }
     .first-grid-col {
         border-right: 1px solid #DEDEDE;
@@ -479,9 +479,9 @@ page-sendMessage {
     }
     .autosuggestion_list {
         width: 100%;
-        margin-top: 11%;
+        margin-top: 3%;
         position: fixed;
-        z-index: 9;
+        z-index: 50;
         background: #fff;
         max-height: 70%;
         overflow: scroll;
@@ -561,16 +561,16 @@ page-sendMessage {
     ion-content .scroll-content {
         margin-top: 90px !important;
     }
-
     span.selected-user span:after {
-        content:", ";
-        color:#666;
+        content: ", ";
+        color: #666;
     }
-
     span.selected-user span:last-child:after {
-        content:"";
+        content: "";
     }
-
+    .list-md>.item-block:last-child .item-inner {
+        border-bottom: none !important;
+    }
     @media(max-width:749px) {
         textarea {
             font-size: 24px;
@@ -594,9 +594,7 @@ page-sendMessage {
         .open-keyboard {
             height: 55%;
         }
-    }
-
-    // HTC-630
+    } // HTC-630
     @media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 2) {
         ion-content .scroll-content {
             // margin-top: 150px !important;
@@ -614,10 +612,7 @@ page-sendMessage {
         .open-keyboard {
             height: 55%;
         }
-    }
-    
-    
-    //iPhone 6,7,8,6S in portrait & landscape , Pixel 2 XL
+    } //iPhone 6,7,8,6S in portrait & landscape , Pixel 2 XL
     @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
         //.scroll-content{    margin-bottom: 42px !important;}
         .close-icon {
