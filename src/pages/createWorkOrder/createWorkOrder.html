@@ -96,7 +96,6 @@
                     <ion-label>Assigned To</ion-label>
                     <ion-select [disabled]="(!userPermissions.wo_access.assigned_to_id && wo_no!='') || workOrderData.closed" tappable [(ngModel)]="workOrderData.assigned_to_id"
                         class="request" placeholder="select checklist item">
-                        <ion-option value="">Unassigned</ion-option>
                         <ng-container *ngFor="let user of members;">
                             <ion-option value="{{user[1]}}">{{user[0]}}</ion-option>
                         </ng-container>
