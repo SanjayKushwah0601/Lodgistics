@@ -303,6 +303,10 @@ export class CreateWorkOrderPage {
   createWorkOrder() {
     //alert(this.workOrderData);
     //console.log(JSON.stringify(this.workOrderData));
+    if (this.workOrderData.maintainable_type == 'Other') {
+      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id
+      this.workOrderData.maintainable_id = ''
+    }
 
     if (this.imageFromParent != "") {
       this.workOrderData.first_img_url = this.imageFromParent;
@@ -333,15 +337,22 @@ export class CreateWorkOrderPage {
           }
 
           if (this.pageName == "feed" && this.id != "") {
-            objData = { 'feed_id': this.id, 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url } };
+            objData = {
+              'feed_id': this.id, 'work_order': {
+                description: this.workOrderData.descriptions, priority: this.workOrderData.priority,
+                status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type,
+                maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id,
+                first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location
+              }
+            };
             url = createFeedWorkOrderUrl + "/" + this.id + "/work_orders";
           }
           else if (this.id != "") {
-            objData = { 'chat_message_id': this.id, 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url } };
+            objData = { 'chat_message_id': this.id, 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location } };
             url = createMessageWorkOrderUrl + "/" + this.id + "/work_orders";
           }
           else {
-            objData = { 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url } };
+            objData = { 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location } };
             url = createWorkOrderUrl;
           }
 
