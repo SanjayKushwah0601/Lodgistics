@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 
-//export let baseUrl = "http://dev.lodgistics.com:3000/";
-//export let webSocketBaseUrl = "ws://dev.lodgistics.com:3000/";
-//export let baseUrl = "http://dev.lodgistics.com/";
-//export let webSocketBaseUrl = "ws://dev.lodgistics.com/";
-//export let baseUrl = "https://dev.lodgistics.com/";
-//export let webSocketBaseUrl = "wss://dev.lodgistics.com/";
+let isProductionServer = false;
+let basePath = "dev";
+if (isProductionServer) {
+    basePath = "app";
+}
 
-export let baseUrl = "https://app.lodgistics.com/";
-export let webSocketBaseUrl = "wss://app.lodgistics.com/";
+export let baseUrl = "https://" + basePath + ".lodgistics.com/";
+export let webSocketBaseUrl = "wss://" + basePath + ".lodgistics.com/";
 
 export let getLoginUrl = baseUrl + "api/auth";
 export let getProfileUrl = baseUrl + "api/users";

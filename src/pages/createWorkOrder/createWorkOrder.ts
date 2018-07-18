@@ -172,7 +172,8 @@ export class CreateWorkOrderPage {
       maintenance_checklist_item_id: "",
       first_img_url: "",
       second_img_url: "",
-      closed: false
+      closed: false,
+      other_maintainable_location: ''
     };
 
     this.nativeStorage.getItem('user_auth').then(
@@ -379,6 +380,8 @@ export class CreateWorkOrderPage {
   }
 
   showGalleryPrompt(index) {
+
+    console.log(this.workOrderData)
 
     let actionSheet = this.actionSheetCtrl.create({
       title: '',
