@@ -13,6 +13,7 @@ import { File } from '@ionic-native/file';
 import { FeedsPage } from '../feeds/feeds';
 import { getAwsSignedUrl } from '../../services/configURLs';
 import { Navbar } from 'ionic-angular';
+import { UtilMethods } from '../../services/utilMethods';
 
 @Component({
   selector: 'page-createFeeds',
@@ -51,7 +52,7 @@ export class CreateFeedsPage {
   public isFocusOnTitleInput = false;
 
 
-  constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public platform: Platform, public zone: NgZone, private sqlite: SQLite, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events) {
+  constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public platform: Platform, public zone: NgZone, private sqlite: SQLite, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events, private utilMethods: UtilMethods) {
     // this.zone.run(() => {
     //   this.feedText="";
     //   this.postButtonEnable = false;
@@ -146,8 +147,10 @@ export class CreateFeedsPage {
       height = img.height;
     }
 
-
-    let objData = { 'feed': { title: this.feedTitle.trim().toUpperCase(), body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
+    this.feedTitle = this.feedTitle.trim().toUpperCase();
+    this.feedTitle = this.utilMethods.nlToBr(this.feedTitle);
+    feedData = this.utilMethods.nlToBr(feedData);
+    let objData = { 'feed': { title: this.feedTitle, body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',

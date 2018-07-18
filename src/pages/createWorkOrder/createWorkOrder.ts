@@ -19,6 +19,7 @@ import { getPublicAreaCheckListItemsUrl } from '../../services/configURLs';
 import { getWoDataUrl } from '../../services/configURLs';
 import { updateWoDataUrl } from '../../services/configURLs';
 import { createWorkOrderUrl, getAssignableUsersUrl } from '../../services/configURLs';
+import { UtilMethods } from '../../services/utilMethods';
 
 @Component({
   selector: 'page-createWorkOrder',
@@ -58,7 +59,7 @@ export class CreateWorkOrderPage {
 
   private tempWorkOrderStatus: string;
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite) {
+  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, private utilMethods: UtilMethods) {
 
     this.selectOptions = {
       cssClass: 'select-drop-down'
@@ -332,6 +333,7 @@ export class CreateWorkOrderPage {
 
           let url = "";
           let objData = {};
+          this.workOrderData.descriptions = this.utilMethods.nlToBr(this.workOrderData.descriptions);
           if (this.workOrderData.maintainable_type == 'Equipment') {
             this.workOrderData.maintenance_checklist_item_id = "";
           }
@@ -707,6 +709,13 @@ export class CreateWorkOrderPage {
   }
 
   updateWorkOrder() {
+
+    if (this.workOrderData.maintainable_type == 'Other') {
+      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id
+      this.workOrderData.maintainable_id = ''
+    }
+
+    this.workOrderData.descriptions = this.utilMethods.nlToBr(this.workOrderData.descriptions);
     //alert(this.workOrderData);
     //console.log(JSON.stringify(this.workOrderData));
     if (this.img[0] != "") {
@@ -732,7 +741,7 @@ export class CreateWorkOrderPage {
             this.workOrderData.maintenance_checklist_item_id = "";
           }
 
-          objData = { 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url } };
+          objData = { 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location } };
           objData['work_order'].due_to_date = this.workOrderData.due_to_date;
 
           this.commonMethod.putData(updateWoDataUrl + "/" + this.wo_no, objData, accessToken).subscribe(

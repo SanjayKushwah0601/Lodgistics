@@ -256,7 +256,6 @@ export class MyApp {
 
   manageNotification(notification) {
     //this.badge.decrease(1);
-    debugger
 
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
@@ -2144,7 +2143,6 @@ export class MyApp {
       let thisObj = this;
       setTimeout(() => {
         thisObj.zone.run(() => {
-          debugger
           thisObj.showNotifyAlert = false;
           console.log("call showNotification");
           thisObj.showNotification();

@@ -19,6 +19,7 @@ import { MyVideosPage } from '../myVideos/myVideos';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
 import { startTaskChecklistUrl, getTaskListDetailsUrl } from '../../services/configURLs';
 import 'web-animations-js/web-animations.min';
+import { UtilMethods } from '../../services/utilMethods';
 
 @Component({
   selector: 'page-taskChecklistDetail',
@@ -64,7 +65,7 @@ export class TaskChecklistDetailPage {
 
   constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController,
     public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public actionSheetCtrl: ActionSheetController,
-    public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events) {
+    public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events, private utilMethods: UtilMethods) {
 
     this.userPermissions = {
       "wo_access": {
@@ -317,6 +318,7 @@ export class TaskChecklistDetailPage {
 
     let objData = {};
     if (commentText != '') {
+      commentText = this.utilMethods.nlToBr(commentText);
       objData = { id: item_id, task_item_record: { status: '', comment: commentText.trim() } };
     } else {
       objData = { id: item_id, task_item_record: { status: 'completed', } };
@@ -559,6 +561,7 @@ export class TaskChecklistDetailPage {
     if (isReviewFinih) {
       finalStatus = "reviewed";
     }
+    this.reviewerNotes = this.utilMethods.nlToBr(this.reviewerNotes);
     let objData = { id: id, status: finalStatus, notes: this.reviewerNotes };
 
     this.nativeStorage.getItem('user_auth').then(

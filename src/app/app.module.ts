@@ -66,7 +66,7 @@ import { PressDirective } from '../directives/press/press';
 import { Market } from '@ionic-native/market';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
-import { HeaderScrollerDirective } from '../directives/header-scroller/header-scroller';
+import { UtilMethods } from '../services/utilMethods';
 
 enableProdMode();
 
@@ -126,7 +126,6 @@ export class SafeHtmlPipe implements PipeTransform {
     PressDirective,
     UpdateAppPage,
     NotificationPermissionPage,
-    HeaderScrollerDirective
   ],
   imports: [
     BrowserModule,
@@ -193,6 +192,7 @@ export class SafeHtmlPipe implements PipeTransform {
     Badge,
     SQLite,
     Market,
+    UtilMethods,
     // Deeplinks,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]

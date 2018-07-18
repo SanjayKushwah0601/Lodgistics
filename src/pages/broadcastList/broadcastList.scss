@@ -95,8 +95,8 @@ page-broadcastList {
         padding-top: 5px;
     }
     .item-ios h2 {
-        font-size: 20px;
-        color: #757575;
+        font-size: 12px;
+        color: black;
         font-family: 'open-sans';
     }
     .item-ios p {
@@ -124,18 +124,6 @@ page-broadcastList {
         padding-right: 0px;
         top: 0;
         height: 100%;
-    }
-    .pull-left {
-        float: left;
-    }
-    .pull-right {
-        float: right;
-        color: #BDBDBD;
-        font-family: 'open_sanslight';
-        font-size: 20px;
-        margin-top: -4px;
-        clear: both;
-        padding-bottom: 0px;
     }
     .label-ios {
         margin: 0px 0px 0px 0px;
@@ -319,9 +307,6 @@ page-broadcastList {
     .bottom-menu:active {
         background: #EEE
     }
-    .item-ios .pull-left h2 {
-        margin-top: 0px !important;
-    }
     .search-loader-text {
         text-align: center;
         margin-top: 0px;
@@ -334,21 +319,11 @@ page-broadcastList {
         background: #EEE;
         opacity: 0.8;
     }
-    ion-card img {
-        margin-top: 0px;
-    }
-    ion-card img {
-        width: 50%;
-    }
     ion-card td {
         padding: 0px;
         width: 50%;
         vertical-align: top;
         white-space: normal;
-    }
-    ion-card td img {
-        margin-top: 2px;
-        width: 100%;
     }
     .td-box-2 {
         padding-left: 10px;
@@ -358,11 +333,6 @@ page-broadcastList {
     }
     .box-1 {
         margin-top: 10px;
-    }
-    .gif-img img {
-        max-width: 100%;
-        min-width: 100%;
-        margin-top: -4%;
     }
     ion-footer ion-icon {
         font-size: 1.8em;
@@ -425,10 +395,6 @@ page-broadcastList {
     .option-icon:active {
         opacity: .5;
     }
-    .show_more_less {
-        float: right;
-        padding-left: 10px;
-    }
     .my-overlay {
         position: fixed;
         width: 100%;
@@ -458,18 +424,6 @@ page-broadcastList {
     }
     ion-title {
         margin-top: 10px;
-    }
-    .pull-left h2 {
-        color: #757575;
-        font-family: 'open-sans';
-        font-size: 1.2rem;
-        padding-bottom: 5px;
-        padding-top: 2px;
-    }
-    .pull-right h2 {
-        color: #757575;
-        font-family: 'open_sanslight';
-        font-size: 1.2rem;
     }
     .page_title {
         width: 90%;
@@ -517,7 +471,30 @@ page-broadcastList {
     .show_more_less {
         float: right;
         padding-left: 10px;
-        padding-top: 10px;
+        padding-top: 5px;
+    }
+    .user-title {
+        font-size: 10px !important;
+        line-height: 2;
+        color: gray;
+    }
+    .pull-left {
+        float: left;
+    }
+    .pull-right {
+        float: right;
+        color: #BDBDBD;
+        font-family: 'open_sanslight';
+        font-size: 11px;
+        clear: right;
+        padding-bottom: 0px;
+    }
+    .label-md {
+        margin: 7px 0px 0px 0px;
+    }
+    .broadcast-image {
+        margin-bottom: 10px;
+        width: 100%;
     }
     @keyframes fadein {
         from {
@@ -597,9 +574,6 @@ page-broadcastList {
             margin-right: auto;
             display: table;
         }
-        .pull-right {
-            font-size: 12px !important;
-        }
         .card-ios p {
             font-size: 15px;
             line-height: 18px;
@@ -611,21 +585,15 @@ page-broadcastList {
             padding-bottom: 0px;
             margin-bottom: 2% !important;
         }
-        .pull-right {
-            float: right;
-            color: #BDBDBD;
-            font-size: 11px;
-        }
         .btn-day {
             font-size: 11px;
             padding: 2px 8px;
         }
+        .item-md ion-avatar img,
         .item-ios ion-avatar img {
             width: 40px;
             height: 40px;
-        } // .item-ios ion-avatar[item-left] {
-        //     margin-top: 0px !important;
-        // }
+        }
         .txt-update,
         .refresher-pulling-text,
         .refresher-refreshing-text {

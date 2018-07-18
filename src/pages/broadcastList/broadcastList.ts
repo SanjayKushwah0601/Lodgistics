@@ -29,7 +29,7 @@ export class BroadcastListPage {
     public alertCtrl: AlertController, public nativeStorage: NativeStorage, private translationservice: TranslationService) {
 
     this.keyboard.disableScroll(true);
-    this.textLengthValue = 110;
+    this.textLengthValue = textLength;
 
 
     this.platform.ready().then(() => {

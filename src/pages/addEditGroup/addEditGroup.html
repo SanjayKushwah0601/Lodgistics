@@ -96,10 +96,10 @@
         </ion-item>
       </span>
 
-      <span *ngFor="let res of users; let i=index">
+      <span *ngFor="let res of users; let i=index" class="user_names">
         <ion-item *ngIf="res.id!=groupOwnerId && res.is_system_user!='1'" [ngClass]="(res.inGroup==true || userId==res.id)?'active':(res.wasInGroup==true?'was-in-group':'')"
           (click)="userId==res.id?'':updateMember(i)">
-          <ion-label>{{res.name}}
+          <ion-label class="user_name_inner">{{res.name}}
             <p>
               <span class="designation" *ngIf="res.title">{{res.title}}</span>
             </p>

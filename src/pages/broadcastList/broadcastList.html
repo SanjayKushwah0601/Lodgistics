@@ -17,30 +17,39 @@
             <ion-card *ngFor="let res of foundRepos; let i = index" (click)="translate(res.title,res.body,'es',i)" style="width:100%;margin:0px;"
                 class="card card-ios" id="10386">
                 <ion-item class="item item-block item-ios">
-                    <ion-avatar item-left="">
+                    <ion-avatar item-left>
                         <img src="{{res.created_by.avatar_img_url}}">
-                        <div class="pull-left">
-                            <h2>{{res.created_by.name}}</h2>
-                        </div>
                     </ion-avatar>
 
-                    <p class="title-text">{{res.title}}</p>
+                    <div class="pull-left">
+                        <h2>{{res.created_by.name}}</h2>
+                        <div class="user-title" *ngIf="res.created_by.title">{{res.created_by.title}}</div>
+                        <p *ngIf="!res.created_by.title">
+                            <br>
+                        </p>
+                    </div>
+
+                    <div class="pull-right">
+                        <span style="float:right;">{{res.created_at | date:'MMM dd hh:mm a'}}</span>
+                    </div>
+                </ion-item>
+
+                <ion-item class="item item-block item-ios">
+                    <p *ngIf="res.title" class="title-text">{{res.title}}</p>
                     <p *ngIf="(res.showMore == undefined || res.showMore)">
-                        <!-- <span *ngIf="res.title" class="feed_title" [innerHTML]="updateHtml(res.title, '',i,j)+'<br/>' | safeHtml"></span> -->
                         <span [innerHTML]="updateHtml(res.body, i) | safeHtml"></span>
                         <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
                         <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
                     </p>
                     <p *ngIf="res.showMore==false && res.body.length>textLengthValue">
-                        <!-- <span *ngIf="res.title" class="feed_title" [innerHTML]="updateHtml(res.title, '',i,j)+'<br/>' | safeHtml"></span> -->
                         <span [innerHTML]="updateHtml1(res.body, i) | safeHtml"></span>
                         <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
                         <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
                     </p>
-                    <div class="pull-right">
-                        <h2>{{res.created_at | date:'MMM dd hh:mm a'}}</h2>
-                    </div>
+                </ion-item>
 
+                <ion-item *ngIf="res.image_url" class="item item-block item-ios">
+                    <img class="broadcast-image" src="res.image_url">
                 </ion-item>
 
             </ion-card>

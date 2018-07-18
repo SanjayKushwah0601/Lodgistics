@@ -27,8 +27,8 @@
     </span>
 
 
-    <textarea name="Text1" placeholder="Your Response" rows="3" [(ngModel)]="messageText" (ngModelChange)="changeModelValue()"
-    (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
+    <textarea #myInput name="Text1" placeholder="Your Response" rows="3" [(ngModel)]="messageText" (ngModelChange)="changeModelValue()"
+      (keydown)="keyDownCheck($event)" (keyup)="valchange($event)"></textarea>
 
     <div class="popup-buttons">
       <button ion-button (click)="dismiss()">CANCEL</button>

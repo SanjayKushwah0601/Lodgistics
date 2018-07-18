@@ -432,6 +432,9 @@ page-addeditgroup {
     .avatar_checkmark_box .ion-md-checkmark:before {
         color: #02B9E7;
     }
+
+        .user_names .user_name_inner{ width: 60px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap; }
+        .user_names .designation{ width: 80px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap; }
     @media(max-width:749px) {
         .label-ios[stacked],
         .label-md[stacked] {

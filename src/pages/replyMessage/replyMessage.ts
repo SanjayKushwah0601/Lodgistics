@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, ViewChild } from '@angular/core';
 import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
@@ -13,6 +13,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 })
 
 export class ReplyMessagePage {
+  @ViewChild('myInput') myInput;
 
   public tempMessageData: any;
   public users: any;
@@ -27,15 +28,19 @@ export class ReplyMessagePage {
   public showMentions = false;
   public mentionMembersFilter = [];
   public items = [];
-  public oldMsgTextValue="";
+  public oldMsgTextValue = "";
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage) {
-
+    // setTimeout(() => {
+    //   keyboard.show()
+    //   this.myInput.setFocus()
+    // }, 1000);
     this.tempMessageData = this.params.get('message');
     this.users = this.params.get('users');
     this.userId = this.params.get('userId');
     this.mentionMembers = this.params.get('mentionMembers');
     this.keyboard.disableScroll(true);
+
 
     for (let i = 0; i < this.mentionMembers.length; i++) {
       if (this.mentionMembers[i].id != this.userId && this.mentionMembers[i].is_system_user != '1') {
@@ -52,6 +57,7 @@ export class ReplyMessagePage {
     this.mentionStr = this.commonMethod.getMentionString(allChatMentions, this.users);
     this.showSub = this.keyboard.onKeyboardShow().subscribe(data => {
       //this.keyboard.disableScroll(true);
+      this.myInput.setFocus();
       console.log('keyboard is shown');
       console.log("screen height=" + data.keyboardHeight);
 
@@ -73,6 +79,8 @@ export class ReplyMessagePage {
 
   }
 
+
+
   dismiss() {
     this.events.publish('hide:keyboard');
     this.keyboard.close();
@@ -90,11 +98,11 @@ export class ReplyMessagePage {
   }
   removeLastInstance(badtext, str) {
     var charpos = str.toLowerCase().lastIndexOf(badtext.toLowerCase());
-    if (charpos<0) return str;
-    let ptone = str.substring(0,charpos);
-    let pttwo = str.substring(charpos+(badtext.length));
-    return (ptone+pttwo);
-}
+    if (charpos < 0) return str;
+    let ptone = str.substring(0, charpos);
+    let pttwo = str.substring(charpos + (badtext.length));
+    return (ptone + pttwo);
+  }
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
 
@@ -104,15 +112,14 @@ export class ReplyMessagePage {
       for (var i = 0; i < strArray.length; i++) {
         if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
           this.zone.run(() => {
-            this.messageText = this.removeLastInstance(strArray[i],this.messageText);
+            this.messageText = this.removeLastInstance(strArray[i], this.messageText);
             /* this is only for android */
-            if(this.messageText.trim()=="")
-            {
-              this.messageText=this.messageText.trim();
+            if (this.messageText.trim() == "") {
+              this.messageText = this.messageText.trim();
             }
-              this.mentionMembersFilter = this.items;
-              this.messageText = this.messageText;
-            
+            this.mentionMembersFilter = this.items;
+            this.messageText = this.messageText;
+
             this.messageText = this.messageText + "@" + memberInfo.name + " ";
             // this.mentionMembers=this.items;
             mentionAdded = false;
@@ -125,7 +132,7 @@ export class ReplyMessagePage {
       for (let i = 0; i < this.mentionUsers.length; i++) {
         if (this.mentionUsers[i].id == memberInfo.id && add != true) {
 
-          let removeStr = "@" + this.mentionUsers[i].name+" ";
+          let removeStr = "@" + this.mentionUsers[i].name + " ";
           console.log(this.messageText + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
 
           this.zone.run(() => {
@@ -174,7 +181,7 @@ export class ReplyMessagePage {
           this.mentionUsers.push(this.mentionMembers[i]);
           this.zone.run(() => {
             if (this.messageText.indexOf("@" + this.items[i].name) == -1) {
-              this.messageText = this.messageText + "@" + this.items[i].name +" ";
+              this.messageText = this.messageText + "@" + this.items[i].name + " ";
             }
           });
         }
@@ -182,7 +189,7 @@ export class ReplyMessagePage {
     } else {
       for (let i = 0; i < this.mentionUsers.length; i++) {
 
-        let removeStr = "@" + this.mentionUsers[i].name +" ";
+        let removeStr = "@" + this.mentionUsers[i].name + " ";
         console.log(this.messageText + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
 
         this.zone.run(() => {
@@ -218,62 +225,65 @@ export class ReplyMessagePage {
     });
   }
 
-  keyDownCheck(e){
-    this.oldMsgTextValue=this.messageText;
-    console.log("11ketdown"+this.messageText);
+  keyDownCheck(e) {
+    // e.preventDefault();
+    this.oldMsgTextValue = this.messageText;
+    console.log("11ketdown" + this.messageText);
+  }
+
+  preventFocusChange(e) {
+    // e.preventDefault();
   }
 
   valchange(e) {
-    
-        console.log("==" + e.key);
-        //console.log("=="+e.keyCode);
-        //console.log("==" + JSON.stringify(e));
-        //if (e.key != "Backspace") {   // only for ios
-        if( !(this.oldMsgTextValue.length>this.messageText.length))   // only for android
-        {
-    
-        this.zone.run(() => {
-          //this.messageText = this.messageText;
-    
-          //this.mentionMembersFilter=this.mentionMembers;
-    
-          if(this.messageText && this.messageText!="")
-          {
-            let strArray = this.messageText.trim().split(" ");
-            // Display array values on page
-            for(var i = 0; i < strArray.length; i++){
-              if(strArray[i].charAt(0)=="@" && strArray.length==(i+1)){
-                this.showMentions=true;
-                let val = strArray[i].toString().substr(1);
-                if(val.trim()!="")
-                {
-                  let tempMentions=[];
-                  for (let l = 0; l < this.mentionMembersFilter.length; l++) {
-    
-                    let tempUserName=this.mentionMembersFilter[l].name.toLowerCase().split(" ");
-                    if (this.mentionMembersFilter[l]!=undefined && this.mentionMembersFilter[l].id != this.userId && tempUserName[0]==val.toLowerCase()) {
-                      //this.showMentions=false;
-                      this.selectUser(undefined,this.mentionMembersFilter[l],true);
-                      tempMentions=this.mentionMembersFilter;
-                    }
-                    else if (this.mentionMembersFilter[l] != undefined && this.mentionMembersFilter[l].id != this.userId && this.mentionMembersFilter[l].name.toLowerCase().search(val.toLowerCase())>-1) {
-                      tempMentions.push(this.mentionMembersFilter[l]);
-                    }
+
+    console.log("==" + e.key);
+    //console.log("=="+e.keyCode);
+    //console.log("==" + JSON.stringify(e));
+    //if (e.key != "Backspace") {   // only for ios
+    if (!(this.oldMsgTextValue.length > this.messageText.length))   // only for android
+    {
+
+      this.zone.run(() => {
+        //this.messageText = this.messageText;
+
+        //this.mentionMembersFilter=this.mentionMembers;
+
+        if (this.messageText && this.messageText != "") {
+          let strArray = this.messageText.trim().split(" ");
+          // Display array values on page
+          for (var i = 0; i < strArray.length; i++) {
+            if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
+              this.showMentions = true;
+              let val = strArray[i].toString().substr(1);
+              if (val.trim() != "") {
+                let tempMentions = [];
+                for (let l = 0; l < this.mentionMembersFilter.length; l++) {
+
+                  let tempUserName = this.mentionMembersFilter[l].name.toLowerCase().split(" ");
+                  if (this.mentionMembersFilter[l] != undefined && this.mentionMembersFilter[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
+                    //this.showMentions=false;
+                    this.selectUser(undefined, this.mentionMembersFilter[l], true);
+                    tempMentions = this.mentionMembersFilter;
                   }
-                  this.mentionMembersFilter=tempMentions;
+                  else if (this.mentionMembersFilter[l] != undefined && this.mentionMembersFilter[l].id != this.userId && this.mentionMembersFilter[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
+                    tempMentions.push(this.mentionMembersFilter[l]);
+                  }
                 }
-              }
-              else{
-                this.showMentions=false;
+                this.mentionMembersFilter = tempMentions;
               }
             }
+            else {
+              this.showMentions = false;
+            }
           }
-          else{
-            this.showMentions=false;
-          }
-    
-        });
-      }
+        }
+        else {
+          this.showMentions = false;
+        }
+
+      });
+    }
   }
   ionViewDidLoad() {
     console.log("I'm alive!");
@@ -283,14 +293,14 @@ export class ReplyMessagePage {
       });
       this.platform.resume.subscribe(() => {
         console.log("resume");
-        setTimeout(() => { 
-        this.nativeStorage.getItem('notificatio_click').then(
-          click => {
-           if(click.click){
-             this.viewCtrl.dismiss('');
-           }
-          });
-        },2000);
+        setTimeout(() => {
+          this.nativeStorage.getItem('notificatio_click').then(
+            click => {
+              if (click.click) {
+                this.viewCtrl.dismiss('');
+              }
+            });
+        }, 2000);
       });
     });
   }

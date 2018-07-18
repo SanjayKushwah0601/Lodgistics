@@ -19,6 +19,7 @@ import { TranslationService } from '../../providers/translation.service';
 import { WorkOrderPage } from '../workOrder/workOrder';
 import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { TaskChecklistDetailPage } from '../taskChecklistDetail/taskChecklistDetail';
+import { UtilMethods } from '../../services/utilMethods';
 
 @Component({
   selector: 'page-feedDetail',
@@ -57,7 +58,7 @@ export class FeedDetailPage {
   public spinner = false;
   public apiInProgress = false;
 
-  constructor(public navCtrl: NavController, public _FB: FormBuilder, public commonMethod: srviceMethodsCall, private viewCtrl: ViewController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navParams: NavParams, private keyboard: Keyboard, public zone: NgZone, private sqlite: SQLite, public platform: Platform, public events: Events, public translationservice: TranslationService) {
+  constructor(public navCtrl: NavController, public _FB: FormBuilder, public commonMethod: srviceMethodsCall, private viewCtrl: ViewController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navParams: NavParams, private keyboard: Keyboard, public zone: NgZone, private sqlite: SQLite, public platform: Platform, public events: Events, public translationservice: TranslationService, private utilMethods: UtilMethods) {
 
     this.getAllMembersFromDb();
 
@@ -194,6 +195,7 @@ export class FeedDetailPage {
   }
   commentOnFeed(formData) {
     let feedCommentData = formData.comment.trim();
+    feedCommentData = this.utilMethods.nlToBr(feedCommentData);
     //feedCommentData = this.commonMethod.replaceURLWithHTMLLinks(feedCommentData);
 
     let mentionId = [];

@@ -22,7 +22,7 @@
           <ion-item class="item_sub1" (click)="(reviewMode && canUpdateReview)?addReviewComment(taskListData.id):''">
             <div class="pull-left">
               <span class="text_capital">Review Comments :</span>
-              <p class="content_text_comment">{{reviewerNotes}}</p>
+              <p class="content_text_comment" [innerHTML]="reviewerNotes"></p>
             </div>
           </ion-item>
         </ion-col>
@@ -90,7 +90,7 @@
               <ion-col col-10 (long-press)="!reviewMode?showContextOptions(j,k,item.id,item.comment):''" class="sub_items_box">
                 <span class="left_content">{{item.title}}</span>
                 <span *ngIf="item.comment">
-                  <div class="content_text">{{item.comment}}</div>
+                  <div class="content_text" [innerHTML]="item.comment"></div>
                 </span>
               </ion-col>
               <ion-col col-2 class="icon_box">

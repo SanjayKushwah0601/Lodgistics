@@ -157,8 +157,9 @@
     </button>
   </ion-buttons>
 </ion-nav>
-<!-- <ion-content class="notify-alert" *ngIf="showNotifyAlert"  (click)="manageNotification(notificationData)"><div>Test 1 content</div></ion-content> -->
-<div class="notify-alert" *ngIf="showNotifyAlert" (click)="manageNotification(notificationData)">
+
+<!-- <div class="notify-alert" *ngIf="showNotifyAlert" (click)="manageNotification(notificationData)"></div> -->
+<div class="notify-alert" *ngIf="false" (click)="manageNotification(notificationData)">
   <ion-list class="notify-alert-div" style="height:100% !important;">
     <ion-card style="height:100% !important;">
       <ion-item-sliding style="height:auto !important;">
@@ -173,7 +174,6 @@
     </ion-card>
 
   </ion-list>
-  <!-- <div>{{notificationData.message}}</div>  {{notificationData.title}}-->
 </div>
 
 <ion-content *ngIf="!showPage" class="showpage-content">

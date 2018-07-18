@@ -70,7 +70,7 @@
 
 </ion-header>
 
-<ion-content overflow-scroll="true" padding (click)="closekeyboard()" header-scroller>
+<ion-content overflow-scroll="true" padding (click)="closekeyboard()">
 
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingText="Pull to refresh"></ion-refresher-content>
@@ -323,7 +323,7 @@
             </ion-card-content>
           </span>
 
-          <span *ngIf="item.image_url!='' && item.image_width>=item.image_height">
+          <span *ngIf="item.image_url!=''">
             <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
               <table class="card-table card-table-2">
                 <tr>
@@ -347,7 +347,7 @@
                 </tr>
                 <tr>
                   <td (click)="showImage(item.image_url)">
-                    <img src="{{item.image_url}}">
+                    <img [ngClass]="item.image_width<item.image_height?'fit-img-obj':''" src="{{item.image_url}}">
                   </td>
                 </tr>
               </table>
@@ -356,7 +356,7 @@
 
 
 
-          <span *ngIf="item.image_url!='' && item.image_width<item.image_height">
+          <!-- <span *ngIf="item.image_url!='' && item.image_width<item.image_height">
             <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
               <table class="card-table">
                 <tr>
@@ -364,7 +364,7 @@
                     <img style="width:200px;height:250px;" src="{{item.image_url}}">
                   </td>
                   <td class="td-box-2">
-                    <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"  class="vertical-image-feed"></p> -->
+                    <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"  class="vertical-image-feed"></p>
                     <p *ngIf="(item.showMore == undefined || item.showMore)">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                       <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
@@ -381,7 +381,7 @@
                 </tr>
               </table>
             </ion-card-content>
-          </span>
+          </span> -->
 
 
 

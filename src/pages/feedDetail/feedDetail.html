@@ -43,7 +43,7 @@
       </span>
 
 
-      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width>=foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_url!=null && foundRepos.image_url!='null'" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
         <ion-card-content ngClass="selectable">
           <table class="card-table card-table-2">
             <tr>
@@ -54,14 +54,14 @@
             </tr>
             <tr>
               <td (load)="imageLoaded()" (click)="showImage(foundRepos.image_url)">
-                <img (load)="imageLoaded()" src="{{foundRepos.image_url}}">
+                <img [ngClass]="foundRepos.image_width<=foundRepos.image_height?'fit-img-obj':''" (load)="imageLoaded()" src="{{foundRepos.image_url}}">
               </td>
             </tr>
           </table>
         </ion-card-content>
       </span>
 
-      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width<foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+      <!-- <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width<foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
         <ion-card-content ngClass="selectable">
           <table class="card-table">
             <tr>
@@ -75,7 +75,7 @@
             </tr>
           </table>
         </ion-card-content>
-      </span>
+      </span> -->
 
       <ion-row class="card-footer">
         <ion-col>

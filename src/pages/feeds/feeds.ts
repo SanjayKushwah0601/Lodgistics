@@ -29,7 +29,6 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { SendMessagePage } from '../sendMessage/sendMessage';
 import { createFollowUpPage } from '../createFollowUp/createFollowUp';
 import { createFollowUpUrl } from '../../services/configURLs';
-import { HeaderScrollerDirective } from '../../directives/header-scroller';
 
 @Component({
   selector: 'page-feeds',
@@ -769,7 +768,6 @@ export class FeedsPage {
       allChatMentions = mentioned_user_ids;
     }
 
-    debugger
     console.log('Before: ' + val)
     let newValue = this.commonMethod.getTextValueWithNames(allChatMentions, this.members, val);
     console.log('After getTextValueWithNames: ' + newValue.text)

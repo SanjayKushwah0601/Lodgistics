@@ -35,6 +35,7 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { TaskChecklistDetailPage } from '../taskChecklistDetail/taskChecklistDetail';
 
 import 'aws-sdk/dist/aws-sdk';
+import { UtilMethods } from '../../services/utilMethods';
 const AWS = (<any>window).AWS;
 
 @Component({
@@ -118,7 +119,7 @@ export class GroupChatPage {
   public alert: any;
   public oldMsgTextValue = "";
 
-  constructor(public platform: Platform, public navCtrl: NavController, private keyboard: Keyboard, public zone: NgZone, public navParams: NavParams, public nativeStorage: NativeStorage, private sqlite: SQLite, public alertCtrl: AlertController, public commonMethod: srviceMethodsCall, public translationservice: TranslationService, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, private clipboard: Clipboard, public modalCtrl: ModalController, public events: Events, private iab: InAppBrowser) {
+  constructor(public platform: Platform, public navCtrl: NavController, private keyboard: Keyboard, public zone: NgZone, public navParams: NavParams, public nativeStorage: NativeStorage, private sqlite: SQLite, public alertCtrl: AlertController, public commonMethod: srviceMethodsCall, public translationservice: TranslationService, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, private clipboard: Clipboard, public modalCtrl: ModalController, public events: Events, private iab: InAppBrowser, private utilMethods: UtilMethods) {
 
     /* only for testing */
     this.allowWO = true;
@@ -445,6 +446,9 @@ export class GroupChatPage {
 
   sendMessage(image_url, parent_id) {
     let mentionId = [];
+    let messageText = this.textMessage.trim();
+    messageText = this.utilMethods.nlToBr(messageText);
+
     if ((this.mentionUsers.length > 0 && image_url == '') || (this.mentionUsers.length > 0 && parent_id == '')) {
       for (let i = 0; i < this.mentionUsers.length; i++) {
         mentionId.push(this.mentionUsers[i].id);
@@ -458,7 +462,6 @@ export class GroupChatPage {
       }
     }
 
-    let messageText = this.textMessage.trim();
     // messageText = this.commonMethod.replaceURLWithHTMLLinks(messageText);
 
     let objData = { 'chat_message': { message: messageText, chat_id: this.groupID, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: parent_id } };

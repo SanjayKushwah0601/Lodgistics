@@ -381,8 +381,7 @@ page-feeds {
         font-size: 1.0rem !important;
     }
     .scroll-content {
-        margin-bottom: 42px !important;
-        // margin-top: 100px !important;
+        margin-bottom: 42px !important; // margin-top: 100px !important;
         padding-left: 0% !important;
         padding-right: 0% !important;
     }
@@ -747,6 +746,11 @@ page-feeds {
         font-size: 10px !important;
         line-height: 2;
         color: gray;
+    }
+    .fit-img-obj {
+        width: 400px;
+        height: 200px;
+        object-fit: fill;
     }
     @media(max-width:749px) {
         .grid .button-ios,
