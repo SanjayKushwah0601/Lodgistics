@@ -49,9 +49,6 @@ page-sendMessage {
         color: #757575;
         background: white;
     }
-    .grid-img ion-row {
-        // border-bottom: 1px solid #DEDEDE;
-    }
     .first-grid-col {
         border-right: 1px solid #DEDEDE;
     }
@@ -568,7 +565,8 @@ page-sendMessage {
     span.selected-user span:last-child:after {
         content: "";
     }
-    .list-md>.item-block:last-child .item-inner {
+    .list-md>.item-block:last-child .item-inner,
+    .list-ios>.item-block:last-child .item-inner {
         border-bottom: none !important;
     }
     @media(max-width:749px) {

@@ -101,7 +101,7 @@
               <span *ngFor="let res of allUsers;" text-wrap>
                 <!-- <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span> -->
                 <span class="user_name">{{res.name}}</span>
-                <span class="selected-user">{{res.type=='group'?'(Group),':','}}</span>
+                <span class="selected-user">{{res.type=='group'?'(Group)':' '}}</span>
               </span>
             </ion-label>
           </ion-item>
