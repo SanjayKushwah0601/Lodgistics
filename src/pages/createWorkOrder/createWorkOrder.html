@@ -11,7 +11,7 @@
                     <ion-label>Request
                         <span class="required">*</span>
                     </ion-label>
-                    <textarea tappable rows="2" class="request" [(ngModel)]="workOrderData.descriptions"></textarea>
+                    <textarea tappable rows="2" class="request" [ngModel]="workOrderData.descriptions | removehtmltags" (ngModelChange)="workOrderData.descriptions=$event"></textarea>
                 </td>
             </tr>
             <tr>

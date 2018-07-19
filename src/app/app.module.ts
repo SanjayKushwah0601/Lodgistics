@@ -67,6 +67,7 @@ import { Market } from '@ionic-native/market';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
 import { UtilMethods } from '../services/utilMethods';
+import { RemovehtmltagsPipe } from '../pipes/removehtmltags/removehtmltags';
 
 enableProdMode();
 
@@ -126,6 +127,7 @@ export class SafeHtmlPipe implements PipeTransform {
     PressDirective,
     UpdateAppPage,
     NotificationPermissionPage,
+    RemovehtmltagsPipe,
   ],
   imports: [
     BrowserModule,
