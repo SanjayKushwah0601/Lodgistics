@@ -404,12 +404,12 @@ page-broadcastList {
         top: 0;
         left: 0;
     }
-    .close-icon {
-        font-size: 2em;
-        float: right;
-        color: red;
-        margin-top: -7px;
-    }
+    // .close-icon {
+    //     font-size: 2em;
+    //     float: right;
+    //     color: red;
+    //     margin-top: -7px;
+    // }
     .scroll_page_inner {
         height: 565px;
         overflow: scroll;
@@ -428,9 +428,9 @@ page-broadcastList {
     .page_title {
         width: 90%;
     }
-    .close-icon {
-        width: 10%;
-    }
+    // .close-icon {
+    //     width: 10%;
+    // }
     .card-ios p,
     .card-md p {
         margin-top: 0px !important;
@@ -701,10 +701,10 @@ page-broadcastList {
         }
     }
     @media only screen and (min-device-width: 320px) and (max-device-width: 533px) {
-        .close-icon {
-            font-size: 1.4em;
-            margin-top: -3px;
-        }
+        // .close-icon {
+        //     font-size: 1.4em;
+        //     margin-top: -3px;
+        // }
     }
     @media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
         .box {

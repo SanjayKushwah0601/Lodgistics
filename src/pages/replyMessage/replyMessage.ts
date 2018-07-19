@@ -1,4 +1,4 @@
-import { Component, NgZone, ViewChild } from '@angular/core';
+import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
@@ -13,7 +13,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 })
 
 export class ReplyMessagePage {
-  @ViewChild('myInput') myInput;
+  @ViewChild('test') myInput;
 
   public tempMessageData: any;
   public users: any;
@@ -30,16 +30,17 @@ export class ReplyMessagePage {
   public items = [];
   public oldMsgTextValue = "";
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage) {
-    // setTimeout(() => {
-    //   keyboard.show()
-    //   this.myInput.setFocus()
-    // }, 1000);
+  constructor(private element: ElementRef, public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage) {
+
+    setTimeout(() => {
+      this.element.nativeElement.querySelector('#textarea').focus()
+    }, 1000);
+
     this.tempMessageData = this.params.get('message');
     this.users = this.params.get('users');
     this.userId = this.params.get('userId');
     this.mentionMembers = this.params.get('mentionMembers');
-    this.keyboard.disableScroll(true);
+    // this.keyboard.disableScroll(true);
 
 
     for (let i = 0; i < this.mentionMembers.length; i++) {
@@ -57,7 +58,7 @@ export class ReplyMessagePage {
     this.mentionStr = this.commonMethod.getMentionString(allChatMentions, this.users);
     this.showSub = this.keyboard.onKeyboardShow().subscribe(data => {
       //this.keyboard.disableScroll(true);
-      this.myInput.setFocus();
+      // this.myInput.setFocus();
       console.log('keyboard is shown');
       console.log("screen height=" + data.keyboardHeight);
 
@@ -71,7 +72,7 @@ export class ReplyMessagePage {
 
     this.hideSub = this.keyboard.onKeyboardHide().subscribe(data => {
       console.log('keyboard is hide');
-      this.events.publish('hide:keyboard');
+      // this.events.publish('hide:keyboard');
       //this.classnameForFooter = "openKeyboard";
       this.marginBottom = 0;
 
@@ -82,14 +83,14 @@ export class ReplyMessagePage {
 
 
   dismiss() {
-    this.events.publish('hide:keyboard');
-    this.keyboard.close();
+    // this.events.publish('hide:keyboard');
+    // this.keyboard.close();
     this.viewCtrl.dismiss('');
   }
 
   send() {
-    this.events.publish('hide:keyboard');
-    this.keyboard.close();
+    // this.events.publish('hide:keyboard');
+    // this.keyboard.close();
     this.viewCtrl.dismiss({ msg: this.messageText.trim(), mentionUsers: this.mentionUsers });
   }
 

@@ -487,7 +487,7 @@ export class ChattingPage {
   }
 
   editGroup(res) {
-    this.navCtrl.push(AddEditGroupPage, { groupInfo: res, isEdit: true });
+    this.navCtrl.push(AddEditGroupPage, { groupInfo: res });
   }
   /* functions for footer */
   openFeedPage() {

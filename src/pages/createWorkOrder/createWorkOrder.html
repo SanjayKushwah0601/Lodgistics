@@ -44,7 +44,7 @@
                         [(ngModel)]="workOrderData.maintainable_id" placeholder=""></ion-input>
                 </td>
             </tr>
-            <tr [hidden]="workOrderData.maintainable_type=='Equipment'">
+            <tr [hidden]="workOrderData.maintainable_type=='Equipment' || workOrderData.maintainable_type=='Other'">
                 <td colspan="2">
                     <ion-label>Checklist Item</ion-label>
                     <ion-select [(ngModel)]="workOrderData.maintenance_checklist_item_id" [disabled]="!workOrderData.maintainable_id || wo_no!=''"

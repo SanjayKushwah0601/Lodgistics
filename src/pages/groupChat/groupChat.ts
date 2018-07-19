@@ -616,7 +616,7 @@ export class GroupChatPage {
   editGroup(res) {
     res.highlight_message = false;
 
-    this.navCtrl.push(AddEditGroupPage, { groupInfo: res, isEdit: true }).then(() => {
+    this.navCtrl.push(AddEditGroupPage, { groupInfo: res }).then(() => {
       // first we find the index of the current view controller:
       const index = this.viewCtrl.index;
       // then we remove it from the navigation stack
@@ -1954,7 +1954,6 @@ export class GroupChatPage {
       let modal = this.modalCtrl.create(ReplyMessagePage, { message: tempMessageData, users: this.users, userId: this.userId, mentionMembers: this.items });
 
       modal.onDidDismiss(data => {
-
         if (data.msg != "undefined" && data.msg != null && data.msg != "") {
           this.textMessage = data.msg;
           this.mentionUsers = [];
@@ -1969,7 +1968,9 @@ export class GroupChatPage {
       });
 
       this.isPopupOpen = true;
-      modal.present();
+      modal.present({
+        keyboardClose: false
+      });
     }
 
   }

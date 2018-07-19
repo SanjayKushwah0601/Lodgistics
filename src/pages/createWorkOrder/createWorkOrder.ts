@@ -225,6 +225,7 @@ export class CreateWorkOrderPage {
           if (this.commonMethod.checkNetwork()) {
             this.commonMethod.getData(getWoDataUrl + "/" + this.wo_no, accessToken).subscribe(
               data => {
+                debugger
                 let woData = data.json();
                 this.img[0] = woData.first_img_url;
                 this.img[1] = woData.second_img_url;
@@ -239,6 +240,11 @@ export class CreateWorkOrderPage {
                 this.workOrderData.maintenance_checklist_item_id = woData.maintenance_checklist_item_id;
                 this.workOrderData.closed = woData.closed;
 
+                if (this.workOrderData.maintainable_type == 'Other') {
+                  
+                  this.workOrderData.maintainable_id = woData.location_detail
+                  // this.workOrderData.other_maintainable_location = this.workOrderData.location_detail
+                }
                 // Store the initial work order status in a variable
                 this.tempWorkOrderStatus = woData.status;
                 //let foundRepos = data.json();
