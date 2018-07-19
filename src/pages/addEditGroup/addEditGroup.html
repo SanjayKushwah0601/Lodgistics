@@ -97,7 +97,7 @@
       </span>
 
       <span *ngFor="let res of users; let i=index" class="user_names">
-        <ion-item *ngIf="res.id!=groupOwnerId && res.is_system_user!='1'" [ngClass]="(res.inGroup==true || userId==res.id)?'active':(res.wasInGroup==true?'was-in-group':'')"
+        <ion-item *ngIf="res.id!=groupOwnerId && res.is_system_user!='1'" [ngClass]="(res.inGroup==true || userId==res.id)?'active':(res.wasInGroup==true && res.isEdit?'was-in-group':'')"
           (click)="userId==res.id?'':updateMember(i)">
           <ion-label class="user_name_inner">{{res.name}}
             <p>
@@ -108,6 +108,9 @@
             <img src="{{res.avatar_img_url}}" class="active">
             <span *ngIf="(res.inGroup==true || userId==res.id)" class="avatar_checkmark_box">
               <ion-icon class="avatar_checkmark" name="ios-checkmark"></ion-icon>
+            </span>
+            <span *ngIf="(res.isEdit && res.wasInGroup==true)" class="avatar_cross_box">
+              <ion-icon class="avatar_checkmark" name="ios-close"></ion-icon>
             </span>
           </ion-avatar>
         </ion-item>

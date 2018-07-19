@@ -616,7 +616,7 @@ export class GroupChatPage {
   editGroup(res) {
     res.highlight_message = false;
 
-    this.navCtrl.push(AddEditGroupPage, { groupInfo: res }).then(() => {
+    this.navCtrl.push(AddEditGroupPage, { groupInfo: res, isEdit: true }).then(() => {
       // first we find the index of the current view controller:
       const index = this.viewCtrl.index;
       // then we remove it from the navigation stack

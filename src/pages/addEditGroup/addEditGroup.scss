@@ -211,13 +211,7 @@ page-addeditgroup {
     ion-input,
     ion-textarea {
         color: #757575;
-    } // .was-in-group img {
-    //     border: 2px solid #ec1455;
-    // }
-    // .was-in-group .label-ios,
-    // .was-in-group .label-md {
-    //     color: #ec1455;
-    // }
+    }
     .back-button.show-back-button {
         margin-top: 0% !important;
     }
@@ -424,7 +418,7 @@ page-addeditgroup {
         border-radius: 50%;
         overflow: hidden;
         position: absolute;
-        top: 10px;
+        top: 11px;
         margin: 8px 16px 8px 0;
         border: 2px solid #02B9E7;
     }
@@ -432,9 +426,38 @@ page-addeditgroup {
     .avatar_checkmark_box .ion-md-checkmark:before {
         color: #02B9E7;
     }
-
-        .user_names .user_name_inner{ width: 60px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap; }
-        .user_names .designation{ width: 80px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap; }
+    .avatar_cross_box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        position: absolute;
+        top: 11px;
+        margin: 8px 16px 8px 0;
+        border: 2px solid #ef5350;
+    }
+    .avatar_cross_box .ion-ios-close:before,
+    .avatar_cross_box .ion-md-close:before {
+        color: #ef5350;
+    }
+    .user_names .user_name_inner {
+        width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .user_names .designation {
+        width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    } // .was-in-group img {
+    //     border: 2px solid #ec1455;
+    // }
+    .was-in-group .label-ios,
+    .was-in-group .label-md {
+        color: #ef5350;
+    }
     @media(max-width:749px) {
         .label-ios[stacked],
         .label-md[stacked] {

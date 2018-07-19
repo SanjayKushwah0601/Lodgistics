@@ -137,6 +137,9 @@ export class AddEditGroupPage {
                           for (let j = 0; j < this.users.length; j++) {
                             if (this.groupInfo.users[i].id == this.users[j].id) {
                               this.users[j].inGroup = true;
+                              if (this.navParams.get('isEdit')) {
+                                this.users[j].isEdit = true;
+                              }
                             }
                             if (this.groupInfo.users[i].id == this.groupInfo.owner_id) {
                               this.groupCreatorName = this.groupInfo.users[i].name;
