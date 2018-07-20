@@ -37,7 +37,7 @@ page-teamListing {
         white-space: normal;
     }
     .scroll-content {
-        margin-bottom: 42px !important;
+        margin-bottom: 0px !important;
     }
     ion-footer {
         border-top: 1px solid #E5E5E5;
@@ -116,41 +116,46 @@ page-teamListing {
     .plus_btn:active {
         opacity: 0.5;
     }
-    @media(max-width:749px) {}
-    //iPhone 5 & 5S in portrait & landscape
-    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-        .scroll-content {
-            margin-bottom: 0px !important;
-        }
+    .list-md .item-block .item-inner {
+        border-bottom: none;
     }
-    //iPhone 6 in portrait & landscape
-    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
-        .scroll-content {
-            margin-bottom: 0px !important;
-        }
-    }
-    //iPhone 6+
-    @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
-        .scroll-content {
-            margin-bottom: 0px !important;
-        }
-    }
-    //iPhone X
-    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-        .scroll-content {
-            margin-bottom: 80px !important;
-        }
-    }
-    //iPhone 8
-    @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
-        .scroll-content {
-            margin-bottom: 0px !important;
-        }
-    }
-    //iPhone 8 Plus
-    @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
-        .scroll-content {
-            margin-bottom: 0px !important;
-        }
-    }
+    .team-list {
+        border-bottom: 1px solid #dedede;
+    } // @media(max-width:749px) {}
+    // //iPhone 5 & 5S in portrait & landscape
+    // @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    //     .scroll-content {
+    //         margin-bottom: 0px !important;
+    //     }
+    // }
+    // //iPhone 6 in portrait & landscape
+    // @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+    //     .scroll-content {
+    //         margin-bottom: 0px !important;
+    //     }
+    // }
+    // //iPhone 6+
+    // @media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 3) and (-webkit-device-pixel-ratio: 3) {
+    //     .scroll-content {
+    //         margin-bottom: 0px !important;
+    //     }
+    // }
+    // //iPhone X
+    // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+    //     .scroll-content {
+    //         margin-bottom: 80px !important;
+    //     }
+    // }
+    // //iPhone 8
+    // @media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
+    //     .scroll-content {
+    //         margin-bottom: 0px !important;
+    //     }
+    // }
+    // //iPhone 8 Plus
+    // @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
+    //     .scroll-content {
+    //         margin-bottom: 0px !important;
+    //     }
+    // }
 }
