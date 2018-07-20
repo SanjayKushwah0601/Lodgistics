@@ -102,7 +102,7 @@ page-sendMessage {
         padding: 0px;
         border-radius: 4px;
         margin-bottom: 0px;
-        margin-top: 0px;
+        margin-top: 25px;
         color: #000;
         font-family: 'open_sanslight';
         font-size: 32px;
@@ -568,6 +568,9 @@ page-sendMessage {
     .list-md>.item-block:last-child .item-inner,
     .list-ios>.item-block:last-child .item-inner {
         border-bottom: none !important;
+    }
+    .selected-user {
+        border-bottom: 1px solid lightgrey;
     }
     @media(max-width:749px) {
         textarea {

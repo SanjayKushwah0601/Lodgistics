@@ -16,6 +16,7 @@
     </ion-row>
 
     <!-- </ion-navbar> -->
+    
 
     <ion-grid class="grid-img">
       <!-- <ion-row>
@@ -23,6 +24,27 @@
             <ion-label class="select_label">SELECT <span (click)="selectGroups()">GROUP</span> / <span (click)="selectIndividual()">USER</span></ion-label>
         </ion-col>
     </ion-row> -->
+    <!-- <ion-grid [ngClass]="allUsers.length>0 && allUsers[0].type == 'private' ? 'selected-user' : ''"> -->
+      <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
+        <ion-col col-19>
+          <ion-list no-lines>
+            <ion-item no-lines>
+              <!-- <ion-label class="to_label">To:</ion-label> -->
+              <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
+                <span *ngFor="let res of allUsers;" text-wrap>
+                  <!-- <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span> -->
+                  <span class="user_name">{{res.name}}</span>
+                  <span class="selected-user">{{res.type=='group'?'(Group)':' '}}</span>
+                </span>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        <ion-col col-3>
+          <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
+        </ion-col>
+      </ion-row>
+    <!-- </ion-grid> -->
 
 
       <ion-row class="user_name_box" *ngIf="!allUsers.length>0 || allUsers[0].type == 'private'">
@@ -73,7 +95,7 @@
 
 </ion-header>
 
-<ion-content padding no-bounce>
+<ion-content padding no-bounce overflow-scroll="false">
 
   <ion-list *ngIf="showList">
     <span class="autosuggestion_list">
@@ -91,27 +113,6 @@
   </ion-list>
   <!-- <ion-label style="min-height:25px;margin:0px;" (click)="closekeyboard()"></ion-label> -->
 
-  <ion-grid style="border-bottom: 1px solid lightgrey;">
-    <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
-      <ion-col col-19>
-        <ion-list no-lines>
-          <ion-item no-lines>
-            <!-- <ion-label class="to_label">To:</ion-label> -->
-            <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
-              <span *ngFor="let res of allUsers;" text-wrap>
-                <!-- <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span> -->
-                <span class="user_name">{{res.name}}</span>
-                <span class="selected-user">{{res.type=='group'?'(Group)':' '}}</span>
-              </span>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col col-3>
-        <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
   <div class="message-box" style="height: 100%;padding-top:0%;">
 
