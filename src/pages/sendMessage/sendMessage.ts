@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
-import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController } from 'ionic-angular';
+import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController, Content } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
@@ -21,6 +21,7 @@ import { removeMessageConfirmMsg } from '../../providers/appConfig';
 export class SendMessagePage {
   //@ViewChild('myInput') myInput: ElementRef;
   @ViewChild('myInput') myInput;
+  @ViewChild(Content) content: Content;
 
   public messageText = "";
   public base64Image = "";
@@ -68,6 +69,7 @@ export class SendMessagePage {
         } else {
           this.classnameForFooter = "openKeyboard";
         }
+        this.resize()
         //this.deviceHeight = (platform.height() - (parseInt(data.keyboardHeight) + parseInt('234')));
         //console.log("deviceHeight = " + this.deviceHeight);
 
@@ -82,6 +84,7 @@ export class SendMessagePage {
         this.isKeyboardOpen = false;
         //this.deviceHeight = (platform.height() - 150);
         this.classnameForFooter = "closeKeyboard";
+        this.resize()
       });
     });
 
@@ -90,10 +93,7 @@ export class SendMessagePage {
   }
 
   resize() {
-    // var element = this.myInput['_elementRef'].nativeElement.getElementsByClassName("text-input")[0];
-    // var scrollHeight = element.scrollHeight;
-    // element.style.height = scrollHeight + 'px';
-    // this.myInput['_elementRef'].nativeElement.style.height = (scrollHeight + 16) + 'px';
+    this.content.resize();
   }
 
   dismiss() {
@@ -457,6 +457,7 @@ export class SendMessagePage {
             }
             this.mentionMembers = tempUsers;
           }
+          this.resize()
         }
       });
     }
@@ -465,6 +466,7 @@ export class SendMessagePage {
 
   resetSelection() {
 
+    let thisObj = this;
     if (this.mentionUsers.length > 0) {
       let alert = this.alertCtrl.create({
         message: removeMessageConfirmMsg,
@@ -485,6 +487,7 @@ export class SendMessagePage {
               this.allUsers = [];
               this.mentionMembers = [];
               this.mentionUsers = [];
+              this.resize()
             }
           }
         ]
@@ -494,6 +497,7 @@ export class SendMessagePage {
       this.allUsers = [];
       this.mentionMembers = [];
       this.mentionUsers = [];
+      this.resize()
     }
 
   }
@@ -1007,6 +1011,8 @@ export class SendMessagePage {
     }
 
     this.removeSearch();
+
+    this.resize()
     this.focusInput();
   }
 

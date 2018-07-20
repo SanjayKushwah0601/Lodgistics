@@ -6,7 +6,7 @@
         <ion-icon (click)="dismiss()" name="arrow-round-back" class="back_arrow"></ion-icon>
       </ion-col>
       <ion-col col-9 class="header_items">
-        <ion-title class="page_title" (click)="closekeyboard()">Create Message</ion-title>
+        <ion-title class="page_title" (click)="resize()">Create Message</ion-title>
       </ion-col>
       <ion-col col-2 class="header_items send_btn_col">
         <button [disabled]="!messageText || !allUsers.length" (click)="allUsers.length>=2?createGroup():send()" ion-button class="msg_send_btn">

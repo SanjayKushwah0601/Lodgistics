@@ -476,7 +476,7 @@ page-sendMessage {
     }
     .autosuggestion_list {
         width: 100%;
-        margin-top: 3%;
+        margin-top: -4%;
         position: fixed;
         z-index: 50;
         background: #fff;
@@ -556,7 +556,7 @@ page-sendMessage {
         min-height: 56px !important;
     }
     ion-content .scroll-content {
-        margin-top: 90px !important;
+        // margin-top: 90px !important;
     }
     span.selected-user span:after {
         content: ", ";

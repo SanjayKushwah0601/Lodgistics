@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { NotificationSettingsPage } from '../notificationSettings/notificationSettings';
 
 /**
  * Generated class for the UpdateAppPage page.
@@ -16,7 +17,8 @@ export class NotificationPermissionPage {
 
   isForceUpdate: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, private nativeStorage: NativeStorage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events,
+    private nativeStorage: NativeStorage, private modalCtrl: ModalController) {
     this.nativeStorage.setItem('show_notification_permission', false)
       .then(resp => {
       }, error => {
@@ -40,6 +42,15 @@ export class NotificationPermissionPage {
   private updateApp() {
     this.events.publish('update:enableNotificationsStatus');
     this.navCtrl.pop();
+    this.notificationSettings()
+  }
+
+  notificationSettings() {
+    let modal = this.modalCtrl.create(NotificationSettingsPage);
+    // modal.onDidDismiss(data => {
+    //   this.closekeyboard();
+    // });
+    modal.present();
   }
 
 }
