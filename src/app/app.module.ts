@@ -68,6 +68,9 @@ import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
 import { UtilMethods } from '../services/utilMethods';
 import { RemovehtmltagsPipe } from '../pipes/removehtmltags/removehtmltags';
+import { FeedCreatedSuccessfullyPage } from '../pages/feedCreatedSuccessfully/feedCreatedSuccessfully';
+import { UserListPopoverPage } from '../pages/user-list-popover/user-list-popover';
+import { MessageSentSuccessfullyPage } from '../pages/messageSentSuccessfully/messageSentSuccessfully';
 
 enableProdMode();
 
@@ -128,6 +131,9 @@ export class SafeHtmlPipe implements PipeTransform {
     UpdateAppPage,
     NotificationPermissionPage,
     RemovehtmltagsPipe,
+    FeedCreatedSuccessfullyPage,
+    UserListPopoverPage,
+    MessageSentSuccessfullyPage
   ],
   imports: [
     BrowserModule,
@@ -184,7 +190,10 @@ export class SafeHtmlPipe implements PipeTransform {
     NewUserPage,
     createFollowUpPage,
     UpdateAppPage,
-    NotificationPermissionPage
+    NotificationPermissionPage,
+    FeedCreatedSuccessfullyPage,
+    UserListPopoverPage,
+    MessageSentSuccessfullyPage
   ],
   providers: [
     StatusBar,

@@ -1,0 +1,22 @@
+<div id="page-bg"></div>
+<ion-content padding no-bounce disable-scroll>
+
+  <div>
+    <div class="circle">
+      <ion-icon name="ios-checkmark"></ion-icon>
+    </div>
+    <div class="text_title">
+      DONE
+    </div>
+    <div class="text_title_sub_text">
+      Message sent to {{name}}
+    </div>
+
+    <div class="text_title_sub_text redirect-msg">
+      Taking you to in
+      <span>{{maxTime}}</span>
+    </div>
+
+  </div>
+  <button ion-button round (click)="dismiss(false)" class="action_btn">CREATE ANOTHER MESSAGE</button>
+</ion-content>

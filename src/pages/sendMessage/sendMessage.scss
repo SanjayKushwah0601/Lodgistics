@@ -222,7 +222,7 @@ page-sendMessage {
         margin-left: 10px;
         background-color: #fff;
         margin: 0px;
-        padding: 10px 0px;
+        padding: 10px 0px 5px 0px;
     }
     ion-select {
         font-size: 14px;
@@ -525,11 +525,12 @@ page-sendMessage {
         border-bottom: 1px solid #DEDEDE;
     }
     .remove_icon {
-        font-size: 2.2em;
+        font-size: 2.5em;
         float: right;
-        margin-right: 15%;
-        margin-top: 12%;
-        color: #BDBDBD;
+        margin-right: 0px;
+        margin-top: 0px;
+        color: gray;
+        padding: 8px 7px 5px 7px;
     }
     .first_row {
         border-top: 0.55px solid #c8c7cc;
@@ -571,6 +572,23 @@ page-sendMessage {
     }
     .selected-user {
         border-bottom: 1px solid lightgrey;
+    }
+    .show-more {
+        float: right;
+        padding: 7px 0px 0px 0px;
+        color: black;
+    }
+    .long-text {
+        display: block;
+        display: -webkit-box;
+        max-width: 100%;
+        max-height: 50px;
+        -webkit-line-clamp: 2;
+        /* autoprefixer: off */
+        -webkit-box-orient: vertical;
+        /* autoprefixer: on */
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     @media(max-width:749px) {
         textarea {

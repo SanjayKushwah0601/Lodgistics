@@ -509,10 +509,12 @@ page-groupchat {
     .img_left {
         float: left;
         width: 100%;
+        object-fit: cover;
     }
     .img_right {
         float: right;
         width: 100%;
+        object-fit: cover;
     }
     .work-order-badge {
         padding: 0px 3px;

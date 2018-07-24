@@ -617,6 +617,7 @@ ion-footer ion-col.active {
     position: relative;
     min-height: 50px;
     min-width: 50px;
+    object-fit: cover;
 }
 
 .image_upload_alert.alert-top {

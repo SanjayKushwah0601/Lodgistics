@@ -496,7 +496,7 @@ page-feedDetail {
     .fit-img-obj {
         width: 400px;
         height: 200px;
-        object-fit: fill;
+        object-fit: cover;
     }
     @keyframes colorchange {
         0% {

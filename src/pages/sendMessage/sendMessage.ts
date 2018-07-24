@@ -1,7 +1,5 @@
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
-import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController, Content } from 'ionic-angular';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Validator } from '../../validator';
+import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController, Content, PopoverController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { Keyboard } from '@ionic-native/keyboard';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -11,6 +9,8 @@ import { File } from '@ionic-native/file';
 import { getAwsSignedUrl, getPrivateOnlyUrl, getGroupsOnlyUrl, sendMessageUrl, addEditGroupUrl } from '../../services/configURLs';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { removeMessageConfirmMsg } from '../../providers/appConfig';
+import { UserListPopoverPage } from '../user-list-popover/user-list-popover';
+import { MessageSentSuccessfullyPage } from '../messageSentSuccessfully/messageSentSuccessfully';
 
 @Component({
   selector: 'page-sendMessage',
@@ -44,13 +44,13 @@ export class SendMessagePage {
   public filterUser: any;
   public filterGroup: any;
   public searchText = "";
-  private groupInfo: any;
   private keyboardHeight = 0;
+  private isShowMore: boolean = false;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone,
-    modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage,
+    private modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage,
     public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File,
-    public alertCtrl: AlertController, private sqlite: SQLite) {
+    public alertCtrl: AlertController, private sqlite: SQLite, public popoverCtrl: PopoverController) {
 
     this.keyboard.disableScroll(true);
     this.messageText = '';
@@ -111,7 +111,7 @@ export class SendMessagePage {
       this.sendMessage('');
     }
     this.keyboard.close();
-    this.viewCtrl.dismiss();
+    // this.viewCtrl.dismiss();
   }
 
   /**
@@ -186,10 +186,10 @@ export class SendMessagePage {
               };
 
               // Send message to newly group
-              this.sendMsgToUser(chatObj);
+              this.sendMsgToUser(chatObj, groupName);
               this.events.publish('hide:keyboard');
               this.keyboard.close();
-              this.viewCtrl.dismiss();
+              // this.viewCtrl.dismiss();
             },
             err => {
               this.commonMethod.hideLoader();
@@ -425,41 +425,43 @@ export class SendMessagePage {
       let user_id = this.foundRepos.privates[i].target_user.id;
       let userInfo = this.foundRepos.privates[i].target_user;
 
-      actionSheet.addButton({
-        text: name, handler: () => {
-          if (this.allUsers && this.allUsers.length > 0) {
-            if (this.allUsers[0].type != 'private') {
-              this.allUsers = []
-              this.mentionUsers = [];
-              this.mentionMembers = []
-            }
-            if (!this.allUsers.some(el => { return el.user_id === user_id; })) {
-              this.allUsers.push({ type: 'private', id: id, name: name, user_id: user_id })
+      if (!this.allUsers.some(el => { return el.user_id === user_id; })) {
+        actionSheet.addButton({
+          text: name, handler: () => {
+            if (this.allUsers && this.allUsers.length > 0) {
+              if (this.allUsers[0].type != 'private') {
+                this.allUsers = []
+                this.mentionUsers = [];
+                this.mentionMembers = []
+              }
+              if (!this.allUsers.some(el => { return el.user_id === user_id; })) {
+                this.allUsers.push({ type: 'private', id: id, name: name, user_id: user_id })
 
+                for (let j = 0; j < this.dbMembers.length; j++) {
+                  if (userInfo.id == this.dbMembers[j].id) {
+                    userInfo.avatar.url = this.dbMembers[j].image;
+                    this.mentionMembers.push(userInfo);
+                  }
+                }
+              }
+
+            } else {
+              this.mentionUsers = [];
+              this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
+
+              let tempUsers = [];
               for (let j = 0; j < this.dbMembers.length; j++) {
                 if (userInfo.id == this.dbMembers[j].id) {
                   userInfo.avatar.url = this.dbMembers[j].image;
-                  this.mentionMembers.push(userInfo);
+                  tempUsers.push(userInfo);
                 }
               }
+              this.mentionMembers = tempUsers;
             }
-
-          } else {
-            this.mentionUsers = [];
-            this.allUsers = [{ type: 'private', id: id, name: name, user_id: user_id }];
-
-            let tempUsers = [];
-            for (let j = 0; j < this.dbMembers.length; j++) {
-              if (userInfo.id == this.dbMembers[j].id) {
-                userInfo.avatar.url = this.dbMembers[j].image;
-                tempUsers.push(userInfo);
-              }
-            }
-            this.mentionMembers = tempUsers;
+            this.resize()
           }
-          this.resize()
-        }
-      });
+        });
+      }
     }
     actionSheet.present();
   }
@@ -487,6 +489,7 @@ export class SendMessagePage {
               this.allUsers = [];
               this.mentionMembers = [];
               this.mentionUsers = [];
+              this.isShowMore = false
               this.resize()
             }
           }
@@ -497,6 +500,7 @@ export class SendMessagePage {
       this.allUsers = [];
       this.mentionMembers = [];
       this.mentionUsers = [];
+      this.isShowMore = false
       this.resize()
     }
 
@@ -645,7 +649,7 @@ export class SendMessagePage {
               mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: ''
             }
           };
-          this.sendMsgToUser(objData);
+          this.sendMsgToUser(objData, this.allUsers[i].name);
         } else {
           let objData = {
             'chat_message': {
@@ -653,7 +657,7 @@ export class SendMessagePage {
               image_url: image_url, responding_to_chat_message_id: ''
             }
           };
-          this.createChatChanel(objData, this.allUsers[i].user_id);
+          this.createChatChanel(objData, this.allUsers[i].user_id, this.allUsers[i].name);
         }
       }
     }
@@ -663,13 +667,36 @@ export class SendMessagePage {
 
   }
 
-  sendMsgToUser(objData) {
+  successMessage(name: string) {
+    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, { name: name });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      if (data.redirect) {
+        this.dismiss()
+      } else {
+        let modal = this.modalCtrl.create(SendMessagePage);
+        modal.onDidDismiss(data => {
+          this.closekeyboard();
+        });
+        modal.present({
+          animate: false
+        });
+        setTimeout(() => {
+          this.dismiss()
+        }, 300)
+      }
+    });
+    modal.present();
+  }
+
+  sendMsgToUser(objData, name) {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           this.commonMethod.postDataWithoutLoder(sendMessageUrl, objData, accessToken).subscribe(
             data => {
               console.log(data.json());
+              this.successMessage(name)
             },
             err => {
               console.error("Error : " + err);
@@ -691,7 +718,7 @@ export class SendMessagePage {
     );
   }
 
-  createChatChanel(objData, user_id) {
+  createChatChanel(objData, user_id, name) {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -707,7 +734,7 @@ export class SendMessagePage {
             data => {
               let chanelCreateData = data.json();
               objData.chat_message.chat_id = chanelCreateData.id;
-              this.sendMsgToUser(objData);
+              this.sendMsgToUser(objData, name);
             },
             err => {
               this.commonMethod.hideLoader();
@@ -940,10 +967,25 @@ export class SendMessagePage {
     }
   }
 
+  showMore(isShowMore: boolean) {
+    this.isShowMore = isShowMore
+  }
+
+  presentPopover(myEvent, isShowMore: boolean) {
+    // this.isShowMore = isShowMore
+    let popover = this.popoverCtrl.create(UserListPopoverPage, {
+      userList: this.allUsers
+    });
+    popover.present({
+      ev: myEvent
+    });
+    popover.onDidDismiss(() => {
+      this.isShowMore = !isShowMore
+    })
+  }
+
   getUsers() {
     this.showList = true;
-    //console.log(this.foundRepos.groups.length);
-    //console.log(this.foundRepos.privates.length);
     if (!this.allUsers || this.allUsers.length == 0) {
       this.filterGroup = this.getFilteredList(this.foundRepos.groups);
       this.filterUser = this.getFilteredList(this.foundRepos.privates);
@@ -953,8 +995,8 @@ export class SendMessagePage {
     } else {
       this.filterGroup = this.getFilteredList(this.foundRepos.groups);
       this.filterUser = []
+      this.showList = false;
     }
-
   }
 
   getFilteredList(data) {
