@@ -226,7 +226,7 @@ export class GroupChatPage {
 
         }
         else {
-        //  sqlQuery = "SELECT members.*,user_mentions.total,chat_group_users.created_at as joined_date FROM members LEFT JOIN user_mentions on user_mentions.user_id=members.user_id AND type='group' AND type_id='2' INNER JOIN chat_group_users ON chat_group_users.user_id=members.user_id WHERE chat_group_users.group_id= '" + this.groupID + "' ORDER BY user_mentions.total DESC, members.name ASC";
+          //  sqlQuery = "SELECT members.*,user_mentions.total,chat_group_users.created_at as joined_date FROM members LEFT JOIN user_mentions on user_mentions.user_id=members.user_id AND type='group' AND type_id='2' INNER JOIN chat_group_users ON chat_group_users.user_id=members.user_id WHERE chat_group_users.group_id= '" + this.groupID + "' ORDER BY user_mentions.total DESC, members.name ASC";
           sqlQuery1 = "SELECT members.*,user_mentions.total,chat_group_users.created_at as joined_date FROM members LEFT JOIN user_mentions on user_mentions.user_id=members.user_id AND type='group' AND type_id='2' INNER JOIN chat_group_users ON chat_group_users.user_id=members.user_id WHERE chat_group_users.group_id= '" + this.groupID + "' ORDER BY chat_group_users.created_at ASC";
         }
 
@@ -245,7 +245,7 @@ export class GroupChatPage {
                 "is_system_user": allMembers.rows.item(i).is_system_user,
                 "total": allMembers.rows.item(i).total
               };
-             console.log("lod log 123"+JSON.stringify(tempUserInfo));
+              console.log("lod log 123" + JSON.stringify(tempUserInfo));
               this.addedUsers.push(tempUserInfo);
             }
           }
@@ -594,23 +594,23 @@ export class GroupChatPage {
         name: 'data.db',
         location: 'default'
       }).then((db: SQLiteObject) => {
-      let emptyText = "";
-      let queryStrt = "";
-     
-      queryStrt = "INSERT INTO chat_messages (id, sender_id, hotel_token, message, image, target_id, type, deleted_at, created_at, updated_at, read_status, mentioned_user_ids, parent_id,room_number,room_id) VALUES ('";
-      queryStrt += res.id + "','" + res.sender_id + "','','";
-      queryStrt += res.message.replace(/'/g, "&#39;") + "','";
-      queryStrt += (res.image_url && res.image_url != null && res.image_url != 'null') ? res.image_url : emptyText;
-      queryStrt += "','" + this.groupID + "','" + this.messageType + "','','" + res.created_at + "','','" + res.read;
-      queryStrt += "','" + res.mentioned_user_ids.toString() + "','" + res.responding_to_chat_message_id + "','" + res.room_number + "','" + res.room_id + "')";
-      //console.log("=="+queryStrt);  
-      db.executeSql(queryStrt, {}).then((data1) => {
-        console.log("MESSAGE INSERT SUCCESS : on server" + JSON.stringify(data1));
-      }, (error1) => {
-        console.log("MESSAGE INSERT ERROR: " + JSON.stringify(error1));
-      });
+        let emptyText = "";
+        let queryStrt = "";
 
-    });
+        queryStrt = "INSERT INTO chat_messages (id, sender_id, hotel_token, message, image, target_id, type, deleted_at, created_at, updated_at, read_status, mentioned_user_ids, parent_id,room_number,room_id) VALUES ('";
+        queryStrt += res.id + "','" + res.sender_id + "','','";
+        queryStrt += res.message.replace(/'/g, "&#39;") + "','";
+        queryStrt += (res.image_url && res.image_url != null && res.image_url != 'null') ? res.image_url : emptyText;
+        queryStrt += "','" + this.groupID + "','" + this.messageType + "','','" + res.created_at + "','','" + res.read;
+        queryStrt += "','" + res.mentioned_user_ids.toString() + "','" + res.responding_to_chat_message_id + "','" + res.room_number + "','" + res.room_id + "')";
+        //console.log("=="+queryStrt);  
+        db.executeSql(queryStrt, {}).then((data1) => {
+          console.log("MESSAGE INSERT SUCCESS : on server" + JSON.stringify(data1));
+        }, (error1) => {
+          console.log("MESSAGE INSERT ERROR: " + JSON.stringify(error1));
+        });
+
+      });
       this.sendStatus([readIds]);
       readIds = '';
 
@@ -882,7 +882,7 @@ export class GroupChatPage {
 
             },
             err => {
-              this.filterDate.setDate(this.filterDate.getDate() +1);
+              this.filterDate.setDate(this.filterDate.getDate() + 1);
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -893,7 +893,7 @@ export class GroupChatPage {
 
         }
         else {
-          this.filterDate.setDate(this.filterDate.getDate() +1);
+          this.filterDate.setDate(this.filterDate.getDate() + 1);
 
           this.commonMethod.showNetworkError();
         }
@@ -968,10 +968,10 @@ export class GroupChatPage {
             }
 
             for (let j = this.addedUsers.length - 1; j >= 0; j--) {
-console.log("lod log" +allGroupMessages.rows.item(i).sender_id+"   "+this.addedUsers[j].id );
+              console.log("lod log" + allGroupMessages.rows.item(i).sender_id + "   " + this.addedUsers[j].id);
               if (this.addedUsers[j].id == allGroupMessages.rows.item(i).sender_id) {
                 chatUserData = this.addedUsers[j];
-                console.log("lod log" +JSON.stringify(this.addedUsers[j]));
+                console.log("lod log" + JSON.stringify(this.addedUsers[j]));
 
               }
               //if (this.addedUsers[j].id == allGroupMessages.rows.item(i).sender_id) {
@@ -1014,7 +1014,7 @@ console.log("lod log" +allGroupMessages.rows.item(i).sender_id+"   "+this.addedU
               }
             }
             let dateGroup = "";
-            console.log("lod log" +JSON.stringify(chatUserData ));
+            console.log("lod log" + JSON.stringify(chatUserData));
             dateGroup = allGroupMessages.rows.item(i).created_at;
             let w = this.device_width / 100 * 58;
 
@@ -1059,7 +1059,7 @@ console.log("lod log" +allGroupMessages.rows.item(i).sender_id+"   "+this.addedU
               }
             }
             woUserDetail = woUserDetail;
-console.log("userInfo lod log 1"+chatUserData);
+            console.log("userInfo lod log 1" + chatUserData);
             let readStatus = allGroupMessages.rows.item(i).read_status ? 3 : 1;
             let tempData = {
               "read_status": readStatus,
@@ -1691,33 +1691,33 @@ console.log("userInfo lod log 1"+chatUserData);
         // this.navCtrl.pop();
         this.nativeStorage.getItem("lastPage")
           .then(
-          pageDetail => {
-            if (pageDetail.pageName) {
-              // if (pageDetail.index) {
-              //   if(pageDetail.index!=-1){
-              //   this.navCtrl.popTo(pageDetail.index);
-              //   }else{
-              //     this.navCtrl.setRoot(FeedsPage);
-              //   }
-              // } else 
+            pageDetail => {
+              if (pageDetail.pageName) {
+                // if (pageDetail.index) {
+                //   if(pageDetail.index!=-1){
+                //   this.navCtrl.popTo(pageDetail.index);
+                //   }else{
+                //     this.navCtrl.setRoot(FeedsPage);
+                //   }
+                // } else 
 
-              if (pageDetail.pageName == MyMentionPage.name) {
-                this.navCtrl.setRoot(MyMentionPage);
-              } else if (pageDetail.pageName == FeedsPage.name) {
-                this.navCtrl.setRoot(FeedsPage);
-              } else if (pageDetail.pageName == ProfilePage.name) {
-                //this.navCtrl.setRoot(ProfilePage);
-                this.navCtrl.pop({});
-              } else if (pageDetail.pageName == CreateFeedsPage.name) {
-                this.navCtrl.push(CreateFeedsPage);
-              } else {
+                if (pageDetail.pageName == MyMentionPage.name) {
+                  this.navCtrl.setRoot(MyMentionPage);
+                } else if (pageDetail.pageName == FeedsPage.name) {
+                  this.navCtrl.setRoot(FeedsPage);
+                } else if (pageDetail.pageName == ProfilePage.name) {
+                  //this.navCtrl.setRoot(ProfilePage);
+                  this.navCtrl.pop({});
+                } else if (pageDetail.pageName == CreateFeedsPage.name) {
+                  this.navCtrl.push(CreateFeedsPage);
+                } else {
+                  this.navCtrl.setRoot(ChattingPage);
+                }
+              }
+              else {
                 this.navCtrl.setRoot(ChattingPage);
               }
-            }
-            else {
-              this.navCtrl.setRoot(ChattingPage);
-            }
-          }),
+            }),
           error => {
             this.navCtrl.setRoot(ChattingPage);
           };
@@ -2093,32 +2093,32 @@ console.log("userInfo lod log 1"+chatUserData);
                     name: 'data.db',
                     location: 'default'
                   }).then((db: SQLiteObject) => {
-                        let woStatus = (allData[i].work_order != null && allData[i].work_order != 'null') ? allData[i].work_order.status : '';
-                        //let woStatus= (obj[i].work_order!=null && obj[i].work_order!='null')?obj[i].work_order.status:'';
-                        let workOrderClosedByUserId = (allData[i].work_order != null && allData[i].work_order != 'null') ? (allData[i].work_order.closed_by_user_id > 0 ? allData[i].work_order.closed_by_user_id : 0) : 0;
-                        let workOrderClosedAt = (allData[i].work_order != null && allData[i].work_order != 'null') ? allData[i].work_order.created_at : '';
-                        let workOrderLocationDetail = (allData[i].work_order != null && allData[i].work_order != 'null' && allData[i].work_order.location_detail != undefined) ? allData[i].work_order.location_detail.replace(/'/g, "&#39;") : '';
-                        let workOrderDescription = (allData[i].work_order != null && allData[i].work_order != 'null' && allData[i].work_order.description != undefined && allData[i].work_order.description != null) ? allData[i].work_order.description.replace(/'/g, "&#39;") : '';
+                    let woStatus = (allData[i].work_order != null && allData[i].work_order != 'null') ? allData[i].work_order.status : '';
+                    //let woStatus= (obj[i].work_order!=null && obj[i].work_order!='null')?obj[i].work_order.status:'';
+                    let workOrderClosedByUserId = (allData[i].work_order != null && allData[i].work_order != 'null') ? (allData[i].work_order.closed_by_user_id > 0 ? allData[i].work_order.closed_by_user_id : 0) : 0;
+                    let workOrderClosedAt = (allData[i].work_order != null && allData[i].work_order != 'null') ? allData[i].work_order.created_at : '';
+                    let workOrderLocationDetail = (allData[i].work_order != null && allData[i].work_order != 'null' && allData[i].work_order.location_detail != undefined) ? allData[i].work_order.location_detail.replace(/'/g, "&#39;") : '';
+                    let workOrderDescription = (allData[i].work_order != null && allData[i].work_order != 'null' && allData[i].work_order.description != undefined && allData[i].work_order.description != null) ? allData[i].work_order.description.replace(/'/g, "&#39;") : '';
 
-                        let emptyText = "";
-                        let queryStrt = "";
-                        queryStrt = "INSERT INTO chat_messages (id, sender_id, hotel_token, message, image, target_id, type, deleted_at, created_at, updated_at, read_status, mentioned_user_ids, parent_id, work_order_id, work_order_url, work_order_status, work_order_closed_by_user_id, work_order_closed_at, work_order_location_detail, work_order_description,room_number,room_id) VALUES ('";
-                        queryStrt += allData[i].id + "','" + allData[i].sender_id + "','','";
-                        queryStrt += allData[i].message.replace(/'/g, "&#39;") + "','";
-                        queryStrt += (allData[i].image_url && allData[i].image_url != null && allData[i].image_url != 'null') ? allData[i].image_url : emptyText;
-                        queryStrt += "','" + this.groupID + "','" + this.messageType + "','','" + allData[i].created_at + "','','" + allData[i].read;
-                        queryStrt += "','" + allData[i].mentioned_user_ids.toString() + "','" + allData[i].responding_to_chat_message_id + "','" + allData[i].work_order_id + "','" + allData[i].work_order_url + "','" + woStatus + "'," + workOrderClosedByUserId + ",'" + workOrderClosedAt + "','" + workOrderLocationDetail + "','" + workOrderDescription + "','" + allData[i].room_number + "','" + allData[i].room_id + "')";
-                        //console.log("=="+queryStrt);
-                        db.executeSql(queryStrt, {}).then((data1) => {
-                          console.log("MESSAGE INSERTED: New message" + JSON.stringify(data1));
-                          
-                        }, (error1) => {
-                          console.log("MESSAGE INSERT ERROR: " + JSON.stringify(error1));
-                        });
-                     
+                    let emptyText = "";
+                    let queryStrt = "";
+                    queryStrt = "INSERT INTO chat_messages (id, sender_id, hotel_token, message, image, target_id, type, deleted_at, created_at, updated_at, read_status, mentioned_user_ids, parent_id, work_order_id, work_order_url, work_order_status, work_order_closed_by_user_id, work_order_closed_at, work_order_location_detail, work_order_description,room_number,room_id) VALUES ('";
+                    queryStrt += allData[i].id + "','" + allData[i].sender_id + "','','";
+                    queryStrt += allData[i].message.replace(/'/g, "&#39;") + "','";
+                    queryStrt += (allData[i].image_url && allData[i].image_url != null && allData[i].image_url != 'null') ? allData[i].image_url : emptyText;
+                    queryStrt += "','" + this.groupID + "','" + this.messageType + "','','" + allData[i].created_at + "','','" + allData[i].read;
+                    queryStrt += "','" + allData[i].mentioned_user_ids.toString() + "','" + allData[i].responding_to_chat_message_id + "','" + allData[i].work_order_id + "','" + allData[i].work_order_url + "','" + woStatus + "'," + workOrderClosedByUserId + ",'" + workOrderClosedAt + "','" + workOrderLocationDetail + "','" + workOrderDescription + "','" + allData[i].room_number + "','" + allData[i].room_id + "')";
+                    //console.log("=="+queryStrt);
+                    db.executeSql(queryStrt, {}).then((data1) => {
+                      console.log("MESSAGE INSERTED: New message" + JSON.stringify(data1));
 
+                    }, (error1) => {
+                      console.log("MESSAGE INSERT ERROR: " + JSON.stringify(error1));
                     });
-                  
+
+
+                  });
+
                   let chatUserData = [];
                   for (let j = 0; j < this.users.length; j++) {
                     if (this.users[j].id == allData[i].sender_id) {
@@ -2126,27 +2126,27 @@ console.log("userInfo lod log 1"+chatUserData);
                     }
                   }
                   ids.push(allData[i].id);
-console.log(JSON.stringify(allData[i])+" allData[i]");
+                  console.log(JSON.stringify(allData[i]) + " allData[i]");
                   let woUserDetail = [];
-                
+
                   if (allData[i].work_order == undefined) {
                     allData[i].work_order = { "status": "" };
                   }
                   else {
-                    console.log(JSON.stringify(allData[i].work_order) +"  WO else ");
-                   console.log(allData[i].work_order.closed_by_user_id);
+                    console.log(JSON.stringify(allData[i].work_order) + "  WO else ");
+                    console.log(allData[i].work_order.closed_by_user_id);
                     for (let m = 0; m < this.users.length; m++) {
                       if (this.users[m].id == allData[i].work_order.closed_by_user_id) {
-                        woUserDetail=this.users[m];
+                        woUserDetail = this.users[m];
                       }
                     }
-                  
-                }
-                console.log(JSON.stringify(woUserDetail)+" 22222");
+
+                  }
+                  console.log(JSON.stringify(woUserDetail) + " 22222");
 
                   woUserDetail = woUserDetail;
-console.log(JSON.stringify(woUserDetail)+" 22222");
-console.log("userInfo lod log 2"+chatUserData);
+                  console.log(JSON.stringify(woUserDetail) + " 22222");
+                  console.log("userInfo lod log 2" + chatUserData);
                   let tempData = {
                     "read_status": 1,
                     "message_obj": allData[i],
@@ -2160,7 +2160,7 @@ console.log("userInfo lod log 2"+chatUserData);
                     this.allMessages = this.allMessages;
                   });
                 }
-                
+
                 this.sendStatus(ids);
               }
               setTimeout(() => {
@@ -2414,7 +2414,7 @@ console.log("userInfo lod log 2"+chatUserData);
             click => {
               if (click.click && this.actionSheet != undefined) {
                 this.actionSheet.dismiss();
-              }  if (click.click && this.alert != undefined) {
+              } if (click.click && this.alert != undefined) {
                 this.alert.dismiss();
               }
             });

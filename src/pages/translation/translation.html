@@ -1,56 +1,56 @@
 <ion-navbar custome *navbar>
 
-	<ion-title>
-		<div [ngStyle]="{'text-align': 'center','color': '#ffff99',    'font-size': '24px', 'font-weight': 'bold'}"> Translate!
-		</div>
-		<button ion-button menuToggle end>
+  <ion-title>
+    <div [ngStyle]="{'text-align': 'center','color': '#ffff99',    'font-size': '24px', 'font-weight': 'bold'}"> Translate!
+    </div>
+    <button ion-button menuToggle end>
       <ion-icon name="menu"></ion-icon>
     </button>
-	</ion-title>
+  </ion-title>
 
 </ion-navbar>
 
 <ion-content class="translation" padding>
-	<ion-card [ngStyle]="{'background-color':'#123456'}">
-		<ion-card-header>
-			<div [ngStyle]="{ 'background-color':'#123456', 'color': '#ffff99', 'font-	size': '14px', 'font-weight': 'bold', 'float':'left'}">
-				{{sourceLanguageName}}
-			</div>
-			<div [ngStyle]="{'text-align':'right'}">
-				<button [ngStyle]="{'background-color':'#123456', 'color': 'white', 'font-size': '14px', 'font-weight': 'bold'}" (click)="clearTextBtn()">
-			    	<ion-icon ios="ios-close" md="md-close">
-			    	</ion-icon>
-			 	</button>
-			</div>
-		</ion-card-header>
-		<ion-card-content>
-			<ion-list>
-				<ion-item>
-					<ion-textarea rows="5" [(ngModel)]="sourceText" (keyup)="translate()">
-					</ion-textarea>
-				</ion-item>
-			</ion-list>
-		</ion-card-content>
-	</ion-card>
-	<ion-card [ngStyle]="{'background-color':'#123456'}">
-		<ion-card-header>
-			<div [ngStyle]="{'background-color':'#123456', 'color': '#ffff99', 'font-size': '14px', 'font-weight': 'bold', 'float':'left'}">
-				{{targetLanguageName}}
-			</div>
-			<div [ngStyle]="{'text-align':'right'}">
-				<button [ngStyle]="{'background-color':'#123456', 'color': 'white', 'font-size': '14px', 'font-weight': 'bold'}" (click)="chooseLanguageBtn()">
-		         	<ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle">
-    			 	</ion-icon>	
-		    	</button>
-			</div>
-		</ion-card-header>
-		<ion-card-content>
-			<ion-list>
-				<ion-item>
-					<ion-textarea rows="5" [(ngModel)]="translatedText">
-					</ion-textarea>
-				</ion-item>
-			</ion-list>
-		</ion-card-content>
-	</ion-card>
+  <ion-card [ngStyle]="{'background-color':'#123456'}">
+    <ion-card-header>
+      <div [ngStyle]="{ 'background-color':'#123456', 'color': '#ffff99', 'font-	size': '14px', 'font-weight': 'bold', 'float':'left'}">
+        {{sourceLanguageName}}
+      </div>
+      <div [ngStyle]="{'text-align':'right'}">
+        <button [ngStyle]="{'background-color':'#123456', 'color': 'white', 'font-size': '14px', 'font-weight': 'bold'}" (click)="clearTextBtn()">
+          <ion-icon ios="ios-close" md="md-close">
+          </ion-icon>
+        </button>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-textarea rows="5" [(ngModel)]="sourceText" (keyup)="translate()">
+          </ion-textarea>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card [ngStyle]="{'background-color':'#123456'}">
+    <ion-card-header>
+      <div [ngStyle]="{'background-color':'#123456', 'color': '#ffff99', 'font-size': '14px', 'font-weight': 'bold', 'float':'left'}">
+        {{targetLanguageName}}
+      </div>
+      <div [ngStyle]="{'text-align':'right'}">
+        <button [ngStyle]="{'background-color':'#123456', 'color': 'white', 'font-size': '14px', 'font-weight': 'bold'}" (click)="chooseLanguageBtn()">
+          <ion-icon ios="ios-arrow-dropdown-circle" md="md-arrow-dropdown-circle">
+          </ion-icon>
+        </button>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-textarea rows="5" [(ngModel)]="translatedText">
+          </ion-textarea>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -9,21 +9,22 @@
     </button>
   </ion-navbar>
 
-  <ion-grid class="grid-img">
+  <!-- <ion-grid class="grid-img">
     <ion-row>
-      <ion-col col-6 class="align-center first-grid-col" (click)="accessGallery()">
+      <ion-col col-6 class="align-center first-grid-col" (tap)="accessGallery()">
         <ion-icon ios="ios-image" md="md-image" class="camera-image-icon"></ion-icon>
       </ion-col>
-      <ion-col col-6 class="align-center" (click)="openCamera()">
+      <ion-col col-6 class="align-center" (tap)="openCamera()">
         <ion-icon ios="ios-camera" md="md-camera" class="camera-image-icon"></ion-icon>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+
 </ion-header>
 
 <ion-content padding [attr.noScroll]="shouldScroll">
 
-  <!-- <ion-label style="min-height:40px;margin:0px;" (click)="closekeyboard()"></ion-label> -->
+  <!-- <ion-label style="min-height:40px;margin:0px;" (tap)="closekeyboard()"></ion-label> -->
 
   <form [formGroup]="feedForm">
 
@@ -95,9 +96,45 @@
 
 </ion-content>
 
-<ion-footer class="{{classnameForFooter}}" *ngIf="!isFocusOnTitleInput">
+<!-- <ion-footer class="{{classnameForFooter}}" *ngIf="!isFocusOnTitleInput"> -->
+<ion-footer *ngIf="!isFocusOnTitleInput">
 
-  <ion-toolbar position="bottom" class="footer_toolbar">
+  <ion-grid class="grid-img">
+    <ion-row>
+      <ion-col col-10 class="align-center first-grid-col">
+
+
+        <ion-icon (click)="createFollowUp(follow_up_start,follow_up_end)" name="ios-calendar-outline" *ngIf="!(follow_up_start && follow_up_end)"
+          class="camera-image-icon"></ion-icon>
+        <span (click)="createFollowUp(follow_up_start,follow_up_end)" class="broadcast_date_text" *ngIf="(follow_up_start && follow_up_end)">
+          <ion-icon name="ios-calendar-outline" class="camera-image-icon-selected"></ion-icon>
+          <span>({{follow_up_start | date:'MMM dd'}} - {{follow_up_end | date:'MMM dd'}})</span>
+        </span>
+
+
+
+        <ion-icon (click)="createBroadcast(broadcast_start,broadcast_end)" name="ios-megaphone-outline" *ngIf="!(broadcast_start && broadcast_end)"
+          class="camera-image-icon"></ion-icon>
+        <span (click)="createBroadcast(broadcast_start,broadcast_end)" class="broadcast_date_text" *ngIf="(broadcast_start && broadcast_end)">
+          <ion-icon name="ios-megaphone-outline" class="camera-image-icon-selected"></ion-icon>
+          <span>({{broadcast_start | date:'MMM dd'}} - {{broadcast_end | date:'MMM dd'}})</span>
+        </span>
+
+
+      </ion-col>
+      <!-- <ion-col col-4 class="align-center first-grid-col" (click)="createBroadcast(broadcast_start,broadcast_end)">
+            <ion-icon name="ios-megaphone-outline" *ngIf="!(broadcast_start && broadcast_end)" class="camera-image-icon"></ion-icon>
+            <span class="broadcast_date_text" *ngIf="(broadcast_start && broadcast_end)">
+                <ion-icon name="ios-megaphone-outline" class="camera-image-icon-selected"></ion-icon>
+              <span>({{broadcast_start | date:'MMM dd'}} - {{broadcast_end | date:'MMM dd'}})</span>
+            </span>
+          </ion-col> -->
+      <ion-col col-2 class="align-center" (click)="showGalleryPrompt()">
+        <ion-icon name="ios-image-outline" [ngClass]="base64Image?'camera-image-icon-selected':'camera-image-icon'"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-toolbar class="footer_toolbar" position="bottom">
 
     <span class="scroll-ion">
       <span class="counting counting_iphone_x">@
@@ -105,14 +142,14 @@
       </span>
       <ion-scroll scrollX="true">
         <ul class="results">
-          <li *ngFor="let memberInfo of mentionMembers" (mousedown)="selectUser($event,memberInfo)" [ngClass]="showSelected(memberInfo.id)?'selected':''">
+          <li *ngFor="let memberInfo of mentionMembers" (mousedown)="selectUser($event,memberInfo,'false')" [ngClass]="showSelected(memberInfo.id)?'selected':''">
             <span>
               <img src="{{memberInfo.image}}" [ngClass]="showSelected(memberInfo.id)?'mention-select':''" />
             </span>
             <label [innerHtml]="updateName(memberInfo.name) | safeHtml"></label>
           </li>
-          <li *ngIf="members.length>2" style="padding-left: 5px;" (mousedown)="(this.mentionUsers.length != members.length)?selectAllMention($event,true):selectAllMention($event,false)"
-            [ngClass]="(mentionUsers.length == members.length)?'selected':''">
+          <li *ngIf="members.length>2" style="padding-left: 5px;     border-left: solid #757575 0.5px;" (tap)="this.mentionUsers.length != members.length?selectAllMention($event,true):selectAllMention($event,false)"
+            [ngClass]="mentionUsers.length == members.length?'selected':''">
             <label style="font-weight:600;">ALL</label>
           </li>
         </ul>

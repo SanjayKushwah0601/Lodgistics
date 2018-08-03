@@ -21,7 +21,7 @@ export class ChangePasswordPage {
   public marginBottom = 0;
   public userId = "";
   public userData: any;
-  public showLoader=false;
+  public showLoader = false;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navCtrl: NavController) {
 
@@ -72,19 +72,19 @@ export class ChangePasswordPage {
         this.userId = accessToken.user_id;
 
         if (this.commonMethod.checkNetwork()) {
-          this.showLoader=true;
+          this.showLoader = true;
           let objData = { 'user': { 'password': this.userData.password.trim(), 'password_confirmation': this.userData.password_confirmation.trim() } };
           this.commonMethod.putDataWithoutLoder(changePasswordUrl, objData, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
               //this.commonMethod.hideLoader();
-              this.showLoader=false;
+              this.showLoader = false;
               this.keyboard.close();
               this.viewCtrl.dismiss();
             },
             err => {
               //this.commonMethod.hideLoader();
-              this.showLoader=false;
+              this.showLoader = false;
               //alertVar.present();
               console.error("Error : " + err);
 

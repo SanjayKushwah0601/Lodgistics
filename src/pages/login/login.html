@@ -44,7 +44,7 @@
 
       <div class="clearfix"></div>
 
-      <button ion-button class="margin-top" [disabled]="!loginForm.valid || showLoader" color="grey" full>{{showLoader?'':'SIGN IN'}}
+      <button ion-button class="margin-top" [disabled]="!loginForm.valid || showLoader" color="gray" full>{{showLoader?'':'SIGN IN'}}
         <ion-spinner *ngIf="showLoader" name="bubbles"></ion-spinner>
       </button>
 
@@ -53,7 +53,7 @@
 
       <div class="pull-left a1" (click)="showLoader?'':forgetPassword()">Forgot password?</div>
 
-      <div class="pull-right a1" (click)="showLoader?'':newAccount()">Create Account</div>
+      <!-- <div class="pull-right a1" (click)="showLoader?'':newAccount()">Create Account</div> -->
 
     </ion-list>
   </form>

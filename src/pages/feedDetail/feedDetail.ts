@@ -3,7 +3,7 @@ import { NavController, NavParams, Content, AlertController, Platform, Events, V
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
-import { getFeedsUrl } from '../../services/configURLs';
+import { getFeedsUrl, getMentionables } from '../../services/configURLs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -24,7 +24,7 @@ import { UtilMethods } from '../../services/utilMethods';
 @Component({
   selector: 'page-feedDetail',
   templateUrl: 'feedDetail.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, SQLite, TranslationService]
+  providers: [UtilMethods, srviceMethodsCall, NativeStorage, Keyboard, SQLite, TranslationService]
 })
 export class FeedDetailPage {
   @ViewChild(Navbar) navbar: Navbar;
@@ -58,7 +58,7 @@ export class FeedDetailPage {
   public spinner = false;
   public apiInProgress = false;
 
-  constructor(public navCtrl: NavController, public _FB: FormBuilder, public commonMethod: srviceMethodsCall, private viewCtrl: ViewController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navParams: NavParams, private keyboard: Keyboard, public zone: NgZone, private sqlite: SQLite, public platform: Platform, public events: Events, public translationservice: TranslationService, private utilMethods: UtilMethods) {
+  constructor(public navCtrl: NavController, public _FB: FormBuilder, public commonMethod: srviceMethodsCall, private viewCtrl: ViewController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public navParams: NavParams, private keyboard: Keyboard, public zone: NgZone, private sqlite: SQLite, public platform: Platform, public events: Events, public translationservice: TranslationService, public utilMethods: UtilMethods) {
 
     this.getAllMembersFromDb();
 
@@ -289,11 +289,11 @@ export class FeedDetailPage {
     );
   }
 
-  //TODO: Need to move this function into utility folder. 
-  updateHtml(val, mentioned_user_ids) {
+  // TODO: Need to move this function into utility folder. 
+  updateHtml(val, mentioned_targets) {
     let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
+    if (mentioned_targets != '' && mentioned_targets != null) {
+      allChatMentions = mentioned_targets;
     }
 
     // let mentionStr = this.commonMethod.getMentionString(allChatMentions, this.members);
@@ -301,7 +301,18 @@ export class FeedDetailPage {
     //   // val = mentionStr + val;
     // }
 
-    let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
+    let newValue = this.commonMethod.getTextValueNew(allChatMentions, this.members, val);
+    if (newValue != "") {
+      val = newValue;
+    }
+
+    return val.replace(/text-decoration-line/g, "text-decoration");
+  }
+
+  //TODO: Need to move this function into utility folder. 
+  updateHtml1(val) {
+    let allChatMentions = [];
+    let newValue = this.commonMethod.getTextValueNew(allChatMentions, this.members, val);
     if (newValue != "") {
       val = newValue;
     }
@@ -325,17 +336,39 @@ export class FeedDetailPage {
               "name": allMembers.rows.item(i).name,
               "image": allMembers.rows.item(i).image,
               "is_system_user": allMembers.rows.item(i).is_system_user,
-              "total": allMembers.rows.item(i).total
+              "total": allMembers.rows.item(i).total,
+              "type": 'User',
             };
+
             if (allMembers.rows.item(i).user_id != this.userId && allMembers.rows.item(i).is_system_user != 1) {
               this.totalMentionUsers += 1;
             }
+
             this.members.push(tempUserInfo);
-
             console.log(JSON.stringify(this.members));
-
           }
         }
+        this.nativeStorage.getItem('mentionable')
+          .then((data) => {
+            if (data) {
+              for (let i = 0; i < data.departments.length; i++) {
+                let tempUserInfo = {
+                  "id": data.departments[i].id,
+                  "name": data.departments[i].name,
+                  "type": 'Department',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                  // "total": allMembers.rows.item(i).total
+                };
+                this.totalMentionUsers += 1;
+                this.members.push(tempUserInfo);
+              }
+              console.log(data)
+            } else {
+              this.getMentionableFromServer()
+            }
+          }).catch((err) => {
+            this.getMentionableFromServer()
+          })
 
       }, (error1) => {
         console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
@@ -344,9 +377,39 @@ export class FeedDetailPage {
     }).catch(e => console.log(e));
   }
 
+  getMentionableFromServer() {
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
+            data => {
+              let foundRepos = data.json();
+              for (let i = 0; i < foundRepos.departments.length; i++) {
+                let tempUserInfo = {
+                  "id": foundRepos.departments[i].id,
+                  "name": foundRepos.departments[i].name,
+                  "type": 'Department',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                };
+                this.members.push(tempUserInfo);
+              }
+
+              console.log(foundRepos)
+            }, err => {
+              // alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              console.log('getData completed');
+            })
+        }
+      })
+  }
+
   escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
+
   removeLastInstance(badtext, str) {
     var charpos = str.toLowerCase().lastIndexOf(badtext.toLowerCase());
     if (charpos < 0) return str;
@@ -354,6 +417,7 @@ export class FeedDetailPage {
     let pttwo = str.substring(charpos + (badtext.length));
     return (ptone + pttwo);
   }
+
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
     if (this.showMentions == true && this.feedComment != "") {
@@ -362,9 +426,8 @@ export class FeedDetailPage {
       for (var i = 0; i < strArray.length; i++) {
         if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
           //this.zone.run(() => {
-          // this.feedComment = this.feedComment.replace(strArray[i], "");
-          //});
           this.feedComment = this.removeLastInstance(strArray[i], this.feedComment);
+          //});
           /* this is only for android */
           if (this.feedComment.trim() == "") {
             this.feedComment = this.feedComment.trim();
@@ -399,6 +462,9 @@ export class FeedDetailPage {
         this.mentionUsers.push(memberInfo);
         if (mentionAdded) {
           this.zone.run(() => {
+            if (this.feedComment && this.feedComment.length > 0 && !this.feedComment.endsWith(' ')) {
+              this.feedComment = this.feedComment + " "
+            }
             this.feedComment = this.feedComment + "@" + memberInfo.name + " ";
           });
         }
@@ -408,6 +474,9 @@ export class FeedDetailPage {
       this.mentionUsers.push(memberInfo);
       if (mentionAdded) {
         this.zone.run(() => {
+          if (this.feedComment && this.feedComment.length > 0 && !this.feedComment.endsWith(' ')) {
+            this.feedComment = this.feedComment + " "
+          }
           this.feedComment = this.feedComment + "@" + memberInfo.name + " ";
         });
       }
@@ -457,9 +526,10 @@ export class FeedDetailPage {
     this.alert.present();
   }
 
-  selectAllMention(e, flag) {
+  selectAllMention(flag) {
     if (flag) {
       this.mentionUsers = [];
+
       for (let i = 0; i < this.members.length; i++) {
 
         if (this.members[i].id != this.userId && this.members[i].is_system_user != 1) {
@@ -472,9 +542,12 @@ export class FeedDetailPage {
         }
       }
     } else {
+
       for (let i = 0; i < this.mentionUsers.length; i++) {
+
         let removeStr = "@" + this.mentionUsers[i].name + " ";
         console.log(this.feedComment + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
+
         this.zone.run(() => {
           console.log(this.feedComment + "  " + this.mentionUsers[i].name + " removeStr" + removeStr);
           this.feedComment = this.feedComment.replace(new RegExp(this.escapeRegExp(removeStr), 'g'), '');
@@ -482,7 +555,7 @@ export class FeedDetailPage {
       }
       this.mentionUsers = [];
     }
-    e.preventDefault();
+    //e.preventDefault();
 
   }
 
@@ -690,6 +763,7 @@ export class FeedDetailPage {
       console.log("hide unsubscribe");
     }
   }
+
   scrollTo(elementId: string) {
     if (document.getElementById(elementId) != null && document.getElementById(elementId) != undefined) {
       let yOffset = document.getElementById(elementId).offsetTop;
@@ -732,7 +806,7 @@ export class FeedDetailPage {
                   let tempUserName = this.members[l].name.toLowerCase().split(" ");
                   if (this.members[l] != undefined && this.members[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
                     //this.showMentions=false;
-                    this.selectUser(undefined, this.members[l], true);
+                    this.selectUser('', this.members[l], true);
                   }
                   else if (this.members[l] != undefined && this.members[l].id != this.userId && this.members[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
                     tempMentions.push(this.members[l]);
@@ -907,7 +981,6 @@ export class FeedDetailPage {
       this.showMentions = false;
     }
   }
-
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {
@@ -928,14 +1001,4 @@ export class FeedDetailPage {
     });
   }
 
-  //TODO: Need to move this function into utility folder. 
-  updateHtml1(val) {
-    let allChatMentions = [];
-    let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
-    if (newValue != "") {
-      val = newValue;
-    }
-
-    return val.replace(/text-decoration-line/g, "text-decoration");
-  }
 }

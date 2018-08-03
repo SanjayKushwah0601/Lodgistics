@@ -13,7 +13,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 })
 
 export class AddCommentPage {
-  
+
   public commentText = "";
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage) {
@@ -29,13 +29,12 @@ export class AddCommentPage {
 
   send() {
     this.keyboard.close();
-    this.viewCtrl.dismiss({ msg: this.commentText.trim()});
+    this.viewCtrl.dismiss({ msg: this.commentText.trim() });
   }
 
-  changeModelValue(e)
-  {
+  changeModelValue(e) {
     this.zone.run(() => {
-      this.commentText=this.commentText;
+      this.commentText = this.commentText;
     });
   }
 
@@ -47,14 +46,14 @@ export class AddCommentPage {
       });
       this.platform.resume.subscribe(() => {
         console.log("resume");
-        setTimeout(() => { 
-        this.nativeStorage.getItem('notificatio_click').then(
-          click => {
-           if(click.click){
-            this.viewCtrl.dismiss('');
-           }
-          });
-        },2000);
+        setTimeout(() => {
+          this.nativeStorage.getItem('notificatio_click').then(
+            click => {
+              if (click.click) {
+                this.viewCtrl.dismiss('');
+              }
+            });
+        }, 2000);
       });
     });
   }

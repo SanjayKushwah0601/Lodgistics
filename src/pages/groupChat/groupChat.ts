@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild, ElementRef, Input, Injectable } from '@angular/core';
-import { ViewController, NavController, NavParams, Content, AlertController, ActionSheetController, ModalController, Events, Navbar, Platform } from 'ionic-angular';
+import { ViewController, NavController, NavParams, Content, AlertController, ActionSheetController, ModalController, Events, Navbar, Platform, MenuController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { Keyboard } from '@ionic-native/keyboard';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -33,15 +33,15 @@ import { webSocketBaseUrl } from '../../services/configURLs';
 import { WorkOrderPage } from '../workOrder/workOrder';
 import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { TaskChecklistDetailPage } from '../taskChecklistDetail/taskChecklistDetail';
+import { UtilMethods } from '../../services/utilMethods';
 
 import 'aws-sdk/dist/aws-sdk';
-import { UtilMethods } from '../../services/utilMethods';
 const AWS = (<any>window).AWS;
 
 @Component({
   selector: 'page-groupchat',
   templateUrl: 'groupChat.html',
-  providers: [srviceMethodsCall, Keyboard, NativeStorage, SQLite, TranslationService, Camera, Transfer, File, Clipboard, InAppBrowser]
+  providers: [UtilMethods, srviceMethodsCall, Keyboard, NativeStorage, SQLite, TranslationService, Camera, Transfer, File, Clipboard, InAppBrowser]
 })
 export class GroupChatPage {
   @ViewChild(Content) content: Content;
@@ -119,7 +119,7 @@ export class GroupChatPage {
   public alert: any;
   public oldMsgTextValue = "";
 
-  constructor(public platform: Platform, public navCtrl: NavController, private keyboard: Keyboard, public zone: NgZone, public navParams: NavParams, public nativeStorage: NativeStorage, private sqlite: SQLite, public alertCtrl: AlertController, public commonMethod: srviceMethodsCall, public translationservice: TranslationService, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, private clipboard: Clipboard, public modalCtrl: ModalController, public events: Events, private iab: InAppBrowser, private utilMethods: UtilMethods) {
+  constructor(public platform: Platform, public navCtrl: NavController, private keyboard: Keyboard, public zone: NgZone, public navParams: NavParams, public nativeStorage: NativeStorage, private sqlite: SQLite, public alertCtrl: AlertController, public commonMethod: srviceMethodsCall, public translationservice: TranslationService, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, private clipboard: Clipboard, public modalCtrl: ModalController, public events: Events, private iab: InAppBrowser, public utilMethods: UtilMethods) {
 
     /* only for testing */
     this.allowWO = true;
@@ -140,6 +140,7 @@ export class GroupChatPage {
       }
     );
 
+
     this.showLoader = false;
     this.device_width = window.screen.width;
     this.imageWidth = window.screen.width / 100 * 58;
@@ -156,8 +157,8 @@ export class GroupChatPage {
       this.groupID = this.groupInfo.id;
       this.nativeStorage.setItem('groupInfo', { "groupID": this.groupID });
       var str = this.groupInfo.created_at.split("T");
-
       this.createdDate = new Date(str[0]);
+      //this.createdDate.setDate(this.createdDate.getDate() - 1);
       this.createdDate.setDate(this.createdDate.getDate());
       let dd1 = ("0" + this.createdDate.getDate()).slice(-2);
       let mm1 = ("0" + ((this.createdDate.getMonth()) + 1)).slice(-2); //January is 0!

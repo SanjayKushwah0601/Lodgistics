@@ -1,3 +1,5 @@
+import { MbscModule } from '@mobiscroll/angular';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { ErrorHandler, NgModule, Pipe, PipeTransform, enableProdMode } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -66,11 +68,12 @@ import { PressDirective } from '../directives/press/press';
 import { Market } from '@ionic-native/market';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
-import { UtilMethods } from '../services/utilMethods';
 import { RemovehtmltagsPipe } from '../pipes/removehtmltags/removehtmltags';
-import { FeedCreatedSuccessfullyPage } from '../pages/feedCreatedSuccessfully/feedCreatedSuccessfully';
 import { UserListPopoverPage } from '../pages/user-list-popover/user-list-popover';
 import { MessageSentSuccessfullyPage } from '../pages/messageSentSuccessfully/messageSentSuccessfully';
+import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { GoogleAnalyticsProvider } from '../providers/google-analytics/google-analytics';
+import { Intercom } from '@ionic-native/intercom';
 
 enableProdMode();
 
@@ -127,15 +130,16 @@ export class SafeHtmlPipe implements PipeTransform {
     IntroInviteUsersPage,
     SendMessagePage, NewUserPage,
     createFollowUpPage,
-    PressDirective,
     UpdateAppPage,
+    PressDirective,
     NotificationPermissionPage,
     RemovehtmltagsPipe,
-    FeedCreatedSuccessfullyPage,
     UserListPopoverPage,
     MessageSentSuccessfullyPage
   ],
-  imports: [
+  imports: [ 
+    MbscModule,
+    FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
@@ -191,7 +195,6 @@ export class SafeHtmlPipe implements PipeTransform {
     createFollowUpPage,
     UpdateAppPage,
     NotificationPermissionPage,
-    FeedCreatedSuccessfullyPage,
     UserListPopoverPage,
     MessageSentSuccessfullyPage
   ],
@@ -203,9 +206,9 @@ export class SafeHtmlPipe implements PipeTransform {
     Badge,
     SQLite,
     Market,
-    UtilMethods,
-    // Deeplinks,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    GoogleAnalytics,
+    Intercom,
+    { provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleAnalyticsProvider
   ]
 })
 export class AppModule { }

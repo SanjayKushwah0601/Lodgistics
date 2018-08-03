@@ -43,25 +43,25 @@ export class InviteUsersPage {
   public feedNotificationCount = 0;
   public messagesNotificationCount = 0;
   public interval: any;
-  public userPermissions:any;
+  public userPermissions: any;
   public isPopupOpen = false;
   public alert: any;
   public spinner = false;
-  public userId="";
+  public userId = "";
   public rolesData = [];
   public departmentsData = [];
   public inviteUser: any;
-  public formData=[];
+  public formData = [];
   public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  public emailValidationReg=/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  public emailValidationReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events, public actionSheetCtrl: ActionSheetController ) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events, public actionSheetCtrl: ActionSheetController) {
 
     this.userPermissions = {
       "wo_access": {
         "view_listing": false,
         "can_create": false,
-        "can_close":false
+        "can_close": false
       }
     };
 
@@ -76,7 +76,7 @@ export class InviteUsersPage {
       );
     });
 
-    
+
     let thisObj = this;
     this.interval = window.setInterval(function () {
       /// call your function here
@@ -101,10 +101,10 @@ export class InviteUsersPage {
       name: '',
       role_name: '',
       role_id: '',
-      department_name:'',
+      department_name: '',
       department_id: '',
     });
-  } 
+  }
 
   ionViewDidEnter() {
     console.log("page loaded");
@@ -124,8 +124,8 @@ export class InviteUsersPage {
     this.keyboard.close();
   }
 
-  addOtherUser(){
-    if(this.formData.length>1){
+  addOtherUser() {
+    if (this.formData.length > 1) {
       this.formData.unshift({
         email: '',
         phone_number: '',
@@ -133,10 +133,10 @@ export class InviteUsersPage {
         name: '',
         role_name: '',
         role_id: '',
-        department_name:'',
+        department_name: '',
         department_id: '',
       });
-    }else{
+    } else {
       this.formData.push({
         email: '',
         phone_number: '',
@@ -144,7 +144,7 @@ export class InviteUsersPage {
         name: '',
         role_name: '',
         role_id: '',
-        department_name:'',
+        department_name: '',
         department_id: '',
       });
     }
@@ -191,135 +191,134 @@ export class InviteUsersPage {
     );
   }
 
- selectRole(index) {
-  let actionSheet = this.actionSheetCtrl.create({
-    title: 'Select Role',
-  });
-  for (var i = 0; i < this.rolesData.length; i++) {
-    let thisObj=this;
-    let name=this.rolesData[i].name;
-    let id=this.rolesData[i].id;
-    actionSheet.addButton({ text: name ,handler: () => { thisObj.formData[index].role_name=name; thisObj.formData[index].role_id=id; console.log(name + " id is"+ id) } });
+  selectRole(index) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Select Role',
+    });
+    for (var i = 0; i < this.rolesData.length; i++) {
+      let thisObj = this;
+      let name = this.rolesData[i].name;
+      let id = this.rolesData[i].id;
+      actionSheet.addButton({ text: name, handler: () => { thisObj.formData[index].role_name = name; thisObj.formData[index].role_id = id; console.log(name + " id is" + id) } });
+    }
+    actionSheet.present();
   }
-  actionSheet.present();
-}
 
-selectDepartment(index) {
-  let actionSheet = this.actionSheetCtrl.create({
-    title: 'Select Department',
-  });
-  for (var i = 0; i < this.departmentsData.length; i++) {
-    let thisObj=this;
-    let name=this.departmentsData[i].name;
-    let id=this.departmentsData[i].id;
-    actionSheet.addButton({ text: name ,handler: () => { thisObj.formData[index].department_name=name; thisObj.formData[index].department_id=id; console.log(name + " id is"+ id) } });
+  selectDepartment(index) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Select Department',
+    });
+    for (var i = 0; i < this.departmentsData.length; i++) {
+      let thisObj = this;
+      let name = this.departmentsData[i].name;
+      let id = this.departmentsData[i].id;
+      actionSheet.addButton({ text: name, handler: () => { thisObj.formData[index].department_name = name; thisObj.formData[index].department_id = id; console.log(name + " id is" + id) } });
+    }
+    actionSheet.present();
   }
-  actionSheet.present();
-}
 
-      invite()
-      {
-        this.spinner = true;
-        let objData = {users:[]};
+  invite() {
+    this.spinner = true;
+    let objData = { users: [] };
 
-        let alertVar = this.alertCtrl.create({
-          title: 'Error!',
-          subTitle: 'Invalid Details!',
-          buttons: ['OK']
-        });
-        this.nativeStorage.getItem('user_auth').then(
-          accessToken => {
+    let alertVar = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'Invalid Details!',
+      buttons: ['OK']
+    });
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
 
-            for(let i=0;i<this.formData.length;i++){
-              if( this.formData[i].phone_number!='' &&  this.formData[i].department_id!='' && this.formData[i].role_id!='' ){
-                let user = {
-                  phone_number: this.formData[i].phone_number.replace(/\D+/g, ''),
-                  property_token: accessToken.property_token,
-                  name: this.formData[i].name,
-                  email: this.formData[i].email,
-                  role_id: this.formData[i].role_id,
-                  department_id: this.formData[i].department_id,
-                }
-                objData.users.push(user);
-              }
+        for (let i = 0; i < this.formData.length; i++) {
+          if (this.formData[i].phone_number != '' && this.formData[i].department_id != '' && this.formData[i].role_id != '') {
+            let user = {
+              phone_number: this.formData[i].phone_number.replace(/\D+/g, ''),
+              property_token: accessToken.property_token,
+              name: this.formData[i].name,
+              email: this.formData[i].email,
+              role_id: this.formData[i].role_id,
+              department_id: this.formData[i].department_id,
             }
+            objData.users.push(user);
+          }
+        }
 
-            if (this.commonMethod.checkNetwork()) {
+        if (this.commonMethod.checkNetwork()) {
 
-              this.spinner = true;
-              this.commonMethod.postDataWithoutLoder(inviteUsersUrl, objData, accessToken).subscribe(
-                data => {
-                  let foundRepos = data.json();
-                  console.log(foundRepos);
-                  this.spinner = false;
-                  this.navCtrl.setRoot(FeedsPage);
-                },
-                err => {
-                  this.spinner = false;
-                  console.log("Error 1: " + JSON.stringify(err.json()));
-                  let res = err.json();
-
-                  if (typeof (res.error) !== undefined) {
-                    let alertVarErr = this.alertCtrl.create({
-                      title: 'Error!',
-                      subTitle: res.error ? res.error : 'Invalid Details!',
-                      buttons: ['OK']
-                    });
-                    alertVarErr.present();
-                  }
-                  else {
-                    let alertVarErr = this.alertCtrl.create({
-                      title: 'Error!',
-                      subTitle: 'Invalid Details!',
-                      buttons: ['OK']
-                    });
-                    alertVarErr.present();
-                  }
-                },
-                () => {
-                  this.spinner = false;
-                  console.log('getData completed');
-                }
-              );
-            }
-            else {
+          this.spinner = true;
+          this.commonMethod.postDataWithoutLoder(inviteUsersUrl, objData, accessToken).subscribe(
+            data => {
+              let foundRepos = data.json();
+              console.log(foundRepos);
               this.spinner = false;
-              this.commonMethod.showNetworkError();
-            }
-          },
-          error => {
-            return '';
-          }
-        );
-      }
+              this.navCtrl.setRoot(FeedsPage);
+            },
+            err => {
+              this.spinner = false;
+              console.log("Error 1: " + JSON.stringify(err.json()));
+              let res = err.json();
 
-      canAddMore(){
-        let status=false;
-        if(this.formData.length>1){
-          status=true;
-          for(let j=0;j<this.formData.length;j++){
-            if( (this.formData[j].email!='' && !this.emailValidationReg.test(this.formData[j].email) ) || this.formData[j].phone_number=='' ||  this.formData[j].department_id=='' || this.formData[j].role_id==''  ){
-              status=false;
+              if (typeof (res.error) !== undefined) {
+                let alertVarErr = this.alertCtrl.create({
+                  title: 'Error!',
+                  subTitle: res.error ? res.error : 'Invalid Details!',
+                  buttons: ['OK']
+                });
+                alertVarErr.present();
+              }
+              else {
+                let alertVarErr = this.alertCtrl.create({
+                  title: 'Error!',
+                  subTitle: 'Invalid Details!',
+                  buttons: ['OK']
+                });
+                alertVarErr.present();
+              }
+            },
+            () => {
+              this.spinner = false;
+              console.log('getData completed');
             }
-          }
+          );
         }
-        return status;
+        else {
+          this.spinner = false;
+          this.commonMethod.showNetworkError();
+        }
+      },
+      error => {
+        return '';
       }
+    );
+  }
 
-     canInviteUser(){
-      let status=false;
-      if(this.formData.length>=1){
-        for(let j=0;j<this.formData.length;j++){
-          if( (this.formData[j].email=='' ||  (this.formData[j].email!='' && this.emailValidationReg.test(this.formData[j].email)) ) && this.formData[j].phone_number!='' &&  this.formData[j].department_id!='' && this.formData[j].role_id!='' ){
-            status=true;
-          }
+  canAddMore() {
+    let status = false;
+    if (this.formData.length > 1) {
+      status = true;
+      for (let j = 0; j < this.formData.length; j++) {
+        if ((this.formData[j].email != '' && !this.emailValidationReg.test(this.formData[j].email)) || this.formData[j].phone_number == '' || this.formData[j].department_id == '' || this.formData[j].role_id == '') {
+          status = false;
         }
       }
-      if(this.spinner){
-        status=false;
+    }
+    return status;
+  }
+
+  canInviteUser() {
+    let status = false;
+    if (this.formData.length >= 1) {
+      for (let j = 0; j < this.formData.length; j++) {
+        if ((this.formData[j].email == '' || (this.formData[j].email != '' && this.emailValidationReg.test(this.formData[j].email))) && this.formData[j].phone_number != '' && this.formData[j].department_id != '' && this.formData[j].role_id != '') {
+          status = true;
+        }
       }
-      return status;
-     } 
+    }
+    if (this.spinner) {
+      status = false;
+    }
+    return status;
+  }
 
 }
 

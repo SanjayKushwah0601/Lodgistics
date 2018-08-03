@@ -8,6 +8,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { createBroadcastUrl } from '../../services/configURLs';
 import { CalendarComponentOptions } from 'ion2-calendar';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-createBroadcast',
@@ -26,15 +27,33 @@ export class createBroadcastPage {
   optionsRange: CalendarComponentOptions = {
     pickMode: 'range'
   };
-  public id="";
-  public apiInProgress=false;
+  public id = "";
+  public apiInProgress = false;
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public alertCtrl: AlertController, public nativeStorage: NativeStorage) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public alertCtrl: AlertController, public nativeStorage: NativeStorage) {
 
-    this.dateRange= { from: '', to: '' };
+    this.dateRange = { from: '', to: '' };
     this.keyboard.disableScroll(true);
-    this.id = this.params.get('id')?this.params.get('id'):'';
-   
+    this.id = this.params.get('id') ? this.params.get('id') : '';
+
+    if (this.params.get('broadcast_start') && this.params.get('broadcast_end')) {
+
+      let d = new Date(this.params.get('broadcast_start'));
+      let dd = ("0" + d.getDate()).slice(-2);
+      let mm = ("0" + ((d.getMonth()) + 1)).slice(-2); //January is 0!
+      let yyyy = d.getFullYear();
+      let from_date = yyyy + '-' + mm + '-' + dd;
+
+      let d1 = new Date(this.params.get('broadcast_end'));
+      let dd1 = ("0" + d1.getDate()).slice(-2);
+      let mm1 = ("0" + ((d1.getMonth()) + 1)).slice(-2); //January is 0!
+      let yyyy1 = d1.getFullYear();
+      let to_date = yyyy1 + '-' + mm1 + '-' + dd1;
+
+      this.dateRange.from = from_date;
+      this.dateRange.to = to_date;
+    }
+
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         this.userId = accessToken.user_id;
@@ -59,7 +78,7 @@ export class createBroadcastPage {
   }
 
   createBroadcast() {
-
+    //alert("from="+this.dateRange.from+" to="+this.dateRange.to);
     let d = new Date(this.dateRange.from);
     let dd = ("0" + d.getDate()).slice(-2);
     let mm = ("0" + ((d.getMonth()) + 1)).slice(-2); //January is 0!
@@ -74,55 +93,61 @@ export class createBroadcastPage {
 
     //this.dismiss();
     //alert(this.workOrderData);
-    
-    /* create WO api call */
-    let alertVar = this.alertCtrl.create({
-      title: 'Error!',
-      subTitle: 'Invalid Details!',
-      buttons: ['OK']
-    });
 
+    if (this.id && this.id != '') {
 
-    this.nativeStorage.getItem('user_auth').then(
-      accessToken => {
-        if (this.commonMethod.checkNetwork()) {
-          let url = "";
-          let objData = {};
-          let objData1 = {};
-          objData = {"feed":{ 'broadcast_start': from_date, 'broadcast_end': to_date }};
-          url = createBroadcastUrl + "/" + this.id;
-          console.log("dates="+JSON.stringify(objData));
-        
-          this.apiInProgress=true;
-          this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
-            data => {
-              let foundRepos = data.json();
-              console.log(foundRepos);
-              this.dismiss();
-              this.apiInProgress=false;
-            },
-            err => {
-              this.apiInProgress=false;
-              alertVar.present();
-              console.error("Error : " + err);
-            },
-            () => {
-              console.log('getData completed');
-            }
-          );
+      /* create broadcast api call */
+      let alertVar = this.alertCtrl.create({
+        title: 'Error!',
+        subTitle: 'Invalid Details!',
+        buttons: ['OK']
+      });
+
+      this.nativeStorage.getItem('user_auth').then(
+        accessToken => {
+          if (this.commonMethod.checkNetwork()) {
+            let url = "";
+            let objData = {};
+            let objData1 = {};
+            objData = { "feed": { 'broadcast_start': from_date, 'broadcast_end': to_date } };
+            url = createBroadcastUrl + "/" + this.id;
+            console.log("dates=" + JSON.stringify(objData));
+
+            this.apiInProgress = true;
+            this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
+              data => {
+                this.googleAnalytics.trackPostEvents(GoogleAnalyticsProvider.ACTION_POST_BROADCAST_CREATE, 'Broadcast is created')
+                let foundRepos = data.json();
+                console.log(foundRepos);
+                this.dismiss();
+                this.apiInProgress = false;
+              },
+              err => {
+                this.apiInProgress = false;
+                alertVar.present();
+                console.error("Error : " + err);
+              },
+              () => {
+                console.log('getData completed');
+              }
+            );
+          }
+          else {
+            this.commonMethod.showNetworkError();
+          }
+
+        },
+        error => {
+          return '';
         }
-        else {
-          this.commonMethod.showNetworkError();
-        }
-
-      },
-      error => {
-        return '';
-      }
-    );
+      );
+    } else {
+      this.keyboard.close();
+      this.viewCtrl.dismiss({ broadcast_start: from_date, broadcast_end: to_date });
+    }
   }
 
- 
+
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {
@@ -145,7 +170,7 @@ export class createBroadcastPage {
 
   onChange() {
     console.log("change");
-    this.dateRange= { from: this.dateRange.from, to:this.dateRange.to };
+    this.dateRange = { from: this.dateRange.from, to: this.dateRange.to };
   }
 
 

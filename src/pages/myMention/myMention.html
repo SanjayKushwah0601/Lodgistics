@@ -89,7 +89,7 @@
             </ion-item>
             <ion-item class="item_sub2">
               <ion-card-content (click)="translate(item.content.content_data,'es',j)" [ngClass]="selectable">
-                <p [innerHTML]="updateHtml(item.content.content_data,item.mentioned_user_ids?item.mentioned_user_ids:'') | safeHtml" style="font-size:15px !important;color:#000000;"></p>
+                <p [innerHTML]="updateHtml(item.content.content_data,item.mentioned_targets?item.mentioned_targets:'') | safeHtml" style="font-size:15px !important;color:#000000;"></p>
               </ion-card-content>
 
               <ion-row [ngClass]="item.content.temp_data?'card-footer blue-border':'card-footer'">

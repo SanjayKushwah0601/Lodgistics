@@ -16,6 +16,7 @@ import { GroupChatPage } from '../groupChat/groupChat';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { File } from '@ionic-native/file';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 //import 'aws-sdk/dist/aws-sdk';
 //const AWS = (<any>window).AWS;
@@ -71,7 +72,7 @@ export class AddEditGroupPage {
   public formData = [];
   public createButton = false;
   public createButtonGroup = false;
-  constructor(public navCtrl: NavController, public keyboard: Keyboard, public zone: NgZone, public platform: Platform, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public commonMethod: srviceMethodsCall, private _FB: FormBuilder, public navParams: NavParams, private sqlite: SQLite, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, public keyboard: Keyboard, public zone: NgZone, public platform: Platform, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public commonMethod: srviceMethodsCall, private _FB: FormBuilder, public navParams: NavParams, private sqlite: SQLite, private viewCtrl: ViewController, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events) {
 
     //this.commonMethod.showLoader();
 
@@ -297,7 +298,6 @@ export class AddEditGroupPage {
     // this.totalRow+=1;
     //this.roleItems.push(this.totalRow);
     this.addOther();
-
   }
 
   addEditGroup(formData) {
@@ -344,6 +344,9 @@ export class AddEditGroupPage {
                 this.commonMethod.putData(addEditGroupUrl + "/" + this.groupInfo.id, objData, accessToken).subscribe(
                   data => {
 
+                    let action = this.groupInfo ? GoogleAnalyticsProvider.ACTION_UPDATE : GoogleAnalyticsProvider.ACTION_CREATE
+                    let label = this.groupInfo ? 'Group is updated' : 'Group is created from group screen'
+                    this.googleAnalytics.trackGroupEvents(action, label)
                     this.foundRepos = data.json();
                     console.error(this.foundRepos);
                     //  this.navCtrl.setRoot(ChattingPage);

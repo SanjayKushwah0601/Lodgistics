@@ -16,7 +16,7 @@ export class ForgetPasswordPage {
   userForm: any;
   email: any;
   public foundRepos;
-  public showLoader=false;
+  public showLoader = false;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, formBuilder: FormBuilder, public commonMethod: srviceMethodsCall) {
     this.userForm = formBuilder.group({
@@ -43,16 +43,16 @@ export class ForgetPasswordPage {
 
     let objData = { 'user': { 'email': this.userForm.value["email"] } };
 
-    this.showLoader=true;
+    this.showLoader = true;
     this.commonMethod.postDataWithoutLoder(forgetPasswordUrl, objData, '').subscribe(
       data => {
         this.foundRepos = data.json();
         alertVar.present();
-        this.showLoader=false;
+        this.showLoader = false;
       },
       err => {
         //this.commonMethod.hideLoader();
-        this.showLoader=false;
+        this.showLoader = false;
         console.log("Error 1: " + JSON.stringify(err.json()));
         let res = err.json();
         if (typeof (res.error) !== undefined) {

@@ -18,5 +18,5 @@ export class IntroInviteUsersPage {
   dismiss() {
     this.viewCtrl.dismiss('');
   }
-  
+
 }

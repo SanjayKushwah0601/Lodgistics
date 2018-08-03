@@ -150,8 +150,11 @@ export class BroadcastListPage {
 
     if (this.touchtime == 0) {
       this.touchtime = new Date().getTime();
+      setTimeout(() => {
+        this.touchtime = 0
+      }, 800)
     } else {
-      if (((new Date().getTime()) - this.touchtime) < 400) {
+      if (((new Date().getTime()) - this.touchtime) < 800) {
         this.touchtime = 0;
         this.translateTitle(title, langCode, i);
 

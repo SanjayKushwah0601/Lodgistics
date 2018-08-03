@@ -18,12 +18,12 @@ export class TeamListingPage {
   @ViewChild(Navbar) navbar: Navbar;
   @ViewChild(Content) content: Content;
 
-  
+
   public foundRepos = [];
   public feedNotificationCount = 0;
   public messagesNotificationCount = 0;
   public interval: any;
-  public userPermissions:any;
+  public userPermissions: any;
   public isPopupOpen = false;
   public alert: any;
   public spinner = false;
@@ -34,7 +34,7 @@ export class TeamListingPage {
       "wo_access": {
         "view_listing": false,
         "can_create": false,
-        "can_close":false
+        "can_close": false
       }
     };
 
@@ -78,18 +78,18 @@ export class TeamListingPage {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         console.log("access token details  : " + JSON.stringify(accessToken));
-        
+
         if (this.commonMethod.checkNetwork()) {
-          this.spinner=true;
+          this.spinner = true;
           this.commonMethod.getDataWithoutLoder(getAllMembersUrl, accessToken).subscribe(
             data => {
               this.foundRepos = data.json();
-              this.spinner=false;
+              this.spinner = false;
               console.log(this.foundRepos);
               //alert(this.foundRepos); 
             },
             err => {
-              this.spinner=false;
+              this.spinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -108,18 +108,18 @@ export class TeamListingPage {
     );
   }
 
-  add(){
+  add() {
     this.navCtrl.push(InviteUsersPage);
   }
 
-  openIntro(){
+  openIntro() {
     let modal = this.modalCtrl.create(IntroInviteUsersPage);
     modal.onDidDismiss(data => {
     });
     modal.present();
   }
 
-  
+
 
 
 }

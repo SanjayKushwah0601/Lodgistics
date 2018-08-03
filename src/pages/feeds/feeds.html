@@ -1,20 +1,6 @@
 <div id="ListBackdrop" *ngIf="fabButtonOpened"></div>
 <ion-header>
   <ion-navbar>
-    <!-- <button ion-button menuToggle end>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-
-    <span start class="broadcast" *ngIf="broadcast_count>0">
-      <span (click)="broadcastList()">
-        
-        <span class="broadcast_btn">
-          <img src="assets/img/broadcost-red-icon.png" />
-        </span>
-        ({{broadcast_count}})</span>
-    </span> -->
-
-
     <ion-buttons left>
       <button ion-button left (click)="broadcastList()">
         <span start class="broadcast" *ngIf="broadcast_count>0">
@@ -217,7 +203,7 @@
       
           
       
-          <ion-col *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !item.work_order_id>0" class="border-right card-btn" (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_user_ids,item.room_id?item.room_id:''):''">
+          <ion-col *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !item.work_order_id>0" class="border-right card-btn" (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_targets,item.room_id?item.room_id:''):''">
             <button ion-button icon-left clear>
               
               <ion-icon ios="ios-construct" md="md-construct" [ngClass]="(item.work_order_id && item.work_order_id>0)?'option-icon wo-dissable':'option-icon'" ></ion-icon>
@@ -271,6 +257,8 @@
         <ion-label text-center class="btn-day" *ngIf="showFilterData" style="text-align:center;">{{(res.date | date:'MMM d, yyyy') | uppercase}}</ion-label>
       </ion-item-divider>
 
+
+
       <ion-item class="feed_item_divider">
         <!-- Long press here -->
         <ion-card *ngFor="let item of res.value; let j=index" (long-press)="showContextOptions(item.id,i,j,item.broadcast_start,item.follow_up_start)"
@@ -283,17 +271,17 @@
 
 
             <div class="pull-left">
-              <h2>{{item.created_by.name}}
+              <h2 class="user_name">{{item.created_by.name}}
                 <span *ngIf="item.room_number && item.room_number>0" class="work-order-badge room_no_badge">Room #{{item.room_number}}</span>
                 <span *ngIf="userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0"
                   (click)="editWorkOrder(item.work_order_id)" class="{{(item.work_order && item.work_order.status=='closed')?'work-order-badge-close':'work-order-badge'}}">WO #{{item.work_order_id}}</span>
               </h2>
-              <div class="user-title" *ngIf="item.created_by.title">{{item.created_by.title}}</div>
+              <p *ngIf="item.created_by.title" class="user_title">{{item.created_by.title}}</p>
               <p *ngIf="!item.created_by.title">
                 <br>
               </p>
             </div>
-            <div [ngClass]="(i<=0 && !showFilterData && item.room_number && item.room_number>0 && userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0)?'pull-right time_text':'pull-right'">
+            <div [ngClass]="(i<=0 && !showFilterData && item.room_number && item.room_number>0 && userPermissions.wo_access && userPermissions.wo_access.view_listing && item.work_order_id && item.work_order_id>0)?'pull-right time_text time-label-fix':'pull-right time-label-fix'">
               <span *ngIf="i<=0 && !showFilterData" style="float:right;">{{item.updated_at | amTimeAgo}}</span>
               <span *ngIf="i>0 && !showFilterData" style="float:right;">{{item.updated_at | date:'shortTime'}}</span>
               <span *ngIf="showFilterData" style="float:right;">{{item.updated_at | amDateFormat:'MMMM. d'}}</span>
@@ -304,18 +292,18 @@
 
 
           <span *ngIf="item.image_url==''">
-            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
-              <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></p> -->
+            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_targets)" ngClass="selectable">
+              <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></p> -->
               <p *ngIf="(item.showMore == undefined || item.showMore)">
                 <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                <span [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                 <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                 <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
               </p>
 
               <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                 <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                <span [innerHTML]="updateHtml1(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                 <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                 <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
               </p>
@@ -324,20 +312,20 @@
           </span>
 
           <span *ngIf="item.image_url!=''">
-            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
+            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_targets)" ngClass="selectable">
               <table class="card-table card-table-2">
                 <tr>
                   <td class="">
-                    <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></p> -->
+                    <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></p> -->
                     <p *ngIf="(item.showMore == undefined || item.showMore)">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
                     <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
@@ -357,23 +345,23 @@
 
 
           <!-- <span *ngIf="item.image_url!='' && item.image_width<item.image_height">
-            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
+            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_targets)" ngClass="selectable">
               <table class="card-table">
                 <tr>
                   <td (click)="showImage(item.image_url)">
                     <img style="width:200px;height:250px;" src="{{item.image_url}}">
                   </td>
                   <td class="td-box-2">
-                    <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"  class="vertical-image-feed"></p>
+                    <p [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"  class="vertical-image-feed"></p>
                     <p *ngIf="(item.showMore == undefined || item.showMore)">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
                     <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
@@ -402,7 +390,7 @@
 
           <p class="broadcast_btn" *ngIf="item.broadcast_start!='' && item.broadcast_start!=null" (click)="(item.broadcast_start!='' && item.broadcast_start!=null)?confirmCancelBroadcast(item.id,i,j):createBroadCastConfirm(item.id)">
             <!-- <img src="{{(item.broadcast_start!='' && item.broadcast_start!=null)?(compareBroadcastDate(item.broadcast_end)?'assets/img/broadcost-gray-icon.png':'assets/img/broadcost-blue-icon.png'):'assets/img/broadcost-gray-icon.png'}}" /> -->
-            <ion-icon name="ios-megaphone-outline" class="option-icon"></ion-icon>
+            <ion-icon name="ios-megaphone-outline" [ngClass]="compareBroadcastDate(item.broadcast_end)?'option-icon broadcast-icon':'option-icon'"></ion-icon>
             <span class="broadcast_date_text" *ngIf="item.broadcast_start!='' && item.broadcast_start!=null">
               <span [ngClass]="compareBroadcastDate(item.broadcast_end)?'broadcast_date_text_gray':''">({{item.broadcast_start | date:'MMM dd'}} - {{item.broadcast_end | date:'MMM dd'}})</span>
             </span>
@@ -410,7 +398,7 @@
           </p>
 
           <p class="broadcast_btn" *ngIf="item.follow_up_start!='' && item.follow_up_start!=null" (click)="(item.follow_up_start!='' && item.follow_up_start!=null)?confirmCancelFollowUp(item.id,i,j):createFollowUpConfirm(item.id)">
-            <ion-icon name="ios-calendar-outline" class="option-icon"></ion-icon>
+            <ion-icon name="ios-calendar-outline" [ngClass]="compareBroadcastDate(item.follow_up_end)?'option-icon broadcast-icon':'option-icon'"></ion-icon>
             <!-- <img src="{{(item.follow_up_start!='' && item.follow_up_start!=null)?(compareBroadcastDate(item.follow_up_end)?'assets/img/broadcost-gray-icon.png':'assets/img/broadcost-blue-icon.png'):'assets/img/broadcost-gray-icon.png'}}" /> -->
             <span class="broadcast_date_text" *ngIf="item.follow_up_start!='' && item.follow_up_start!=null">
               <span [ngClass]="compareBroadcastDate(item.follow_up_end)?'broadcast_date_text_gray':''">({{item.follow_up_start | date:'MMM dd'}} - {{item.follow_up_end | date:'MMM dd'}})</span>
@@ -433,7 +421,7 @@
 
 
             <ion-col *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !item.work_order_id>0" class="border-right card-btn"
-              (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_user_ids,item.room_id?item.room_id:''):''">
+              (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_targets,item.room_id?item.room_id:''):''">
               <button ion-button icon-left clear>
                 <!-- <div [ngClass]="(item.work_order_id && item.work_order_id>0)?'wo-dissable':''">Create Work Order</div> -->
                 <ion-icon ios="ios-construct" md="md-construct" [ngClass]="(item.work_order_id && item.work_order_id>0)?'option-icon wo-dissable':'option-icon'"></ion-icon>
@@ -476,14 +464,10 @@
           </ion-row>
 
         </ion-card>
-
       </ion-item>
+
     </ion-item-group>
-
   </span>
-
-
-
 
   <span class="txt-update" *ngIf="reachedOnLastDate && !showFilter">
     <br/>Your hotel does not have any posts before this date.</span>
@@ -496,6 +480,7 @@
     <ion-spinner style="text-align:center;width:100%;"></ion-spinner>
     <p class="search-loader-text">Loading older posts...</p>
   </span>
+
 
   <ion-fab bottom center edge #fab class="footer_fab_box">
     <button ion-fab class="btn_feb_add" (click)="openFabButton()">
@@ -529,6 +514,7 @@
       </span>
     </ion-fab-list>
   </ion-fab>
+
 </ion-content>
 
 <ion-footer>

@@ -18,7 +18,7 @@
 </ion-content> -->
 <ion-list>
   <!-- <ion-list-header>Ionic</ion-list-header> -->
-  <ion-item *ngFor="let user of users">
+  <ion-item *ngFor="let user of users; let i = index">
     <ion-label>{{user.name}}</ion-label>
   </ion-item>
 

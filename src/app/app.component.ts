@@ -52,6 +52,9 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { Device } from '@ionic-native/device';
 import { UpdateAppPage } from '../pages/updateApp/updateApp';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
+import { GoogleAnalyticsProvider } from '../providers/google-analytics/google-analytics';
+import { UtilMethods } from '../services/utilMethods';
+import { Intercom } from '@ionic-native/intercom';
 
 (window as any).handleOpenURL = (url: string) => {
   (window as any).handleOpenURL_LastURL = url;
@@ -59,7 +62,7 @@ import { NotificationPermissionPage } from '../pages/notificationPermission/noti
 
 @Component({
   templateUrl: 'app.html',
-  providers: [NativeStorage, Push, srviceMethodsCall, SQLite, Keyboard, InAppBrowser, Badge, EmailComposer, Device]
+  providers: [NativeStorage, Push, srviceMethodsCall, SQLite, Keyboard, InAppBrowser, Badge, EmailComposer, Device, UtilMethods]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -93,9 +96,12 @@ export class MyApp {
   public openPageByDeeplink = false;
   public notificationsStatus = true;
 
-  constructor(public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController, private badge: Badge, public modalCtrl: ModalController, public toastCtrl: ToastController, private emailComposer: EmailComposer, private device: Device) {//,private localNotifications: LocalNotifications
+  constructor(private intercom: Intercom, public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public zone: NgZone, public commonMethod: srviceMethodsCall, public statusBar: StatusBar, public splashScreen: SplashScreen, public nativeStorage: NativeStorage, private push: Push, public alertCtrl: AlertController, private sqlite: SQLite, private keyboard: Keyboard, public events: Events, private iab: InAppBrowser, public menuCtrl: MenuController, private badge: Badge, public modalCtrl: ModalController, public toastCtrl: ToastController, private emailComposer: EmailComposer, private device: Device, public utilMethods: UtilMethods) {//,private localNotifications: LocalNotifications
     this.initializeApp();
-
+    this.platform.ready().then(() => {
+      this.intercom.registerIdentifiedUser({ userId: "12345" });
+      // this.intercom.setLauncherVisibility('VISIBLE');
+    });
     // override open handler to navigate on further custom url scheme actions
     (window as any).handleOpenURL = (url: string) => {
       setTimeout(() => {
@@ -145,7 +151,9 @@ export class MyApp {
       this.hotelMenu = [];
       for (let i = 0; i < hotels.length; i++) {
         if (i == index) {
+          //if (this.currentHotelName == "") {
           this.currentHotelName = hotels[i].name;
+          //}
         }
         this.hotelMenu.push({ name: hotels[i].name, token: hotels[i].token, created_at: hotels[i].created_at });
       }
@@ -197,7 +205,7 @@ export class MyApp {
     events.subscribe('show:LoaderPage', () => {
       this.showPage = true;
       this.showChar = { first: false, secound: false, third: false, fourth: false };
-      console.log("show:LoaderPage 1");
+
       this.userName = "";
       this.displayText1 = "";
       this.displayText2 = "";
@@ -303,12 +311,6 @@ export class MyApp {
           }
           this.showNotification();
         } else {
-
-          if (notification.additionalData.inlineReply != undefined && notification.additionalData.inlineReply) {
-            console.log("got message = " + JSON.stringify(notification.additionalData));
-            //this.sendMessage(notification.additionalData.inlineReply, '', '', '');
-          }
-
           console.log("aaaaaa" + notification.additionalData);
           if (notification.additionalData.type.property_token && notification.additionalData.type.property_token == accessToken.property_token) {
             this.commonMethod.showLoader();
@@ -364,50 +366,17 @@ export class MyApp {
 
 
   }
-  sendMessage(textMessage, image_url, parent_id, groupID) {
 
-    let mentionId = [];
-
-
-    let messageText = textMessage.trim();
-    // messageText = this.commonMethod.replaceURLWithHTMLLinks(messageText);
-    console.log("aaaaa")
-
-    let objData = { chat_message: { message: textMessage, chat_id: 521, mentioned_user_ids: [], image_url: "", responding_to_chat_message_id: 9840 } };//{ 'chat_message': { message: messageText, chat_id: groupID, mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: parent_id } };
-
-    this.nativeStorage.getItem('user_auth').then(
-      accessToken => {
-        if (this.commonMethod.checkNetwork()) {
-          this.commonMethod.postDataWithoutLoder(sendMessageUrl, objData, accessToken).subscribe(
-            data => {
-              console.log(data.json());
-            },
-            err => {
-              console.error("Error : " + err);
-            },
-            () => {
-              console.log('getData completed');
-            }
-          );
-
-        }
-        else {
-          this.commonMethod.showNetworkError();
-        }
-
-      },
-      error => {
-        return '';
-      }
-    );
-
-
-  }
   initializeApp() {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+
+      /* Call function to store last 7 days data */
+      this.utilMethods.updateFeedData(7);
+
       this.hotelMenu = [];
+
       this.nativeStorage.getItem('user_properties').then(
         hotels => {
           console.log("userProperties=" + hotels);
@@ -499,17 +468,16 @@ export class MyApp {
 
 
       // this.deeplinks.routeWithNavController(this.nav, {
-      //  '/about-us': NewAccountPage,
-      // '/create/:hotelCode': NewAccountPage
+      //   '/create/:propertyToken/:hotelCode': NewUserPage
       // }).subscribe((match) => {
-      // match.$route - the route we matched, which is the matched entry from the arguments to route()
-      // match.$args - the args passed in the link
-      // match.$link - the full link data
-      //   console.log('Successfully matched route', match);
-      //}, (nomatch) => {
-      // nomatch.$link - the full link data
-      // console.error('Got a deeplink that didn\'t match', nomatch);
-      // });
+      //     // match.$route - the route we matched, which is the matched entry from the arguments to route()
+      //     // match.$args - the args passed in the link
+      //     // match.$link - the full link data
+      //     console.log('Successfully matched route', JSON.stringify(match));
+      //   }, (nomatch) => {
+      //     // nomatch.$link - the full link data
+      //     console.error('Got a deeplink that didn\'t match', nomatch);
+      //   });
 
 
     });
@@ -626,6 +594,7 @@ export class MyApp {
   }
 
   openLearningCenter() {
+    this.googleAnalytics.sideMenuClick('Learning Center')
     this.nav.setRoot(MyVideosPage);
   }
 
@@ -873,7 +842,7 @@ export class MyApp {
   // }
 
   changeHotel(propertyToken, hotelName, hotelCreated, notification, updateNewVersion) {
-
+    this.googleAnalytics.sideMenuClick('Switch Hotel')
     if (this.commonMethod.checkNetwork()) {
       if (updateNewVersion == true) {
         this.commonMethod.showLoaderForDbSync();
@@ -946,6 +915,7 @@ export class MyApp {
         }
       );
 
+
     }
     else {
       this.commonMethod.showNetworkError();
@@ -957,6 +927,7 @@ export class MyApp {
     // to check if we have permission
     this.push.hasPermission()
       .then((res: any) => {
+
         if (res.isEnabled) {
           console.log('We have permission to send push notifications');
         } else {
@@ -981,9 +952,7 @@ export class MyApp {
     };
 
     const pushObject: PushObject = this.push.init(options);
-
     pushObject.on('notification').subscribe((notification: any) => {
-
       console.log('Received a notification', JSON.stringify(notification));
 
       console.log("ccccc" + notification.additionalData);
@@ -1046,27 +1015,17 @@ export class MyApp {
 
     });
     pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
-
-    pushObject.on('accept').subscribe(obj => {
-      console.log('accept a notification', JSON.stringify(obj));
-
-      this.sendMessage(obj.additionalData.inlineReply, "", "", "");
-    });
-    pushObject.on('reject').subscribe(obj => console.log('reject a notification', JSON.stringify(obj)));
-
   }
-
-
   openSpecificPage(notification) {
     //TODO: Your logic here
     let view = this.nav.getActive();
     this.menuCtrl.close();
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
-        // alert(JSON.stringify(notification));
         this.zone.run(() => {
           this.showNotifyAlert = false;
         });
+        // alert(JSON.stringify(notification));
         if (accessToken.access_token != undefined && accessToken.access_token != '') {
           if (notification.additionalData == undefined || notification.additionalData.type == undefined) {
             this.commonMethod.hideLoader;
@@ -1798,6 +1757,7 @@ export class MyApp {
   }
 
   logoutUser() {
+    this.googleAnalytics.sideMenuClick('Logout')
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         // alert(accessToken.db_version);
@@ -1952,9 +1912,8 @@ export class MyApp {
     //   alert(event.direction);
 
   }
-  updateHtml(text): string {
+  updateHtml(text) {
     text = text.replace(/\n/g, "<br/>");
-    // text = text.replace(/\n/g, " ");
     return text;
   }
 
@@ -2064,7 +2023,7 @@ export class MyApp {
   }
 
   openWebPage(webUrl) {
-
+    this.googleAnalytics.sideMenuClick('Maintenance: ' + webUrl)
     this.openSideMenuOpt = false;
     this.menuCtrl.close();
     this.nativeStorage.getItem('user_auth').then(
@@ -2088,23 +2047,29 @@ export class MyApp {
     );
     //this.navCtrl.setRoot(WorkOrderPage,{id:id,page:'group_chat',group_data:this.groupInfo});
   }
+
   openWoPage() {
+    this.googleAnalytics.sideMenuClick('Work Order')
     this.nav.setRoot(WorkOrderPage);
   }
 
   openMentionsPage() {
+    this.googleAnalytics.sideMenuClick('Mentions')
     this.nav.setRoot(MyMentionPage);
   }
 
   openProfilePage() {
+    this.googleAnalytics.sideMenuClick('Profile')
     this.nav.push(ProfilePage);
   }
 
   openTeamPage() {
+    this.googleAnalytics.sideMenuClick('Team')
     this.nav.push(TeamListingPage);
   }
 
   openTaskChecklistPage() {
+    this.googleAnalytics.sideMenuClick('Check Lists')
     this.nav.setRoot(TaskChecklistPage);
   }
 
@@ -2233,7 +2198,6 @@ export class MyApp {
                                                 this.subscribeAcNotification();
 
 
-
                                                 //this.foundRepos = data.json();
                                                 let users = this.usersdata;
                                                 console.error(users);
@@ -2295,6 +2259,12 @@ export class MyApp {
                                                     },
                                                     error => console.error('Error storing broadcast_count', error)
                                                   );
+
+
+
+
+
+
 
                                               },
                                               error => {
@@ -2455,6 +2425,15 @@ export class MyApp {
       enabled: this.notificationsStatus ? true : false
     };
 
+    let label = ''
+    if (this.notificationsStatus) {
+      label = "Notification: true"
+    } else {
+      label = "Notification: false"
+    }
+
+    this.googleAnalytics.sideMenuClick(label)
+
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -2535,11 +2514,11 @@ export class MyApp {
   }
 
   /**
-   * Navigate user to update screen page, where user will be having an option to update his app
-   * 
-   * @param isForceUpdate required parameter to show or hide the dismiss button. 
-   * If it is true, user will no longer have the option to dismiss that screen.
-   */
+    * Navigate user to update screen page, where user will be having an option to update his app
+    * 
+    * @param isForceUpdate required parameter to show or hide the dismiss button. 
+    * If it is true, user will no longer have the option to dismiss that screen.
+    */
   navigateToUpdateAppPage(isForceUpdate: boolean, message) {
     this.nav.push(UpdateAppPage, {
       isForceUpdate: isForceUpdate,
@@ -2548,8 +2527,9 @@ export class MyApp {
     //this.nav.push(NotificationPermissionPage);
   }
 
-  sendEmail() {
 
+  sendEmail() {
+    this.googleAnalytics.sideMenuClick('Email Support')
     let emailText = "Device information - <br>";
     emailText += "Platform : " + this.device.platform + " <br>";
     emailText += "Model : " + this.device.model + " <br>";
@@ -2568,7 +2548,9 @@ export class MyApp {
     this.emailComposer.open(email);
   }
 
+
   checkAppUpdate() {
+
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',

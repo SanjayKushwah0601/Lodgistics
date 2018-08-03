@@ -1,142 +1,141 @@
 page-login {
-    .list-ios>.item-block:first-child,
-    .list-md>.item-block:first-child {
-        border-top: none;
+  .list-ios>.item-block:first-child,
+  .list-md>.item-block:first-child {
+    border-top: none;
+  }
+  .item-ios,
+  .item-md {
+    padding-left: 0px;
+    margin-bottom: 30px;
+    font-family: 'open_sanslight';
+  }
+  .margin-top {
+    margin-top: 20px;
+  }
+  .a1 {
+    color: #BDBDBD;
+    letter-spacing: 1px;
+    margin-top: 5px;
+    font-family: 'open_sanslight';
+    text-transform: capitalize;
+    /*font-size: 20px;*/
+  }
+  .show-pass {
+    float: right;
+    position: relative;
+    padding: 5px;
+    top: -40px;
+    color: #BDBDBD;
+    letter-spacing: 2px;
+    font-size: 12px;
+  }
+  .clearfix {
+    clear: both;
+    letter-spacing: 2px;
+  }
+  .button-ios,
+  .button-md {
+    font-family: 'open_sanssemibold';
+  }
+  .label-ios[stacked],
+  .label-md[stacked] {
+    font-family: 'open_sanslight';
+    font-size: 20px;
+    color: #BDBDBD;
+  }
+  form {
+    max-width: 495px;
+    margin: 40px auto auto auto;
+  }
+  .text-input {
+    color: #424242;
+  }
+  .item-md {
+    padding-left: 0px;
+  }
+  .button-full-md {
+    box-shadow: none;
+    border-radius: 4px;
+  }
+  .password-field {
+    padding-right: 35px;
+  } //.margin-top:hover{opacity: 0.4;}
+  .show-pass:active {
+    background-color: #EEE;
+    color: gray;
+    opacity: 0.8;
+  }
+  .a1:active {
+    background-color: #EEE;
+    color: gray;
+    opacity: 0.8;
+  }
+  .label-ios[floating],
+  .label-md[floating] {
+    color: #BDBDBD;
+  }
+  .app_logo {
+    text-align: center;
+  }
+  .app_logo img {
+    height: 40%;
+    width: 45%;
+  }
+  .app_logo h4 {
+    color: #a2a2a2 !important;
+    margin-top: 0px;
+  }
+  .login_heading {
+    color: #808080;
+    font-weight: 300;
+    text-align: center;
+  }
+  .toolbar-title-md {
+    margin-left: 0px !important;
+  }
+  .scroll-content {
+    margin-bottom: 0px !important;
+    padding: 16px 16px 0 16px !important;
+  }
+  @media(max-width:749px) {
+    .label-ios[stacked],
+    .label-md[stacked] {
+      letter-spacing: 1px;
+    }
+    .label-ios,
+    .label-md {
+      font-size: 16px !important;
+      letter-spacing: normal;
+    }
+    .margin-top {
+      margin-top: 10px;
     }
     .item-ios,
     .item-md {
-        padding-left: 0px;
-        margin-bottom: 30px;
-        font-family: 'open_sanslight';
-    }
-    .margin-top {
-        margin-top: 20px;
-    }
-    .a1 {
-        color: #BDBDBD;
-        letter-spacing: 1px;
-        margin-top: 5px;
-        font-family: 'open_sanslight';
-        text-transform: capitalize;
-        /*font-size: 20px;*/
+      margin-bottom: 10px;
     }
     .show-pass {
-        float: right;
-        position: relative;
-        padding: 5px;
-        top: -40px;
-        color: #BDBDBD;
-        letter-spacing: 2px;
-        font-size: 12px;
+      font-size: 12px;
+      padding: 5px;
     }
-    .clearfix {
-        clear: both;
-        letter-spacing: 2px;
+    .a1 {
+      font-size: 12px;
+      margin-top: 1px;
+    }
+    form {
+      max-width: 272px;
+      margin: 25px auto auto auto;
+    }
+    .text-input-ios {
+      margin-top: 0px !important;
+      font-size: 16px;
     }
     .button-ios,
     .button-md {
-        font-family: 'open_sanssemibold';
+      height: 52px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-weight: 300 !important;
     }
-    .label-ios[stacked],
-    .label-md[stacked] {
-        font-family: 'open_sanslight';
-        font-size: 20px;
-        color: #BDBDBD;
-    }
-    form {
-        max-width: 495px;
-        margin: 40px auto auto auto;
-    }
-    .text-input {
-        color: #424242;
-    }
-    .item-md {
-        padding-left: 0px;
-    }
-    .button-full-md {
-        box-shadow: none;
-        border-radius: 4px;
-    }
-    .password-field {
-        padding-right: 35px;
-    }
-    //.margin-top:hover{opacity: 0.4;}
-    .show-pass:active {
-        background-color: #EEE;
-        color: gray;
-        opacity: 0.8;
-    }
-    .a1:active {
-        background-color: #EEE;
-        color: gray;
-        opacity: 0.8;
-    }
-    .label-ios[floating],
-    .label-md[floating] {
-        color: #BDBDBD;
-    }
-    .app_logo {
-        text-align: center;
-    }
-    .app_logo img {
-        height: 40%;
-        width: 45%;
-    }
-    .app_logo h4 {
-        color: #a2a2a2 !important;
-        margin-top: 0px;
-    }
-    .login_heading {
-        color: #808080;
-        font-weight: 300;
-        text-align: center;
-    }
-    .toolbar-title-md {
-        margin-left: 0px !important;
-    }
-    .scroll-content {
-        margin-bottom: 0px !important;
-        padding: 16px 16px 0 16px !important;
-    }
-    @media(max-width:749px) {
-        .label-ios[stacked],
-        .label-md[stacked] {
-            letter-spacing: 1px;
-        }
-        .label-ios,
-        .label-md {
-            font-size: 16px !important;
-            letter-spacing: normal;
-        }
-        .margin-top {
-            margin-top: 10px;
-        }
-        .item-ios,
-        .item-md {
-            margin-bottom: 10px;
-        }
-        .show-pass {
-            font-size: 12px;
-            padding: 5px;
-        }
-        .a1 {
-            font-size: 12px;
-            margin-top: 1px;
-        }
-        form {
-            max-width: 272px;
-            margin: 25px auto auto auto;
-        }
-        .text-input-ios {
-            margin-top: 0px !important;
-            font-size: 16px;
-        }
-        .button-ios,
-        .button-md {
-            height: 52px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            font-weight: 300 !important;
-        }
-    }
+  }
 }

@@ -38,7 +38,7 @@ import { UtilMethods } from '../../services/utilMethods';
     )
   ],
   templateUrl: 'taskChecklistDetail.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, SQLite]
+  providers: [UtilMethods, srviceMethodsCall, NativeStorage, Keyboard, SQLite]
 })
 
 export class TaskChecklistDetailPage {
@@ -63,9 +63,7 @@ export class TaskChecklistDetailPage {
   public showFooter = true;
   public spinner = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController,
-    public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public actionSheetCtrl: ActionSheetController,
-    public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events, private utilMethods: UtilMethods) {
+  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public params: NavParams, public events: Events, public actionSheetCtrl: ActionSheetController, public utilMethods: UtilMethods) {
 
     this.userPermissions = {
       "wo_access": {
@@ -561,6 +559,7 @@ export class TaskChecklistDetailPage {
     if (isReviewFinih) {
       finalStatus = "reviewed";
     }
+
     this.reviewerNotes = this.utilMethods.nlToBr(this.reviewerNotes);
     let objData = { id: id, status: finalStatus, notes: this.reviewerNotes };
 

@@ -29,6 +29,7 @@ import { SendMessagePage } from '../sendMessage/sendMessage';
 import { CreateWorkOrderPage } from '../createWorkOrder/createWorkOrder';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
 import 'web-animations-js/web-animations.min';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-myMention',
@@ -82,7 +83,7 @@ export class MyMentionPage {
   public spinner = false;
   public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private toast: Toast, private sqlite: SQLite, private iab: InAppBrowser, public platform: Platform, public zone: NgZone, public modalCtrl: ModalController) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private toast: Toast, private sqlite: SQLite, private iab: InAppBrowser, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
 
     this.viewWOUrl = viewWorkOrderUrl;
     this.getAllMembersFromDb();
@@ -144,6 +145,26 @@ export class MyMentionPage {
             this.members.push(tempUserInfo);
           }
         }
+
+        debugger
+        this.nativeStorage.getItem('mentionable')
+          .then((data) => {
+            debugger
+            if (data) {
+              for (let i = 0; i < data.departments.length; i++) {
+                let tempUserInfo = {
+                  "id": data.departments[i].id,
+                  "name": data.departments[i].name,
+                  "type": 'Department',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                  // "total": allMembers.rows.item(i).total
+                };
+                this.members.push(tempUserInfo);
+              }
+              console.log(data)
+            }
+          }).catch((err) => {
+          })
 
       }, (error1) => {
         console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
@@ -213,6 +234,8 @@ export class MyMentionPage {
   }
 
   openDetail(comment_id, id, index) {
+
+
     let objData = { status: 'checked' };
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -261,6 +284,7 @@ export class MyMentionPage {
 
   }
   openGroupCaht(id, index) {
+
     if (this.foundRepos[index].content.content_type == "private_chat") {
       this.openPrivateChat(this.foundRepos[index].content.content_type_id, this.foundRepos[index].content.content_id, this.foundRepos[index].created_at, index);
     }
@@ -581,12 +605,12 @@ export class MyMentionPage {
   }
 
   //TODO: Need to move this function into utility folder. 
-  updateHtml(val, mentioned_user_ids) {
+  updateHtml(val, mentioned_targets) {
     //return "<span style='color:#02B9E7'>@Abhishek</span> " + val.replace(/text-decoration-line/g, "text-decoration");
 
     let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
+    if (mentioned_targets != '' && mentioned_targets != null) {
+      allChatMentions = mentioned_targets;
     }
 
     // let mentionStr = this.commonMethod.getMentionString(allChatMentions, this.members);
@@ -594,7 +618,7 @@ export class MyMentionPage {
     //   val = mentionStr + val;
     // }
 
-    let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
+    let newValue = this.commonMethod.getTextValueNew(allChatMentions, this.members, val);
     if (newValue != "") {
       val = newValue;
     }
@@ -604,15 +628,19 @@ export class MyMentionPage {
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
   }
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
@@ -743,6 +771,8 @@ export class MyMentionPage {
     //alert(id);
     //alert(message_id);
     //alert(message_date);
+
+
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -1241,8 +1271,8 @@ export class MyMentionPage {
     }
   }
 
-  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
+  createWorkOrder(id, value, image_url, mentioned_targets, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_targets, room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
     });

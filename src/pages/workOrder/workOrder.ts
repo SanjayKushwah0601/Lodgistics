@@ -16,6 +16,8 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { SendMessagePage } from '../sendMessage/sendMessage';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
 import 'web-animations-js/web-animations.min';
+import { UtilMethods } from '../../services/utilMethods';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-workOrder',
@@ -34,7 +36,7 @@ import 'web-animations-js/web-animations.min';
     )
   ],
   templateUrl: 'workOrder.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, TranslationService, SQLite, FabContainer]
+  providers: [UtilMethods, srviceMethodsCall, NativeStorage, Keyboard, TranslationService, SQLite, FabContainer]
 })
 
 export class WorkOrderPage {
@@ -62,9 +64,7 @@ export class WorkOrderPage {
   public userPermissions: any;
   public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage,
-    public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController,
-    public platform: Platform, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController, public utilMethods: UtilMethods) {
 
     this.getAllMembersFromDb();
 
@@ -272,17 +272,21 @@ export class WorkOrderPage {
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
   }
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
 
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
 
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
@@ -421,7 +425,7 @@ export class WorkOrderPage {
           }
         }, {
           text: 'Cancel',
-          role: 'destructive',
+          role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
           }
@@ -467,6 +471,7 @@ export class WorkOrderPage {
     setTimeout(function () {
       thisObj.content.resize();
     }, 1000);
+
   }
 
   toggleMove() {
@@ -483,7 +488,6 @@ export class WorkOrderPage {
     if (this.foundRepos.length > 0) {
       for (let i = 0; i < this.foundRepos.length; i++) {
         if (this.foundRepos[i].priority == status) {
-
           temp.push(this.foundRepos[i]);
         }
       }
@@ -582,6 +586,7 @@ export class WorkOrderPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.createFeed();
   }
 
@@ -590,6 +595,7 @@ export class WorkOrderPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
     this.createWorkOrder();
   }
 
@@ -598,6 +604,7 @@ export class WorkOrderPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();

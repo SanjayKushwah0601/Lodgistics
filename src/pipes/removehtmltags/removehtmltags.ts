@@ -10,7 +10,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'removehtmltags',
 })
 export class RemovehtmltagsPipe implements PipeTransform {
-
+  /**
+   * Takes a value and makes it lowercase.
+   */
   transform(value: string) {
     if (value) {
       var result = value.replace(/<\/?[^>]+>/gi, ""); //removing html tag using regex pattern
@@ -19,5 +21,4 @@ export class RemovehtmltagsPipe implements PipeTransform {
     }
     else { }
   }
-  
 }

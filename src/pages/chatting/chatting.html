@@ -18,7 +18,12 @@
   </ion-navbar>
 
   <ion-toolbar no-border-top>
+
+
+
     <ion-grid>
+
+
       <ion-row class="search-bar-animate">
         <ion-col col-10>
           <form (ngSubmit)="searchData()">
@@ -42,12 +47,16 @@
           <label class="user_count">({{totalPrivateUSers}})</label>
         </span>
       </div>
+
     </div>
     <div class="accord-bar text-left" *ngIf="showGroupList" (click)="createGroup()">
       <ion-icon name="add" class="icon-add"></ion-icon>
       <span class="head head_left">Create New Group</span>
     </div>
+
   </ion-toolbar>
+
+
 </ion-header>
 
 <ion-content padding (click)="closekeyboard()" [ngClass]="showGroupList && !initWithPrivate?'':'scroll-content-private'">
@@ -63,22 +72,30 @@
           <ion-spinner name="bubbles"></ion-spinner>
           <span class="api_loader_text">Fetching records...</span>
         </span>
+
         <!-- <div class="accord-bar text-left" (click)="createGroup()"><ion-icon name="add" class="icon-add"></ion-icon><span class="head head_left">Create New Group</span>  </div> -->
+
         <span *ngIf="foundRepos && !groupSpinner">
           <span *ngFor="let res of foundRepos.groups; let i=index" id="{{i}}" id="grouplistitems">
             <ion-item (click)="openGroupCaht(res.chat)" id="item{{i}}">
               <ion-avatar item-left>
                 <span class="badge" *ngIf="res.chat.unread>0">{{res.chat.unread}}</span>
+
                 <div class="avatar-group">
+
                   <div class="gr-full">
                     <img src="{{res.chat.image_url?res.chat.image_url:'assets/img/default_group_pic.jpg'}}">
                   </div>
+
                 </div>
+
               </ion-avatar>
+
               <div class="pull-left">
                 <h2 class="group-name">{{res.chat.name}}</h2>
                 <h2 *ngIf="res.chat.last_message" class="user-name" [innerHTML]="getUserName(res.chat.last_message?res.chat.last_message.sender_id:'')"></h2>
               </div>
+
               <div class="pull-right">
                 <span style="float:right;">{{res.chat.last_message?(res.chat.last_message.created_at | amTimeAgo):''}}</span>
               </div>
@@ -87,22 +104,46 @@
                   ios="ios-camera" md="md-camera"></ion-icon>
                 <p class="text_camera" [innerHTML]="updateHtml(res.chat.last_message?res.chat.last_message.message:'',res.chat.last_message?res.chat.last_message.mentioned_user_ids:'') | safeHtml"></p>
               </ion-card-content>
+
             </ion-item>
             <!-- <ion-card-content (click)="openGroupCaht()" [ngClass]="((foundRepos.groups-1)==i)?'card-last':''">-->
           </span>
+
         </span>
+
+
       </span>
+
+
+
     </ion-card>
+
+
+
+
+
+
+
+
+
+
     <ion-card style="width:100%;margin:0px;" *ngIf="showIndividualList">
+
+
       <!--<div [ngClass]="showIndividualList?'accord-bar':'accord-bar accord-bar-empty'"><span class="head head_left">Individuals ({{foundRepos?foundRepos.privates.length:'0'}})</span>
+
       <ion-icon *ngIf="showIndividualList" name="arrow-up" class="icon-arrow-up" (click)="toggleDetails(false,false)"></ion-icon>
       <ion-icon *ngIf="!showIndividualList" name="arrow-down" class="icon-arrow-down" (click)="toggleDetails(false,true)"></ion-icon>
+
     </div>-->
+
       <span *ngIf="showIndividualList">
+
         <span *ngIf="privateSpinner" class="api_loader">
           <ion-spinner name="bubbles"></ion-spinner>
           <span class="api_loader_text">Fetching records...</span>
         </span>
+
         <span *ngIf="foundRepos && !privateSpinner">
           <span *ngFor="let res of foundRepos.privates; let i=index">
             <ion-item *ngIf="!res.is_system_user" (click)="goToPrivateChat(res)">
@@ -114,6 +155,7 @@
                   </div>
                 </div>
               </ion-avatar>
+
               <div class="pull-left">
                 <h2 class="group-name individual">{{res.target_user?.name}}:</h2>
                 <h2 *ngIf="res.chat.last_message && res.chat.last_message.sender_id==userId" class="user-name">You:</h2>
@@ -127,14 +169,24 @@
                   class="camers_icon" ios="ios-camera" md="md-camera"></ion-icon>
                 <p class="text_camera" [innerHTML]="updateHtml(res.chat.last_message?res.chat.last_message.message:'',res.chat.last_message?res.chat.last_message.mentioned_user_ids:'') | safeHtml"></p>
               </ion-card-content>
+
             </ion-item>
+
+
           </span>
+
         </span>
+
       </span>
+
     </ion-card>
+
   </span>
+
+
   <span *ngIf="searchQuery.trim()!=''" class="search_result">
     <div class="clear"></div>
+
     <br/>
     <div class="search-res-text" *ngIf="tabSearch">
       <span>{{searchDataResponse.length}} messages found</span> (Results for last 7 days)
@@ -143,8 +195,11 @@
       Tap to search to load results.
     </div>
     <br/>
+
+
     <span *ngFor="let res of searchDataResponse; let i=index">
       <ion-item>
+
         <div class="pull-left" style="width:78%;" (click)="openSearchGroupCaht(res.group_id,res.message_id,res.is_private,res.created_at)">
           <h2 *ngIf="res.group_name">In {{res.group_name}}</h2>
           <h2>By {{res.name}}:</h2>
@@ -157,8 +212,10 @@
         </ion-card-content>
       </ion-item>
     </span>
+
     <div class="clear"></div>
     <!--<div *ngIf="searchDataResponse.length<=0" class="no-result" text-center>No Result(s) Found</div>-->
+
   </span>
 
   <ion-fab bottom center edge #fab [ngClass]="showGroupList?'footer_fab_box':'footer_fab_box feb_btn_on_private'">

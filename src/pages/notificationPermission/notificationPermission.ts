@@ -18,7 +18,7 @@ export class NotificationPermissionPage {
   isForceUpdate: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events,
-    private nativeStorage: NativeStorage, private modalCtrl: ModalController) {
+    public nativeStorage: NativeStorage, private modalCtrl: ModalController) {
     this.nativeStorage.setItem('show_notification_permission', false)
       .then(resp => {
       }, error => {

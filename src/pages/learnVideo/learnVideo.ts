@@ -27,8 +27,8 @@ export class learnVideoPage {
 
     let id = this.params.get('id');
 
-    this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/"+id+"?rel=0&amp;showinfo=0");
-    
+    this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/" + id + "?rel=0&amp;showinfo=0");
+
   }
 
   dismiss() {

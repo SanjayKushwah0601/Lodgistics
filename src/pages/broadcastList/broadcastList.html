@@ -1,60 +1,60 @@
 <!-- <ion-content padding no-bounce disable-scroll> -->
 <div class="page-wraper-box">
 
-    <div class="box">
-        <ion-icon class="arrow_tooltip" name="ios-arrow-up-outline"></ion-icon>
-        <ion-title class="wo_title">
-            <span class="page_title">Broadcast List ({{foundRepos.length}}) </span>
-            <ion-icon class="popup-close-button" ios="ios-close" md="md-close" (click)="dismiss()"></ion-icon>
-        </ion-title>
+  <div class="box">
+    <ion-icon class="arrow_tooltip" name="ios-arrow-up-outline"></ion-icon>
+    <ion-title class="wo_title">
+      <span class="page_title">Broadcast List ({{foundRepos.length}}) </span>
+      <ion-icon class="popup-close-button" ios="ios-close" md="md-close" (click)="dismiss()"></ion-icon>
+    </ion-title>
 
-        <span *ngIf="spinner" class="api_loader">
-            <ion-spinner name="bubbles"></ion-spinner>
-            <span class="api_loader_text">Fetching records...</span>
-        </span>
+    <span *ngIf="spinner" class="api_loader">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <span class="api_loader_text">Fetching records...</span>
+    </span>
 
-        <div class="scroll_page_inner">
-            <ion-card *ngFor="let res of foundRepos; let i = index" (click)="translate(res.title,res.body,'es',i)" style="width:100%;margin:0px;"
-                class="card card-ios" id="10386">
-                <ion-item class="item item-block item-ios">
-                    <ion-avatar item-left>
-                        <img src="{{res.created_by.avatar_img_url}}">
-                    </ion-avatar>
+    <div class="scroll_page_inner">
+      <ion-card *ngFor="let res of foundRepos; let i = index" (click)="translate(res.title,res.body,'es',i)" style="width:100%;margin:0px;"
+        class="card card-ios" id="10386">
+        <ion-item class="item item-block item-ios">
+          <ion-avatar item-left>
+            <img src="{{res.created_by.avatar_img_url}}">
+          </ion-avatar>
 
-                    <div class="pull-left">
-                        <h2>{{res.created_by.name}}</h2>
-                        <div class="user-title" *ngIf="res.created_by.title">{{res.created_by.title}}</div>
-                        <p *ngIf="!res.created_by.title">
-                            <br>
-                        </p>
-                    </div>
+          <div class="pull-left">
+            <h2>{{res.created_by.name}}</h2>
+            <div class="user-title" *ngIf="res.created_by.title">{{res.created_by.title}}</div>
+            <p *ngIf="!res.created_by.title">
+              <br>
+            </p>
+          </div>
 
-                    <div class="pull-right">
-                        <span style="float:right;">{{res.created_at | date:'MMM dd hh:mm a'}}</span>
-                    </div>
-                </ion-item>
+          <div class="pull-right">
+            <span style="float:right;">{{res.created_at | date:'MMM dd hh:mm a'}}</span>
+          </div>
+        </ion-item>
 
-                <ion-item class="item item-block item-ios">
-                    <p *ngIf="res.title" class="title-text">{{res.title}}</p>
-                    <p *ngIf="(res.showMore == undefined || res.showMore)">
-                        <span [innerHTML]="updateHtml(res.body, i) | safeHtml"></span>
-                        <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
-                        <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
-                    </p>
-                    <p *ngIf="res.showMore==false && res.body.length>textLengthValue">
-                        <span [innerHTML]="updateHtml1(res.body, i) | safeHtml"></span>
-                        <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
-                        <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
-                    </p>
-                </ion-item>
+        <ion-item class="item item-block item-ios">
+          <p *ngIf="res.title" class="title-text" [innerHTML]="res.title"></p>
+          <p *ngIf="(res.showMore == undefined || res.showMore)">
+            <span class="description" [innerHTML]="updateHtml(res.body, i) | safeHtml"></span>
+            <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
+            <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
+          </p>
+          <p *ngIf="res.showMore==false && res.body.length>textLengthValue">
+            <span class="description" [innerHTML]="updateHtml1(res.body, i) | safeHtml"></span>
+            <a *ngIf="(res.showMore == undefined || res.showMore) && res.body.length>textLengthValue" (click)="showMore(i)" class="show_more_less">Show more</a>
+            <a *ngIf="res.showMore==false && res.body.length>textLengthValue" (click)="showLess(i)" class="show_more_less">Show Less</a>
+          </p>
+        </ion-item>
 
-                <ion-item *ngIf="res.image_url" class="item item-block item-ios">
-                    <img class="broadcast-image" src="res.image_url">
-                </ion-item>
+        <ion-item *ngIf="res.image_url" class="item item-block item-ios">
+          <img class="broadcast-image" src="res.image_url">
+        </ion-item>
 
-            </ion-card>
-        </div>
-
+      </ion-card>
     </div>
+
+  </div>
 </div>
 <!-- </ion-content> -->

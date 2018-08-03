@@ -1,6 +1,10 @@
 page-user-list-popover {
-    // popover-ios .popover-content,
-    // popover-md .popover-content {
-    //     margin-top: 5%;
-    // }
+  // popover-ios .popover-content,
+  // popover-md .popover-content {
+  //     margin-top: 5%;
+  // }
+  .list-ios,
+  .list-md {
+    margin: -1px 0 0px 0;
+  }
 }

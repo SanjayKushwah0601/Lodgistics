@@ -20,11 +20,60 @@ import { getWoDataUrl } from '../../services/configURLs';
 import { updateWoDataUrl } from '../../services/configURLs';
 import { createWorkOrderUrl, getAssignableUsersUrl } from '../../services/configURLs';
 import { UtilMethods } from '../../services/utilMethods';
+import { mobiscroll, MbscSelectOptions, MbscFormOptions } from '@mobiscroll/angular';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
+import { MessageSentSuccessfullyPage } from '../messageSentSuccessfully/messageSentSuccessfully';
+import { FeedsPage } from '../feeds/feeds';
+
+
+let names = [{
+  text: "Abigail Hodges",
+  value: 1
+}, {
+  text: "Adam Robertson",
+  value: 2
+}, {
+  text: "Adrian Mackay",
+  value: 3
+}, {
+  text: "Adrian Springer",
+  value: 4
+}
+  // Showing partial data. Download full source.
+],
+  myData = {
+    url: 'https://trial.mobiscroll.com/airports/',
+    remoteFilter: true,
+    dataType: 'jsonp',
+    processResponse: function (data) {
+      var i,
+        item,
+        ret = [];
+
+      if (data) {
+        for (i = 0; i < data.length; i++) {
+          item = data[i];
+          ret.push({
+            value: item.code,
+            text: item.name,
+            html: '<div style="font-size:16px;line-height:18px;">' + item.name + '</div><div style="font-size:10px;line-height:12px;">' + item.location + ', ' + item.code + '</div>'
+          });
+        }
+      }
+
+      return ret;
+    }
+  };
+
+mobiscroll.settings = {
+  theme: 'material'
+};
+
 
 @Component({
   selector: 'page-createWorkOrder',
   templateUrl: 'createWorkOrder.html',
-  providers: [srviceMethodsCall, Keyboard, Camera, Transfer, File, NativeStorage, SQLite]
+  providers: [UtilMethods, srviceMethodsCall, Keyboard, Camera, Transfer, File, NativeStorage, SQLite]
 })
 
 export class CreateWorkOrderPage {
@@ -58,8 +107,52 @@ export class CreateWorkOrderPage {
   private canEditClosedWo: boolean = false;
 
   private tempWorkOrderStatus: string;
+  public allStatus = ['open', 'closed', 'working'];
+  public allPriority = [['Low', 'l'], ['Medium', 'm'], ['High', 'h']];
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, private utilMethods: UtilMethods) {
+  public localData = "";
+  public locationData = [];
+  public publicAreaData = [];
+  public equipmentData = [];
+  public select: any;
+  public roomCheckListItemsData = [];
+  public publicAreaCheckListItemsData = [];
+
+  formSettings = {
+    theme: 'material'
+  };
+
+  names: any = names;
+  myData: any = myData;
+
+  localSettings = {
+    filter: true,
+    display: 'top',
+    closeOnOverlayTap: true,
+    rows: 7,
+    filterPlaceholderText: 'Type to filter'
+  };
+
+  remoteSettings = {
+    multiline: 2,
+    height: 50,
+    data: myData,
+    filter: true
+  };
+
+
+  //  public nonFormSettings: MbscSelectOptions = {
+  //     multiline: 2,
+  //     height: 50,
+  //     data: myData,
+  //     filter: true,
+  //     inputClass: 'demo-non-form'
+  // };
+
+
+
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, public modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public utilMethods: UtilMethods) {
+
 
     this.selectOptions = {
       cssClass: 'select-drop-down'
@@ -91,6 +184,7 @@ export class CreateWorkOrderPage {
           this.publicArea = data.publicArea;
           this.equipment = data.equipment;
           this.processData();
+          this.updateLocationDataForInput();
         },
         error => {
           console.error(error);
@@ -119,6 +213,7 @@ export class CreateWorkOrderPage {
                     this.room = foundRepos.Room;
                     this.publicArea = foundRepos.PublicArea;
                     this.equipment = foundRepos.Equipment;
+                    this.updateLocationDataForInput();
 
                     this.nativeStorage.setItem('wo_data', { locationType: this.locationType, room: this.room, publicArea: this.publicArea, equipment: this.equipment })
                       .then(
@@ -164,17 +259,16 @@ export class CreateWorkOrderPage {
     this.img[1] = "";
     this.workOrderData = {
       descriptions: '',
-      priority: 'm',
+      priority: '',
       status: 'open',
-      due_to_date: '',
-      assigned_to_id: '-2',
-      maintainable_type: 'Room',
+      due_to_date: '',//new Date().toISOString(),
+      assigned_to_id: '',
+      maintainable_type: '',
       maintainable_id: '',
       maintenance_checklist_item_id: "",
       first_img_url: "",
       second_img_url: "",
-      closed: false,
-      other_maintainable_location: ''
+      closed: false
     };
 
     this.nativeStorage.getItem('user_auth').then(
@@ -225,7 +319,6 @@ export class CreateWorkOrderPage {
           if (this.commonMethod.checkNetwork()) {
             this.commonMethod.getData(getWoDataUrl + "/" + this.wo_no, accessToken).subscribe(
               data => {
-                debugger
                 let woData = data.json();
                 this.img[0] = woData.first_img_url;
                 this.img[1] = woData.second_img_url;
@@ -240,11 +333,6 @@ export class CreateWorkOrderPage {
                 this.workOrderData.maintenance_checklist_item_id = woData.maintenance_checklist_item_id;
                 this.workOrderData.closed = woData.closed;
 
-                if (this.workOrderData.maintainable_type == 'Other') {
-                  
-                  this.workOrderData.maintainable_id = woData.location_detail
-                  // this.workOrderData.other_maintainable_location = this.workOrderData.location_detail
-                }
                 // Store the initial work order status in a variable
                 this.tempWorkOrderStatus = woData.status;
                 //let foundRepos = data.json();
@@ -310,11 +398,11 @@ export class CreateWorkOrderPage {
   createWorkOrder() {
     //alert(this.workOrderData);
     //console.log(JSON.stringify(this.workOrderData));
-    if (this.workOrderData.maintainable_type == 'Other') {
-      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id
-      this.workOrderData.maintainable_id = ''
-    }
 
+    if (this.workOrderData.maintainable_type == 'Other') {
+      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id;
+      this.workOrderData.maintainable_id = '';
+    }
     if (this.imageFromParent != "") {
       this.workOrderData.first_img_url = this.imageFromParent;
     }
@@ -340,19 +428,13 @@ export class CreateWorkOrderPage {
           let url = "";
           let objData = {};
           this.workOrderData.descriptions = this.utilMethods.nlToBr(this.workOrderData.descriptions);
+
           if (this.workOrderData.maintainable_type == 'Equipment') {
             this.workOrderData.maintenance_checklist_item_id = "";
           }
 
           if (this.pageName == "feed" && this.id != "") {
-            objData = {
-              'feed_id': this.id, 'work_order': {
-                description: this.workOrderData.descriptions, priority: this.workOrderData.priority,
-                status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type,
-                maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id,
-                first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location
-              }
-            };
+            objData = { 'feed_id': this.id, 'work_order': { description: this.workOrderData.descriptions, priority: this.workOrderData.priority, status: this.workOrderData.status, assigned_to_id: this.workOrderData.assigned_to_id, maintainable_type: this.workOrderData.maintainable_type, maintainable_id: this.workOrderData.maintainable_id, maintenance_checklist_item_id: this.workOrderData.maintenance_checklist_item_id, first_img_url: this.workOrderData.first_img_url, second_img_url: this.workOrderData.second_img_url, other_maintainable_location: this.workOrderData.other_maintainable_location } };
             url = createFeedWorkOrderUrl + "/" + this.id + "/work_orders";
           }
           else if (this.id != "") {
@@ -370,10 +452,12 @@ export class CreateWorkOrderPage {
 
           this.commonMethod.postData(url, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackWorkOrderEvents(GoogleAnalyticsProvider.ACTION_CREATE, 'Work order is created')
               let foundRepos = data.json();
               console.log(foundRepos);
               this.commonMethod.hideLoader();
               this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
+              this.successMessage();
             },
             err => {
               this.commonMethod.hideLoader();
@@ -399,8 +483,6 @@ export class CreateWorkOrderPage {
   }
 
   showGalleryPrompt(index) {
-
-    console.log(this.workOrderData)
 
     let actionSheet = this.actionSheetCtrl.create({
       title: '',
@@ -434,7 +516,7 @@ export class CreateWorkOrderPage {
 
   accessGallery(index) {
     this.camera.getPicture({
-      quality: 50
+      quality: 100
       , destinationType: this.camera.DestinationType.FILE_URI
       , sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
       , encodingType: this.camera.EncodingType.JPEG
@@ -444,8 +526,7 @@ export class CreateWorkOrderPage {
     }).then((imageData) => {
       //this.sendImage(imageData);
       //this.img[index]=imageData;
-      imageData = imageData.substring(0, imageData.indexOf('?'));
-      this.uploadImageOnAws(imageData, index);
+      this.uploadImageOnAws(imageData.substring(0, imageData.indexOf('?')), index);
     }, (err) => {
       console.log(err);
     });
@@ -453,7 +534,7 @@ export class CreateWorkOrderPage {
 
   openCamera(index) {
     const options: CameraOptions = {
-      quality: 50
+      quality: 100
       , destinationType: this.camera.DestinationType.FILE_URI
       , sourceType: this.camera.PictureSourceType.CAMERA
       , encodingType: this.camera.EncodingType.JPEG
@@ -631,7 +712,7 @@ export class CreateWorkOrderPage {
   // }
 
   updateCheckList() {
-    if ((this.roomCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'Room') || (this.publicAreaCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'PublicArea')) {
+    if ((this.roomCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'Room') || (this.publicAreaCheckListItems.length <= 0 && (this.workOrderData.maintainable_type == 'PublicArea' || this.workOrderData.maintainable_type == 'Public Area'))) {
       /* strat api call room check list items */
       let alertVar = this.alertCtrl.create({
         title: 'Error!',
@@ -652,13 +733,36 @@ export class CreateWorkOrderPage {
 
             this.commonMethod.getData(url, accessToken).subscribe(
               data => {
-
                 if (this.roomCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'Room') {
+                  this.roomCheckListItemsData = [];
+                  let tempData = [];
                   this.roomCheckListItems = data.json();
                   //console.log("==" + JSON.stringify(this.roomCheckListItems));
+                  for (let i = 0; i < this.roomCheckListItems.length; i++) {
+                    tempData.push({ text: "---- " + this.roomCheckListItems[i].name + " ----", value: this.roomCheckListItems[i].id, disabled: true });
+                    for (let j = 0; j < this.roomCheckListItems[i].checklist_items.length; j++) {
+                      tempData.push({ text: this.roomCheckListItems[i].checklist_items[j].name, value: this.roomCheckListItems[i].checklist_items[j].id, disabled: false });
+                    }
+                  }
+                  this.roomCheckListItemsData = tempData;
+                  //console.log("this.roomCheckListItemsData="+JSON.stringify(this.roomCheckListItemsData));
                 }
+                //else if( this.publicAreaCheckListItems.length <= 0 && (this.workOrderData.maintainable_type == 'PublicArea' || this.workOrderData.maintainable_type == 'Public Area') ){
                 else {
+                  this.publicAreaCheckListItemsData = [];
+                  let tempData = [];
                   this.publicAreaCheckListItems = data.json();
+
+                  for (let i = 0; i < this.publicAreaCheckListItems.length; i++) {
+                    if (this.publicAreaCheckListItems[i].id == this.workOrderData.maintainable_id) {
+                      //this.publicAreaCheckListItemsData.push({ text: this.publicAreaCheckListItems[i].name, value: this.publicAreaCheckListItems[i].id });
+                      for (let j = 0; j < this.publicAreaCheckListItems[i].checklist_items.length; j++) {
+                        tempData.push({ text: this.publicAreaCheckListItems[i].checklist_items[j].name, value: this.publicAreaCheckListItems[i].checklist_items[j].id });
+                      }
+                    }
+                  }
+                  this.publicAreaCheckListItemsData = tempData;
+                  //console.log("this.publicAreaCheckListItems="+JSON.stringify(this.publicAreaCheckListItems));
                   //console.log("==" + JSON.stringify(this.publicAreaCheckListItems));
                 }
 
@@ -715,15 +819,16 @@ export class CreateWorkOrderPage {
   }
 
   updateWorkOrder() {
+    //alert(this.workOrderData);
+    //console.log(JSON.stringify(this.workOrderData));
 
     if (this.workOrderData.maintainable_type == 'Other') {
-      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id
-      this.workOrderData.maintainable_id = ''
+      this.workOrderData.other_maintainable_location = this.workOrderData.maintainable_id;
+      this.workOrderData.maintainable_id = '';
     }
 
     this.workOrderData.descriptions = this.utilMethods.nlToBr(this.workOrderData.descriptions);
-    //alert(this.workOrderData);
-    //console.log(JSON.stringify(this.workOrderData));
+
     if (this.img[0] != "") {
       this.workOrderData.first_img_url = this.img[0];
     }
@@ -752,6 +857,7 @@ export class CreateWorkOrderPage {
 
           this.commonMethod.putData(updateWoDataUrl + "/" + this.wo_no, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackWorkOrderEvents(GoogleAnalyticsProvider.ACTION_UPDATE, 'Work order update')
               let foundRepos = data.json();
               console.log(foundRepos);
               this.commonMethod.hideLoader();
@@ -863,6 +969,7 @@ export class CreateWorkOrderPage {
               this.commonMethod.hideLoader();
               //this.viewCtrl.dismiss();
               this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
+
             },
             err => {
               this.commonMethod.hideLoader();
@@ -928,4 +1035,218 @@ export class CreateWorkOrderPage {
       }
     );
   }
+
+  selectAssignTo() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Assigned To',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.members.length; i++) {
+      let thisObj = this;
+      let name = this.members[i][0];
+      //let id=this.departmentsData[i].id;
+      let id = this.members[i][1];
+      let className = '';
+      if (id == thisObj.workOrderData.assigned_to_id) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.assigned_to_id = id;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  getAssignToUserName() {
+    for (var i = 0; i < this.members.length; i++) {
+      if (this.workOrderData.assigned_to_id == this.members[i][1]) {
+        return this.members[i][0];
+      }
+    }
+  }
+
+  selectStatus() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Status',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.allStatus.length; i++) {
+      let thisObj = this;
+      let name = this.allStatus[i];
+      let className = '';
+      if (this.workOrderData.status == this.allStatus[i]) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name.charAt(0).toUpperCase() + name.slice(1), cssClass: className, handler: () => {
+          thisObj.workOrderData.status = name;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  selectPriority() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Priority',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.allPriority.length; i++) {
+      let thisObj = this;
+      let name = this.allPriority[i][0];
+      //let id=this.departmentsData[i].id;
+      let id = this.allPriority[i][1];
+      let className = '';
+      if (id == thisObj.workOrderData.priority) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.priority = id;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  getPriorityName() {
+    for (var i = 0; i < this.allPriority.length; i++) {
+      if (this.workOrderData.priority == this.allPriority[i][1]) {
+        return this.allPriority[i][0];
+      }
+    }
+  }
+
+  selectLocation() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Location',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.locationType.length; i++) {
+      let thisObj = this;
+      let name = this.locationType[i];
+      let className = '';
+      if (this.workOrderData.maintainable_type == this.locationType[i]) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.maintainable_type = name;
+          thisObj.workOrderData.maintainable_id = "";
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  updateLocationDataForInput() {
+    this.locationData = [];
+    this.publicAreaData = [];
+    this.equipmentData = [];
+
+    for (let i = 0; i < this.room.length; i++) {
+      this.locationData.push({ text: this.room[i].room_number, value: this.room[i].id });
+    }
+    for (let i = 0; i < this.publicArea.length; i++) {
+      this.publicAreaData.push({ text: this.publicArea[i].name, value: this.publicArea[i].id });
+    }
+    for (let i = 0; i < this.equipment.length; i++) {
+      this.equipmentData.push({ text: this.equipment[i].name, value: this.equipment[i].id });
+    }
+  }
+
+  removeFocus() {
+    //this.closeKeyBoard();
+    //(document.querySelector("#loaction-type input") as HTMLElement).blur();
+  }
+
+  showImage(url) {
+    let alert = this.alertCtrl.create({
+      title: '',
+      message: '<div class="img-loader"></div><img src="' + url + '" class="loaded-image" alt="Loading..." >',
+      cssClass: 'image_upload_alert',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  closekeyboard() {
+    this.keyboard.close();
+  }
+
+  successMessage() {
+    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, {
+      message: 'WO created successfully!',
+      navigationMessage: 'You will be taken back in ',
+      buttonText: 'CREATE ANOTHER WO'
+    });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      if (data.redirect) {
+        this.dismiss();
+      } else {
+        let modal = this.modalCtrl.create(CreateWorkOrderPage);
+        modal.onDidDismiss(data => {
+          this.closekeyboard();
+        });
+        modal.present({
+          animate: false
+        });
+        setTimeout(() => {
+          //this.dismiss()
+        }, 300);
+      }
+    });
+    modal.present();
+  }
+
+  getLocationName(maintainable_id) {
+  }
+
 }

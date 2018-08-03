@@ -1,5 +1,7 @@
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { NavController, AlertController, Platform, ModalController, NavParams, ViewController, Events, ActionSheetController, Content, PopoverController } from 'ionic-angular';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
 import { Keyboard } from '@ionic-native/keyboard';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -9,13 +11,17 @@ import { File } from '@ionic-native/file';
 import { getAwsSignedUrl, getPrivateOnlyUrl, getGroupsOnlyUrl, sendMessageUrl, addEditGroupUrl } from '../../services/configURLs';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { removeMessageConfirmMsg } from '../../providers/appConfig';
+import { Device } from '@ionic-native/device';
+import { UtilMethods } from '../../services/utilMethods';
 import { UserListPopoverPage } from '../user-list-popover/user-list-popover';
 import { MessageSentSuccessfullyPage } from '../messageSentSuccessfully/messageSentSuccessfully';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
+import { GroupChatPage } from '../groupChat/groupChat';
 
 @Component({
   selector: 'page-sendMessage',
   templateUrl: 'sendMessage.html',
-  providers: [srviceMethodsCall, Keyboard, NativeStorage, Camera, Transfer, File, SQLite]
+  providers: [UtilMethods, srviceMethodsCall, Keyboard, NativeStorage, Camera, Transfer, File, SQLite, Device]
 })
 
 export class SendMessagePage {
@@ -47,11 +53,7 @@ export class SendMessagePage {
   private keyboardHeight = 0;
   private isShowMore: boolean = false;
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone,
-    private modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage,
-    public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File,
-    public alertCtrl: AlertController, private sqlite: SQLite, public popoverCtrl: PopoverController) {
-
+  constructor(public navCtrl: NavController, public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, private modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public nativeStorage: NativeStorage, public actionSheetCtrl: ActionSheetController, private camera: Camera, private transfer: Transfer, private file: File, public alertCtrl: AlertController, private sqlite: SQLite, private device: Device, public utilMethods: UtilMethods, public popoverCtrl: PopoverController) {
     this.keyboard.disableScroll(true);
     this.messageText = '';
     this.foundRepos = { groups: [], privates: [] };
@@ -69,7 +71,7 @@ export class SendMessagePage {
         } else {
           this.classnameForFooter = "openKeyboard";
         }
-        this.resize()
+        this.resize();
         //this.deviceHeight = (platform.height() - (parseInt(data.keyboardHeight) + parseInt('234')));
         //console.log("deviceHeight = " + this.deviceHeight);
 
@@ -178,6 +180,7 @@ export class SendMessagePage {
           // Create the new group
           this.commonMethod.postData(addEditGroupUrl, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackGroupEvents(GoogleAnalyticsProvider.ACTION_CREATE, 'Group is created from create message screen')
               let chatObj = {
                 'chat_message': {
                   message: this.messageText.trim(), chat_id: data.json().id,
@@ -186,10 +189,10 @@ export class SendMessagePage {
               };
 
               // Send message to newly group
-              this.sendMsgToUser(chatObj, groupName);
+              this.sendMsgToUser(chatObj, groupName, true, data.json());
               this.events.publish('hide:keyboard');
               this.keyboard.close();
-              // this.viewCtrl.dismiss();
+              //this.viewCtrl.dismiss();
             },
             err => {
               this.commonMethod.hideLoader();
@@ -458,7 +461,7 @@ export class SendMessagePage {
               }
               this.mentionMembers = tempUsers;
             }
-            this.resize()
+            this.resize();
           }
         });
       }
@@ -649,7 +652,7 @@ export class SendMessagePage {
               mentioned_user_ids: mentionId, image_url: image_url, responding_to_chat_message_id: ''
             }
           };
-          this.sendMsgToUser(objData, this.allUsers[i].name);
+          this.sendMsgToUser(objData, this.allUsers[i].name, false, null);
         } else {
           let objData = {
             'chat_message': {
@@ -667,36 +670,132 @@ export class SendMessagePage {
 
   }
 
-  successMessage(name: string) {
-    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, { name: name });
+  successMessage(name: string, isGroup: boolean, groupInfo: any) {
+    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, {
+      arrivedFrom: 'SendMessagePage', // Mendatory
+      message: isGroup ? `New Group Created` : `Message sent to ${name}`,
+      navigationMessage: isGroup ? 'Taking you to group in ' : 'Taking you to message in ',
+      buttonText: 'CREATE NEW MESSAGE',
+      is_group: isGroup,
+      group_info: groupInfo,
+    });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       if (data.redirect) {
         this.dismiss()
       } else {
-        let modal = this.modalCtrl.create(SendMessagePage);
-        modal.onDidDismiss(data => {
-          this.closekeyboard();
-        });
-        modal.present({
-          animate: false
-        });
-        setTimeout(() => {
-          this.dismiss()
-        }, 300)
+        if (data.group_info) {
+          this.openGroupCaht(data.group_info)
+        } else {
+          let modal = this.modalCtrl.create(SendMessagePage);
+          modal.onDidDismiss(data => {
+            this.closekeyboard();
+          });
+          modal.present({
+            animate: false
+          });
+          setTimeout(() => {
+            this.dismiss()
+          }, 300)
+        }
       }
     });
     modal.present();
   }
 
-  sendMsgToUser(objData, name) {
+  openGroupCaht(groupInfo) {
+    let insertChatGroupUsersQuery = 'INSERT INTO chat_group_users (group_id, user_id, is_admin, deleted_at, created_at) VALUES ';
+    let updateChatGroupsData = "";
+    let updateChatGroupUsersQuery = "UPDATE chat_group_users SET group_id = (case ";
+    let updateChatGroupUsersGroupIdData = "";
+    let updateChatGroupUsersUserIdData = "Else group_id End), user_id = (case ";
+    let insertChatGroupUsersData = "";
+
+    this.sqlite.create({
+      name: 'data.db',
+      location: 'default'
+    }).then((db: SQLiteObject) => {
+      let allExistingUserIds = [];
+
+      db.executeSql("SELECT * FROM chat_group_users WHERE group_id='" + groupInfo.id + "'", []).then((dataUserSQL) => {
+        console.log("GROUP USER TABLE DATA: " + JSON.stringify(dataUserSQL));
+        if (dataUserSQL.rows.length > 0) {
+          for (let k = 0; k < dataUserSQL.rows.length; k++) {
+            allExistingUserIds.push({
+              user_id: dataUserSQL.rows.item(k).user_id
+            });
+          }
+        }
+
+        for (let k = 0; k < groupInfo.users.length; k++) {
+          let insertUserFlag = true;
+          for (let l = 0; l < allExistingUserIds.length; l++) {
+            if (groupInfo.users[k].id == allExistingUserIds[l].user_id) {
+              insertUserFlag = false;
+            }
+          }
+          if (insertUserFlag == true) {
+            insertChatGroupUsersData = insertChatGroupUsersData + "('" + groupInfo.id + "','" + groupInfo.users[k].id + "','0','','" + groupInfo.users[k].joined_at + "'),";
+            console.log("insertChatGroupUsersData  " + insertChatGroupUsersData);
+          }
+          else {
+
+            updateChatGroupUsersGroupIdData = updateChatGroupUsersGroupIdData + "when user_id='" + groupInfo.users[k].id + "' AND group_id='" + groupInfo.id + "' then '" + groupInfo.id + "' ";
+            updateChatGroupUsersUserIdData = updateChatGroupUsersUserIdData + "when user_id='" + groupInfo.users[k].id + "' AND group_id='" + groupInfo.id + "' then '" + groupInfo.users[k].id + "' ";
+          }
+
+        }
+
+        if (insertChatGroupUsersData != "") {
+          db.executeSql(insertChatGroupUsersQuery + insertChatGroupUsersData.substring(0, insertChatGroupUsersData.length - 1), {}).then((dataUser1) => {
+            console.log("Data  == GROUP USER INSERTED: " + JSON.stringify(dataUser1));
+            this.navCtrl.push(GroupChatPage, { groupInfo: groupInfo }).then(() => {
+              // first we find the index of the current view controller:
+              // const index = this.viewCtrl.index;
+              // then we remove it from the navigation stack
+              // this.navCtrl.remove(index);
+              this.dismiss()
+            });
+          }, (errorUser1) => {
+            console.log("Data  == GROUP USER INSERT ERROR: " + JSON.stringify(errorUser1));
+          });
+        } else {
+          this.navCtrl.push(GroupChatPage, { groupInfo: groupInfo }).then(() => {
+            // first we find the index of the current view controller:
+            // const index = this.viewCtrl.index;
+            // then we remove it from the navigation stack
+            // this.navCtrl.remove(index);
+            this.dismiss()
+          });
+        }
+
+        if (updateChatGroupUsersGroupIdData != "") {
+          console.log("chat_group_users Data  == " + updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)");
+          db.executeSql(updateChatGroupUsersQuery + updateChatGroupUsersGroupIdData + updateChatGroupUsersUserIdData + "Else user_id End)", {}).then((dataUser1) => {
+          }, (errorUser1) => {
+            console.log("GROUP USER UPDATED ERROR: " + JSON.stringify(errorUser1));
+          });
+        }
+
+      }, (errorUser) => {
+        console.log("1 ERROR: " + JSON.stringify(errorUser));
+      });
+    });
+
+
+  }
+
+  sendMsgToUser(objData: any, name: string, isGroup: boolean, groupInfo: any) {
     this.nativeStorage.getItem('user_auth').then(
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
+
+          objData.chat_message.message = this.utilMethods.nlToBr(objData.chat_message.message);
           this.commonMethod.postDataWithoutLoder(sendMessageUrl, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackMessageEvents(GoogleAnalyticsProvider.ACTION_SEND, 'Message sent from the create message screen')
               console.log(data.json());
-              this.successMessage(name)
+              this.successMessage(name, isGroup, groupInfo)
             },
             err => {
               console.error("Error : " + err);
@@ -734,7 +833,7 @@ export class SendMessagePage {
             data => {
               let chanelCreateData = data.json();
               objData.chat_message.chat_id = chanelCreateData.id;
-              this.sendMsgToUser(objData, name);
+              this.sendMsgToUser(objData, name, false, null);
             },
             err => {
               this.commonMethod.hideLoader();

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { translationApiKey } from '../services/configURLs';
 
 
 @Injectable()
@@ -36,25 +37,13 @@ export class TranslationService {
 
   // }
 
-  // translateText(sourceText, targetLanguageCode) {
-
-  //   let obj = { target: targetLanguageCode, q: sourceText };
-  //   return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ", obj)
-  //     .map(response => {
-  //       this.data = response.json().data.translations[0];
-  //       return this.data;
-  //     }).catch(this.handleError);
-
-  // }
-
   translateText(sourceText, targetLanguageCode) {
 
     let obj = { target: targetLanguageCode, q: sourceText };
-    return this.http.post("https://translation.googleapis.com/language/translate/v2?key=AIzaSyBtj_cHE5NzzBWYprdW7L15xzI98ajbFw4", obj) //AIzaSyCAzE_zAtScIPorYG-3wkId-3TWGdFAlPQ
+    return this.http.post(`https://translation.googleapis.com/language/translate/v2?key=${translationApiKey}`, obj)
       .map(response => {
         let data = response.json().data.translations[0];
         data.translatedText = data.translatedText.replace(new RegExp("@ ", 'g'), "@");
-        console.log('Translated: ' + JSON.stringify(data.translatedText))
         return data;
       }).catch(this.handleError);
 

@@ -1,0 +1,42 @@
+{
+    "project_info": {
+      "project_number": "249584789755",
+      "firebase_url": "https://lodgistics-connect.firebaseio.com",
+      "project_id": "lodgistics-connect",
+      "storage_bucket": "lodgistics-connect.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:249584789755:android:11d8c17efb8482e6",
+          "android_client_info": {
+            "package_name": "com.lodgistics.connect"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "249584789755-9ac3dms8c686qhsjgq8lpm5691nl49jk.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyD74siQVivlSaVMWZ8cxxCVsX99qDvBEpE"
+          }
+        ],
+        "services": {
+          "analytics_service": {
+            "status": 1
+          },
+          "appinvite_service": {
+            "status": 1,
+            "other_platform_oauth_client": []
+          },
+          "ads_service": {
+            "status": 2
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

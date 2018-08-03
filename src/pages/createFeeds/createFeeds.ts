@@ -1,9 +1,9 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
-import { NavController, AlertController, Platform, ActionSheetController, Events } from 'ionic-angular';
+import { ViewController, NavController, AlertController, Platform, ActionSheetController, Events, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
-import { createFeedUrl } from '../../services/configURLs';
+import { createFeedUrl, getMentionables } from '../../services/configURLs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Keyboard } from '@ionic-native/keyboard';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
@@ -14,11 +14,15 @@ import { FeedsPage } from '../feeds/feeds';
 import { getAwsSignedUrl } from '../../services/configURLs';
 import { Navbar } from 'ionic-angular';
 import { UtilMethods } from '../../services/utilMethods';
+import { createBroadcastPage } from '../createBroadcast/createBroadcast';
+import { createFollowUpPage } from '../createFollowUp/createFollowUp';
+import { MessageSentSuccessfullyPage } from '../messageSentSuccessfully/messageSentSuccessfully';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-createFeeds',
   templateUrl: 'createFeeds.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, SQLite, Camera, Transfer, File]
+  providers: [UtilMethods, srviceMethodsCall, NativeStorage, Keyboard, SQLite, Camera, Transfer, File]
 })
 export class CreateFeedsPage {
   @ViewChild(Navbar) navbar: Navbar;
@@ -50,9 +54,15 @@ export class CreateFeedsPage {
   public placeHolderText = "What do you want to share with your colleagues?";
   public feedTitle = "";
   public isFocusOnTitleInput = false;
+  public keyboardHeight = 0;
+  public isIphoneX = false;
+  public broadcast_start = "";
+  public broadcast_end = "";
+  public follow_up_start = "";
+  public follow_up_end = "";
 
 
-  constructor(public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public platform: Platform, public zone: NgZone, private sqlite: SQLite, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events, private utilMethods: UtilMethods) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public platform: Platform, public zone: NgZone, private sqlite: SQLite, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public events: Events, public utilMethods: UtilMethods, public modalCtrl: ModalController, private viewCtrl: ViewController) {
     // this.zone.run(() => {
     //   this.feedText="";
     //   this.postButtonEnable = false;
@@ -122,14 +132,15 @@ export class CreateFeedsPage {
   postFeedOnServer(formData) {
 
     this.apiInProgress = true;
-    // let feedData = formData.feed.trim().replace(/\r?\n/g, '<br />');
+    //let feedData = formData.feed.trim().replace(/\r?\n/g, '<br />');
     let feedData = formData.feed.trim();
     //feedData = this.commonMethod.replaceURLWithHTMLLinks(feedData);
 
     let mentionId = [];
     if (this.mentionUsers.length > 0) {
       for (let i = 0; i < this.mentionUsers.length; i++) {
-        mentionId.push(this.mentionUsers[i].id);
+        let obj = { id: this.mentionUsers[i].id + '', type: this.mentionUsers[i].type }
+        mentionId.push(obj);
         // feedData = feedData.replace("@"+this.mentionUsers[i].name,'');
 
         let mention_user_id = this.mentionUsers[i].id;
@@ -150,7 +161,22 @@ export class CreateFeedsPage {
     this.feedTitle = this.feedTitle.trim().toUpperCase();
     this.feedTitle = this.utilMethods.nlToBr(this.feedTitle);
     feedData = this.utilMethods.nlToBr(feedData);
-    let objData = { 'feed': { title: this.feedTitle, body: feedData, mentioned_user_ids: mentionId, image_url: this.feedS3FileUrl, image_width: width, image_height: height, local_time: new Date() + "" } };
+    let objData = {
+      'feed':
+      {
+        title: this.feedTitle,
+        body: feedData,
+        image_url: this.feedS3FileUrl,
+        image_width: width,
+        image_height: height,
+        mentioned_targets: mentionId,
+        local_time: new Date() + "",
+        broadcast_start: this.broadcast_start,
+        broadcast_end: this.broadcast_start,
+        follow_up_start: this.follow_up_start,
+        follow_up_end: this.follow_up_end
+      }
+    };
 
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
@@ -169,7 +195,8 @@ export class CreateFeedsPage {
               this.feedTitle = "";
               this.foundRepos = data.json();
               console.error(this.foundRepos);
-              this.navCtrl.setRoot(FeedsPage);
+              this.googleAnalytics.trackPostEvents(GoogleAnalyticsProvider.ACTION_POST_CREATE, "Post/Feed is created")
+              this.successMessage();
               this.apiInProgress = false;
               this.zone.run(() => {
                 this.postButtonEnable = false;
@@ -205,6 +232,7 @@ export class CreateFeedsPage {
     this.zone.run(() => {
       this.feedText = "";
       this.postButtonEnable = false;
+      this.getMentionable()
     });
     // this.navbar.backButtonClick = () => {
     //   ///here you can do wathever you want to replace the backbutton event
@@ -231,6 +259,132 @@ export class CreateFeedsPage {
         100);
 
     }
+  }
+
+
+  getMentionable() {
+    this.nativeStorage.getItem('mentionable')
+      .then((data) => {
+        if (data) {
+          for (let i = 0; i < data.departments.length; i++) {
+            let tempUserInfo = {
+              "id": data.departments[i].id,
+              "name": data.departments[i].name,
+              "type": 'Department',
+              "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+              // "total": allMembers.rows.item(i).total
+            };
+
+            this.members.push(tempUserInfo);
+          }
+          for (let i = 0; i < data.users.length; i++) {
+            let tempUserInfo = {
+              "id": data.users[i].id,
+              "name": data.users[i].name,
+              "type": 'User',
+              "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+              // "total": allMembers.rows.item(i).total
+            };
+
+            this.members.push(tempUserInfo);
+          }
+          this.mentionMembers = this.members
+          console.log(data)
+        } else {
+          this.getMentionableFromServer()
+        }
+      }).catch((err) => {
+        this.getMentionableFromServer()
+      })
+    // this.nativeStorage.getItem('user_auth').then(
+    //   accessToken => {
+
+    //     if (this.commonMethod.checkNetwork()) {
+
+    //       this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
+    //         data => {
+    //           let foundRepos = data.json();
+
+    //           for (let i = 0; i < foundRepos.departments.length; i++) {
+    //             let tempUserInfo = {
+    //               "id": foundRepos.departments[i].id,
+    //               "name": foundRepos.departments[i].name.toUpperCase(),
+    //               "type": 'Department',
+    //               "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+    //               // "total": allMembers.rows.item(i).total
+    //             };
+
+    //             this.members.push(tempUserInfo);
+    //           }
+    //           for (let i = 0; i < foundRepos.users.length; i++) {
+    //             let tempUserInfo = {
+    //               "id": foundRepos.users[i].id,
+    //               "name": foundRepos.users[i].name,
+    //               "type": 'User',
+    //               "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+    //               // "total": allMembers.rows.item(i).total
+    //             };
+
+    //             this.members.push(tempUserInfo);
+    //           }
+    //           this.mentionMembers = this.members
+    //           console.log(foundRepos)
+    //         }, err => {
+    //           this.apiInProgress = false;
+    //           // alertVar.present();
+    //           console.error("Error : " + err);
+    //         },
+    //         () => {
+    //           console.log('getData completed');
+    //         })
+    //     }
+    //   })
+  }
+
+  getMentionableFromServer() {
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+
+        if (this.commonMethod.checkNetwork()) {
+
+          this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
+            data => {
+              let foundRepos = data.json();
+
+              for (let i = 0; i < foundRepos.departments.length; i++) {
+                let tempUserInfo = {
+                  "id": foundRepos.departments[i].id,
+                  "name": foundRepos.departments[i].name,
+                  "type": 'Department',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                  // "total": allMembers.rows.item(i).total
+                };
+
+                this.members.push(tempUserInfo);
+              }
+              for (let i = 0; i < foundRepos.users.length; i++) {
+                let tempUserInfo = {
+                  "id": foundRepos.users[i].id,
+                  "name": foundRepos.users[i].name,
+                  "type": 'User',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                  // "total": allMembers.rows.item(i).total
+                };
+
+                this.members.push(tempUserInfo);
+              }
+              this.mentionMembers = this.members
+              console.log(foundRepos)
+            }, err => {
+              this.apiInProgress = false;
+              // alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              console.log('getData completed');
+            })
+        }
+      })
   }
 
   getdeviceheight() {
@@ -261,6 +415,7 @@ export class CreateFeedsPage {
   escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
+
   removeLastInstance(badtext, str) {
     var charpos = str.toLowerCase().lastIndexOf(badtext.toLowerCase());
     if (charpos < 0) return str;
@@ -268,16 +423,16 @@ export class CreateFeedsPage {
     let pttwo = str.substring(charpos + (badtext.length));
     return (ptone + pttwo);
   }
+
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
-    console.log("selectUser call");
+
     if (this.showMentions == true && this.feedText != "") {
       let strArray = this.feedText.trim().split(" ");
       // Display array values on page
       for (var i = 0; i < strArray.length; i++) {
         if (strArray[i].charAt(0) == "@" && strArray.length == (i + 1)) {
           //this.zone.run(() => {
-          //console.log("1="+this.feedText);
           this.feedText = this.removeLastInstance(strArray[i], this.feedText);
           /* this is only for android */
           if (this.feedText.trim() == "") {
@@ -285,7 +440,6 @@ export class CreateFeedsPage {
           }
           //console.log("2="+this.feedText);
           this.feedText = this.feedText + "@" + memberInfo.name + " ";
-          //console.log("3="+this.feedText);
           mentionAdded = false;
         }
       }
@@ -313,6 +467,9 @@ export class CreateFeedsPage {
         this.mentionUsers.push(memberInfo);
         if (mentionAdded) {
           this.zone.run(() => {
+            if (this.feedText && this.feedText.length > 0 && !this.feedText.endsWith(' ')) {
+              this.feedText = this.feedText + " "
+            }
             this.feedText = this.feedText + "@" + memberInfo.name + " ";
           });
         }
@@ -322,6 +479,9 @@ export class CreateFeedsPage {
       this.mentionUsers.push(memberInfo);
       if (mentionAdded) {
         this.zone.run(() => {
+          if (this.feedText && this.feedText.length > 0 && !this.feedText.endsWith(' ')) {
+            this.feedText = this.feedText + " "
+          }
           this.feedText = this.feedText + "@" + memberInfo.name + " ";
         });
       }
@@ -356,7 +516,7 @@ export class CreateFeedsPage {
                   "total": allMembers.rows.item(i).total
                 };
 
-                this.members.push(tempUserInfo);
+                // this.members.push(tempUserInfo);
               }
             }
 
@@ -672,7 +832,7 @@ export class CreateFeedsPage {
                   let tempUserName = this.members[l].name.toLowerCase().split(" ");
                   if (this.members[l] != undefined && this.members[l].id != this.userId && tempUserName[0] == val.toLowerCase()) {
                     //this.showMentions=false;
-                    this.selectUser(undefined, this.members[l], true);
+                    this.selectUser('', this.members[l], true);
                   }
                   else if (this.members[l] != undefined && this.members[l].id != this.userId && this.members[l].name.toLowerCase().search(val.toLowerCase()) > -1) {
                     tempMentions.push(this.members[l]);
@@ -717,6 +877,52 @@ export class CreateFeedsPage {
         }, 2000);
       });
     });
+  }
+
+
+  createBroadcast() {
+    let modal = this.modalCtrl.create(createBroadcastPage, { broadcast_start: this.broadcast_start, broadcast_end: this.broadcast_end });
+    modal.onDidDismiss(data => {
+      if (data && data.broadcast_start != "" && data.broadcast_end != "") {
+        this.broadcast_start = data.broadcast_start;
+        this.broadcast_end = data.broadcast_end;
+      }
+    });
+    modal.present();
+  }
+
+  createFollowUp() {
+    let modal = this.modalCtrl.create(createFollowUpPage, { follow_up_start: this.follow_up_start, follow_up_end: this.follow_up_end });
+    modal.onDidDismiss(data => {
+      if (data && data.follow_up_start != "" && data.follow_up_end != "") {
+        this.follow_up_start = data.follow_up_start;
+        this.follow_up_end = data.follow_up_end;
+      }
+    });
+    modal.present();
+  }
+
+  successMessage() {
+    // let modal = this.modalCtrl.create(FeedCreatedSuccessfullyPage);
+    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, {
+      message: 'Log post saved successfully!',
+      navigationMessage: 'You will be taken to Hotel Log in ',
+      buttonText: 'CREATE ANOTHER POST'
+    });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      if (data.redirect) {
+        this.navCtrl.setRoot(FeedsPage);
+      } else {
+        this.navCtrl.push(CreateFeedsPage).then(() => {
+          // first we find the index of the current view controller:
+          const index = this.viewCtrl.index;
+          // then we remove it from the navigation stack
+          this.navCtrl.remove(index);
+        });
+      }
+    });
+    modal.present();
   }
 
 }

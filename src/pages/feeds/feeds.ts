@@ -1,7 +1,7 @@
 import { Component, ViewChild, trigger, transition, style, animate, state, NgZone } from '@angular/core';
 import { NavController, AlertController, Platform, Content, NavParams, ModalController, ViewController, Events, FabContainer, Slides, ActionSheetController } from 'ionic-angular';
 import { srviceMethodsCall } from '../../services/serviceMethods';
-import { getFeedsUrl } from '../../services/configURLs';
+import { getFeedsUrl, getMentionables } from '../../services/configURLs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -29,7 +29,8 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { SendMessagePage } from '../sendMessage/sendMessage';
 import { createFollowUpPage } from '../createFollowUp/createFollowUp';
 import { createFollowUpUrl } from '../../services/configURLs';
-import { FeedCreatedSuccessfullyPage } from '../feedCreatedSuccessfully/feedCreatedSuccessfully';
+import { UtilMethods } from '../../services/utilMethods';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-feeds',
@@ -48,7 +49,7 @@ import { FeedCreatedSuccessfullyPage } from '../feedCreatedSuccessfully/feedCrea
     )
   ],
   templateUrl: 'feeds.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, TranslationService, SQLite, InAppBrowser, FabContainer]
+  providers: [UtilMethods, srviceMethodsCall, NativeStorage, Keyboard, TranslationService, SQLite, InAppBrowser, FabContainer]
 })
 
 export class FeedsPage {
@@ -96,7 +97,8 @@ export class FeedsPage {
   // public totalFeeds=0;
   public totalFeeds = 0;
   public lastfeedcount = 0;
-  constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public navParams: NavParams, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, private iab: InAppBrowser, public viewCtrl: ViewController, public events: Events, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController) {
+
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public navParams: NavParams, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, public translationservice: TranslationService, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, private iab: InAppBrowser, public viewCtrl: ViewController, public events: Events, public fabContainer: FabContainer, public actionSheetCtrl: ActionSheetController, public utilMethods: UtilMethods) {
 
     this.viewWOUrl = viewWorkOrderUrl;
     this.textLengthValue = textLength;
@@ -170,6 +172,7 @@ export class FeedsPage {
         this.showLoader = false;
         this.reachedOnLastDate = false;
         this.callDateFilter = true;
+
         this.foundRepos = feedData.data;
         //this.findTotalFeed();
         this.filterDate = new Date(feedData.lastDate);
@@ -212,10 +215,6 @@ export class FeedsPage {
       }
     );
 
-  }
-
-  showSuccessPage() {
-    this.navCtrl.push(FeedCreatedSuccessfullyPage)
   }
 
   callTodaysFeedInBackground() {
@@ -668,144 +667,19 @@ export class FeedsPage {
   toggleMove() {
     //this.state = (this.state === 'inactive' ? 'active' : 'inactive');
   }
-  //TODO: Need to move this function into utility folder. 
-  // updateHtml(val, mentioned_user_ids) {
-  //   let allChatMentions = [];
-  //   if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-  //     allChatMentions = mentioned_user_ids;
-  //   }
-
-  //   // let mentionStr = this.commonMethod.getMentionString(allChatMentions, this.members);
-  //   // if (mentionStr != "") {
-  //   //   // val = mentionStr + val;
-  //   // }
-
-  //   let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
-  //   if (newValue != "") {
-  //      val = newValue;
-  //   }
 
 
-  //   return val.replace(/text-decoration-line/g, "text-decoration");
-  // }
-  // updateHtml(val, mentioned_user_ids, i, j) {
-  //     let allChatMentions = [];
-  //     if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-  //       allChatMentions = mentioned_user_ids;
-  //     }
+  updateHtml(val, mentioned_targets, i, j) {
 
-
-  //     let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
-  //     if (newValue != "") {
-  //        val = newValue;
-  //     }
-  //     this.foundRepos[i].value[j].showMore=true;
-  //     // let htmlStr="<span '(click)=showMore("+i+","+j+")'>Read More</span>";
-  //     val=val.replace(/text-decoration-line/g, "text-decoration");
-  //     return val.length > 20 ? val.substring(0, 20)+"...  "  : val; 
-
-
-  //   }
-  //   updateHtml1(val, mentioned_user_ids, i, j) {
-  //     let allChatMentions = [];
-  //     if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-  //       allChatMentions = mentioned_user_ids;
-  //     }
-
-
-  //     let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
-  //     if (newValue != "") {
-  //        val = newValue;
-  //     }
-  //     this.foundRepos[i].value[j].showMore=false;
-  //     // let htmlStr="<span '(click)=showLess("+i+","+j+")'>Read Less</span>";
-  //     val=val.replace(/text-decoration-line/g, "text-decoration");
-  //     return  val+"    "; 
-
-
-  //   }
-
-  testMethod() {
-    let data = {
-      "id": 12112,
-      "title": "TITLE1",
-      "body": "The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service.\n@Gaurav M @Abhishek @Akanksha A @Chetan D",
-      "created_at": "2018-07-13T05:52:02.927-04:00",
-      "updated_at": "2018-07-13T05:52:02.927-04:00",
-      "mentioned_user_ids": [
-        452,
-        416,
-        415,
-        414
-      ],
-      "image_url": "https://lodgistics-images.s3.us-east-2.amazonaws.com/photos/upload/e0b2df75-0eef-4410-8bdb-9271c0333449_413_1531475503132_9k=",
-      "image_width": 600,
-      "image_height": 800,
-      "work_order_id": null,
-      "room_number": null,
-      "broadcast_start": null,
-      "broadcast_end": null,
-      "follow_up_start": null,
-      "follow_up_end": null,
-      "comments_count": 0,
-      "created_by": {
-        "id": 413,
-        "name": "Animesh Jain",
-        "role": "Admin",
-        "title": "Admin",
-        "avatar": "/assets/adminre_theme_v120/image/avatar/avatar.png",
-        "avatar_img_url": "/assets/adminre_theme_v120/image/avatar/avatar.png"
-      },
-      "work_order_url": null,
-      "work_order": null,
-      "created_by_system": false,
-      "room_id": null,
-      "completed_at": null,
-      "completed_by": null
-    }
-
-    this.testHTML(data.body, data.mentioned_user_ids)
-  }
-
-  testHTML(val, mentioned_user_ids) {
     let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
+    if (mentioned_targets != '' && mentioned_targets != null) {
+      allChatMentions = mentioned_targets;
     }
 
-    console.log('Before: ' + val)
-    let newValue = this.commonMethod.getTextValueWithNames(allChatMentions, this.members, val);
-    console.log('After getTextValueWithNames: ' + newValue.text)
-    console.log('After getTextValueWithNames: ' + newValue.html)
+    let newValue = this.commonMethod.getTextValueWithNamesNew(allChatMentions, this.members, val);
     if (newValue.text != "" && newValue.text.length > this.textLengthValue) {
       val = newValue.text.substring(0, this.textLengthValue);
-      console.log('After insideIf: ' + val)
-      var newValueWrap = this.commonMethod.getTextValue(allChatMentions, this.members, val);
-      console.log('After getTextValue: ' + newValueWrap)
-      if (newValueWrap != "") {
-        val = newValueWrap + "....";
-      }
-      // val = val + "....";
-    } else if (newValue.html != "") {
-      if (newValue.html != "") {
-        val = newValue.html;
-      }
-    }
-    val = val.replace(/text-decoration-line/g, "text-decoration");
-    console.log(val)
-    return val;
-  }
-
-  updateHtml(val, mentioned_user_ids, i, j) {
-    let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
-    }
-
-    let newValue = this.commonMethod.getTextValueWithNames(allChatMentions, this.members, val);
-    if (newValue.text != "" && newValue.text.length > this.textLengthValue) {
-      val = newValue.text.substring(0, this.textLengthValue);
-      var newValueWrap = this.commonMethod.getTextValue(allChatMentions, this.members, val);
+      var newValueWrap = this.commonMethod.getTextValueNew(allChatMentions, this.members, val);
       if (newValueWrap != "") {
         val = newValueWrap + "....";
       }
@@ -822,18 +696,18 @@ export class FeedsPage {
 
 
   }
-  updateHtml1(val, mentioned_user_ids, i, j) {
+  updateHtml1(val, mentioned_targets, i, j) {
     let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
+    if (mentioned_targets != '' && mentioned_targets != null) {
+      allChatMentions = mentioned_targets;
     }
-
 
     // let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
     // if (newValue != "") {
     //    val = newValue;
     // }
-    let newValue = this.commonMethod.getTextValueWithNames(allChatMentions, this.members, val);
+
+    let newValue = this.commonMethod.getTextValueWithNamesNew(allChatMentions, this.members, val);
     if (newValue.html != "") {
       val = newValue.html;
     }
@@ -854,54 +728,49 @@ export class FeedsPage {
 
 
   }
+
+
+
   closeSearch() {
+    //alert('hi');
   }
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
-
   }
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
 
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
 
-  translate(title, sourceText, langCode, i, j, mentioned_user_ids) {
+  translate(title, sourceText, langCode, i, j, mentioned_targets) {
 
     let allChatMentions = [];
-    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
-      allChatMentions = mentioned_user_ids;
+    if (mentioned_targets != '' && mentioned_targets != null) {
+      allChatMentions = mentioned_targets;
     }
 
     sourceText = sourceText.replace(/\n/g, "<br/>");
-    // let sourceText2 = this.commonMethod.removeMentionsFromName(allChatMentions, this.members, sourceText);
-    // sourceText=sourceText2;
-    // let firstPos = sourceText.indexOf("<span");
-    // let lastPos = sourceText.indexOf("</span>");
     let tempStr = "";
-    // if (firstPos == 0) {
-    //   tempStr = sourceText.substring(firstPos, lastPos + 7);
-    //   sourceText = sourceText.substring(lastPos + 7);
-    // }
     console.log("sourceText=" + sourceText);
-    //alert(i);
-    //alert(j);
-    //alert(this.foundRepos[i].value[j].id);
 
     if (this.touchtime == 0) {
       this.touchtime = new Date().getTime();
+      setTimeout(() => {
+        this.touchtime = 0
+      }, 800)
     } else {
-      if (((new Date().getTime()) - this.touchtime) < 400) {
-        //alert("double clicked");
-
+      if (((new Date().getTime()) - this.touchtime) < 800) {
         this.touchtime = 0;
         this.translateTitle(title, langCode, i, j);
-
 
         if (this.foundRepos[i].value[j].temp_data != undefined && this.foundRepos[i].value[j].temp_data != "") {
           this.foundRepos[i].value[j].body = this.foundRepos[i].value[j].temp_data;
@@ -910,7 +779,6 @@ export class FeedsPage {
         else {
           this.commonMethod.showLoader();
           this.translationservice.translateText(sourceText, langCode).subscribe(data => {
-            console.log('4')
 
             if (data.detectedSourceLanguage == "en") {
               this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
@@ -919,7 +787,6 @@ export class FeedsPage {
             }
             else {
               this.translationservice.translateText(sourceText, 'en').subscribe(data => {
-                console.log('3')
 
                 this.foundRepos[i].value[j].temp_data = this.foundRepos[i].value[j].body;
                 this.foundRepos[i].value[j].body = tempStr + data.translatedText;
@@ -945,10 +812,6 @@ export class FeedsPage {
           });
         }
 
-
-
-
-
       } else {
         this.touchtime = 0;
       }
@@ -959,7 +822,7 @@ export class FeedsPage {
   translateTitle(sourceText, langCode, i, j) {
     sourceText = sourceText.replace(/\n/g, "<br/>");
     let tempStr = "";
-    console.log("sourceTextTitle=" + sourceText);
+    console.log("sourceText=" + sourceText);
 
     if (this.foundRepos[i].value[j].temp_title_data != undefined && this.foundRepos[i].value[j].temp_title_data != "") {
       this.foundRepos[i].value[j].title = this.foundRepos[i].value[j].temp_title_data;
@@ -968,7 +831,6 @@ export class FeedsPage {
     else {
       //this.commonMethod.showLoader();
       this.translationservice.translateText(sourceText, langCode).subscribe(data => {
-        console.log('2')
 
         if (data.detectedSourceLanguage == "en") {
           this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
@@ -977,7 +839,6 @@ export class FeedsPage {
         }
         else {
           this.translationservice.translateText(sourceText, 'en').subscribe(data => {
-            console.log('1')
             this.foundRepos[i].value[j].temp_title_data = this.foundRepos[i].value[j].title;
             this.foundRepos[i].value[j].title = tempStr + data.translatedText;
             //this.commonMethod.hideLoader();
@@ -1011,7 +872,8 @@ export class FeedsPage {
 
       console.log("location----: " + JSON.stringify(db));
 
-      db.executeSql("SELECT * FROM members", {}).then((allMembers) => {
+
+      db.executeSql("SELECT user_id, name, image FROM members", {}).then((allMembers) => {
         console.log("SELECT MEMBERS FROM DB: " + JSON.stringify(allMembers));
 
         if (allMembers.rows.length > 0) {
@@ -1019,7 +881,8 @@ export class FeedsPage {
             let tempUserInfo = {
               "id": allMembers.rows.item(i).user_id,
               "name": allMembers.rows.item(i).name,
-              "image": allMembers.rows.item(i).image
+              "image": allMembers.rows.item(i).image,
+              "type": "User"
             };
 
             this.members.push(tempUserInfo);
@@ -1029,8 +892,80 @@ export class FeedsPage {
       }, (error1) => {
         console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));
       });
+      this.getMentionable();
+
+      // db.executeSql("SELECT id, name FROM chat_groups", []).then((allMembers) => {
+      //   console.log("SELECT GROUPs FROM DB: " + JSON.stringify(allMembers));
+      //   if (allMembers.rows.length > 0) {
+      //     for (let i = 0; i < allMembers.rows.length; i++) {
+      //       let tempUserInfo = {
+      //         "id": allMembers.rows.item(i).id,
+      //         "name": allMembers.rows.item(i).name,
+      //         "image": '',
+      //         "type": "Department"
+      //       };
+
+      //       this.members.push(tempUserInfo);
+      //     }
+      //   }
+      // }, (error1) => {
+      //   console.log("SELECT GROUP ERROR: " + JSON.stringify(error1));
+      // });
 
     }).catch(e => console.log(e));
+  }
+
+  getMentionable() {
+    this.nativeStorage.getItem('mentionable').then(
+      data => {
+        if (data) {
+          for (let i = 0; i < data.departments.length; i++) {
+            let tempUserInfo = {
+              "id": data.departments[i].id,
+              "name": data.departments[i].name,
+              "type": 'Department',
+              "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+              // "total": allMembers.rows.item(i).total
+            };
+            this.members.push(tempUserInfo);
+          }
+          console.log('Mentionable Department')
+          console.log(this.members)
+        } else {
+          this.getMentionableFromServer()
+        }
+      }).catch(error => {
+        this.getMentionableFromServer()
+      })
+  }
+
+  getMentionableFromServer() {
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
+            data => {
+              let foundRepos = data.json();
+              for (let i = 0; i < foundRepos.departments.length; i++) {
+                let tempUserInfo = {
+                  "id": foundRepos.departments[i].id,
+                  "name": foundRepos.departments[i].name,
+                  "type": 'Department',
+                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+                };
+                this.members.push(tempUserInfo);
+              }
+
+              console.log(foundRepos)
+            }, err => {
+              // alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              console.log('getData completed');
+            })
+        }
+      })
   }
 
   showImage(url) {
@@ -1057,7 +992,6 @@ export class FeedsPage {
     this.alert.present();
   }
   closekeyboard() {
-
     this.keyboard.close();
   }
   scrollTo(elementId: string) {
@@ -1086,7 +1020,7 @@ export class FeedsPage {
     }, 4000);
   }
 
-  confirmWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
+  confirmWorkOrder(id, value, image_url, mentioned_targets, room_id) {
     this.alert = this.alertCtrl.create({
       message: createWorkOrderConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1102,7 +1036,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.createWorkOrder(id, value, image_url, mentioned_user_ids, room_id);
+            this.createWorkOrder(id, value, image_url, mentioned_targets, room_id);
           }
         }
       ]
@@ -1110,20 +1044,8 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
-    modal.onDidDismiss(data => {
-      this.closekeyboard();
-      this.callTodaysFeedInBackground();
-    });
-    modal.present();
-  }
-
-  editWorkOrder(woId) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, {
-      wo_no: woId,
-      can_edit_closed_wo: this.userPermissions.wo_access.can_close
-    });
+  createWorkOrder(id, value, image_url, mentioned_targets, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_targets, room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.callTodaysFeedInBackground();
@@ -1182,8 +1104,10 @@ export class FeedsPage {
   }
 
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
+
   ionViewWillLeave() {
     console.log("Looks like I'm about to leave :(, clear notification Interval");
     window.clearInterval(this.interval);
@@ -1299,6 +1223,15 @@ export class FeedsPage {
     );
   }
 
+  editWorkOrder(wo_no) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { wo_no: wo_no, can_edit_closed_wo: this.userPermissions.wo_access.can_close });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      this.callTodaysFeedInBackground();
+    });
+    modal.present();
+  }
+
   compareBroadcastDate(date) {
     let currentDate = new Date();
     let broadcast_date = new Date(date);
@@ -1366,6 +1299,7 @@ export class FeedsPage {
           this.foundRepos[i].value[j].cancelInProgress = true;
           this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackPostEvents(GoogleAnalyticsProvider.ACTION_POST_BROADCAST_DELETE, 'Broadcast is canceled')
               let foundRepos = data.json();
               console.log(foundRepos);
               /* below line commented because we are calling api in background to update page */
@@ -1400,6 +1334,7 @@ export class FeedsPage {
     if (fab !== undefined) {
       fab.close();
     }
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.fabButtonOpened = false;
     this.createFeed();
   }
@@ -1409,6 +1344,7 @@ export class FeedsPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
     this.createWorkOrder('', '', '', '', '');
   }
 
@@ -1417,6 +1353,7 @@ export class FeedsPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -1425,7 +1362,6 @@ export class FeedsPage {
   }
 
   openFabButton() {
-    console.log(this.fabButtonOpened)
     if (this.fabButtonOpened == false) {
       this.fabButtonOpened = true;
     } else {
@@ -1620,6 +1556,7 @@ export class FeedsPage {
           this.foundRepos[i].value[j].cancelFollowUpInProgress = true;
           this.commonMethod.putDataWithoutLoder(url, objData, accessToken).subscribe(
             data => {
+              this.googleAnalytics.trackPostEvents(GoogleAnalyticsProvider.ACTION_POST_FOLLOWUP_DELETE, 'Follow up is canceled')
               let foundRepos = data.json();
               console.log(foundRepos);
               /* below line commented because we are calling api in background to update page */
@@ -1710,7 +1647,7 @@ export class FeedsPage {
       broadcastLabel = "Cancel Broadcast";
     }
 
-    this.actionSheet = this.actionSheetCtrl.create({
+    let actionSheet = this.actionSheetCtrl.create({
       title: '',
       cssClass: 'feed_action_items',
       buttons: [
@@ -1748,6 +1685,12 @@ export class FeedsPage {
         }
       ]
     });
-    this.actionSheet.present();
+    actionSheet.present();
   }
+
+
+
+
+
+
 }

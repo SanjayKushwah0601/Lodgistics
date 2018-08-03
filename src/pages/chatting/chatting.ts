@@ -21,6 +21,7 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { SendMessagePage } from '../sendMessage/sendMessage';
 import { CreateWorkOrderPage } from '../createWorkOrder/createWorkOrder';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-chatting',
@@ -60,7 +61,7 @@ export class ChattingPage {
   public groupSpinner = false;
   public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public keyboard: Keyboard, public navParams: NavParams, private iab: InAppBrowser, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public keyboard: Keyboard, public navParams: NavParams, private iab: InAppBrowser, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
 
     this.viewWOUrl = viewWorkOrderUrl;
 
@@ -76,6 +77,7 @@ export class ChattingPage {
     }
 
     this.getAllMembersFromDb();
+
     this.userPermissions = {
       "wo_access": {
         "view_listing": false,
@@ -93,6 +95,7 @@ export class ChattingPage {
         }
       );
     });
+
     let thisObj = this;
     this.interval = window.setInterval(function () {
       /// call your function here
@@ -289,6 +292,11 @@ export class ChattingPage {
                     }, (errorUser) => {
                       console.log("1 ERROR: " + JSON.stringify(errorUser));
                     });
+
+                    // }, (errorUser) => {
+                    //   console.error("Unable to execute sql", errorUser);
+                    // }).catch(e => console.log('Executed SQL Error= ' + JSON.stringify(e)));
+
                     /* Group SQL code end  */
 
 
@@ -491,15 +499,19 @@ export class ChattingPage {
   }
   /* functions for footer */
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
@@ -1310,6 +1322,7 @@ export class ChattingPage {
     if (fab !== undefined) {
       fab.close();
     }
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.fabButtonOpened = false;
     this.createFeed();
   }
@@ -1319,6 +1332,7 @@ export class ChattingPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
     this.createWorkOrder('', '', '', '', '');
   }
 
@@ -1327,6 +1341,7 @@ export class ChattingPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();

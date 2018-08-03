@@ -17,16 +17,12 @@
 
     <!-- </ion-navbar> -->
 
-
     <ion-grid class="grid-img">
       <!-- <ion-row>
         <ion-col col-12 class="align-center first-grid-col label_text">
             <ion-label class="select_label">SELECT <span (click)="selectGroups()">GROUP</span> / <span (click)="selectIndividual()">USER</span></ion-label>
         </ion-col>
     </ion-row> -->
-      <!-- <ion-grid [ngClass]="allUsers.length>0 && allUsers[0].type == 'private' ? 'selected-user' : ''"> -->
-
-      <!-- </ion-grid> -->
 
 
       <ion-row class="user_name_box" *ngIf="!allUsers.length>0">
@@ -50,7 +46,7 @@
       </ion-row>
 
       <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type != 'private'">
-        <ion-col col-19>
+        <ion-col col-10>
           <ion-list>
             <ion-item>
               <ion-label class="to_label">To:</ion-label>
@@ -63,36 +59,42 @@
             </ion-item>
           </ion-list>
         </ion-col>
-        <ion-col col-3>
+        <ion-col col-2>
           <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
         </ion-col>
       </ion-row>
 
       <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
-        <ion-col col-16>
+        <ion-col col-9>
           <ion-list no-lines>
             <ion-item no-lines>
               <ion-label class="to_label">To:</ion-label>
-              <ion-label *ngIf="allUsers.length>0" class="sendin_footer" class="long-text">
-                <span *ngFor="let res of allUsers;" text-wrap>
-                  <span class="user_name">{{res.name}}</span>
-                </span>
+              <ion-label *ngIf="allUsers.length>0" class="sendin_footer" [ngClass]="!isShowMore ? 'long-text' : ''">
+                <div *ngFor="let res of allUsers; let i = index">
+                  <span *ngIf="i < 2" text-wrap class="user_name">{{res.name}}
+                    <!-- <span >{{res.name}}</span> -->
+                    <!-- <span *ngIf="i==1 && allUsers.length > 2">...</span> -->
+
+                  </span>
+                  <a *ngIf="i == 1 && allUsers.length > 2 && !isShowMore" class="show-more" (click)="presentPopover($event, !isShowMore)">+{{allUsers.length - 2}} More</a>
+                  <a *ngIf="i == 1 && allUsers.length > 2 && isShowMore" class="show-more" (click)="presentPopover($event, !isShowMore)">Show Less</a>
+
+                </div>
               </ion-label>
             </ion-item>
+
           </ion-list>
         </ion-col>
         <ion-col col-1>
           <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
         </ion-col>
         <ion-col col-2>
-          <ion-list>
-            <ion-item>
-              <ion-label class="select_label">
+          <ion-list text-center>
+            <ion-item text-center>
+              <ion-label class="select_label" text-center>
                 <span (click)="selectIndividual()">User</span>
               </ion-label>
             </ion-item>
-            <a *ngIf="allUsers.length > 2 && !isShowMore" class="show-more" (click)="presentPopover($event, !isShowMore)">+{{allUsers.length - 2}} More</a>
-            <a *ngIf="allUsers.length > 2 && isShowMore" class="show-more" (click)="presentPopover($event, !isShowMore)">Show Less</a>
           </ion-list>
         </ion-col>
       </ion-row>
@@ -124,6 +126,27 @@
   </ion-list>
   <!-- <ion-label style="min-height:25px;margin:0px;" (click)="closekeyboard()"></ion-label> -->
 
+  <!-- <ion-grid style="border-bottom: 1px solid lightgray;">
+    <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
+      <ion-col col-19>
+        <ion-list no-lines>
+          <ion-item no-lines>
+            
+            <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
+              <span *ngFor="let res of allUsers;" text-wrap>
+                
+                <span class="user_name">{{res.name}}</span>
+                <span class="selected-user">{{res.type=='group'?'(Group)':' '}}</span>
+              </span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col col-3>
+        <ion-icon class="remove_icon" name="ios-close-outline" (click)="resetSelection()"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid> -->
 
   <div class="message-box" style="height: 100%;padding-top:0%;">
 
@@ -213,6 +236,7 @@
 
 </ion-content>
 
+<!-- <ion-footer class="{{classnameForFooter}}"> -->
 <ion-footer [style.margin-bottom.px]="keyboardHeight">
   <ion-label *ngIf="base64Image && isKeyboardOpen" class="scroll_down_label" (click)="closekeyboard()">Scroll down to see image</ion-label>
 

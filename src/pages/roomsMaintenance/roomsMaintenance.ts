@@ -27,12 +27,12 @@ export class RoomsMaintenancePage {
   public woNotificationCount = 0;
   public interval: any;
   public userId = "";
-  public broadcast_count=0;
-  public userPermissions:any;
+  public broadcast_count = 0;
+  public userPermissions: any;
   public isPopupOpen = false;
-  public roomNo="";
-  public room:any;
-  public roomId="";
+  public roomNo = "";
+  public room: any;
+  public roomId = "";
 
   constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform) {
 
@@ -40,23 +40,23 @@ export class RoomsMaintenancePage {
       "wo_access": {
         "view_listing": false,
         "can_create": false,
-        "can_close":false
+        "can_close": false
       }
     };
     this.platform.ready().then(() => {
-      
-            this.commonMethod.getUserPermissions().then(
-              permissions => {
-                this.userPermissions = permissions;
-                if (!this.userPermissions.wo_access.can_create) {
-                  
-                }
-              },
-              error => {
-                return false;
-              }
-            );
-          });
+
+      this.commonMethod.getUserPermissions().then(
+        permissions => {
+          this.userPermissions = permissions;
+          if (!this.userPermissions.wo_access.can_create) {
+
+          }
+        },
+        error => {
+          return false;
+        }
+      );
+    });
 
     let thisObj = this;
     this.interval = window.setInterval(function () {
@@ -66,7 +66,7 @@ export class RoomsMaintenancePage {
         count => {
           thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
           thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-          thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+          thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
         },
         error => {
           return false;
@@ -100,7 +100,7 @@ export class RoomsMaintenancePage {
         this.userId = accessToken.user_id;
         console.log("access token details  : " + JSON.stringify(accessToken));
         if (this.commonMethod.checkNetwork()) {
-        
+
           this.commonMethod.getData(locationsUrl, accessToken).subscribe(
             data => {
               let allData = data.json();
@@ -165,21 +165,18 @@ export class RoomsMaintenancePage {
     modal.present();
   }
 
-  selectRoom(no,id)
-  {
-    this.roomNo=no;
-    this.roomId=id;
+  selectRoom(no, id) {
+    this.roomNo = no;
+    this.roomId = id;
   }
 
-  deSelectRoom()
-  {
-    this.roomNo="";
-    this.roomId="";
+  deSelectRoom() {
+    this.roomNo = "";
+    this.roomId = "";
   }
-  
-  startPm()
-  {
-    this.navCtrl.push(StartPmPage, { roomNo: this.roomNo,roomId:this.roomId});
+
+  startPm() {
+    this.navCtrl.push(StartPmPage, { roomNo: this.roomNo, roomId: this.roomId });
   }
 
 }

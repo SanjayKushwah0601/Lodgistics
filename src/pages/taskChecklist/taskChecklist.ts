@@ -17,6 +17,7 @@ import { SendMessagePage } from '../sendMessage/sendMessage';
 import { CreateWorkOrderPage } from '../createWorkOrder/createWorkOrder';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
 import 'web-animations-js/web-animations.min';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-taskChecklist',
@@ -124,7 +125,7 @@ export class TaskChecklistPage {
   public isChecklistDataLoaded = false;
   public fabButtonOpened = false;
 
-  constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public fabContainer: FabContainer) {
 
     this.userPermissions = {
       "wo_access": {
@@ -254,15 +255,19 @@ export class TaskChecklistPage {
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
   }
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
 
@@ -735,6 +740,7 @@ export class TaskChecklistPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.createFeed();
   }
 
@@ -743,6 +749,7 @@ export class TaskChecklistPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
     this.createWorkOrder('', '', '', '', '');
   }
 
@@ -751,6 +758,7 @@ export class TaskChecklistPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();

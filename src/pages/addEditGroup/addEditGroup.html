@@ -5,9 +5,9 @@
     <ion-icon *ngIf="groupInfo" (click)="openGroupCaht()" class="back-button-icon icon icon-ios back-button-icon-ios ion-ios-arrow-back" role="img" aria-label="arrow back"></ion-icon>
 -->
 
-    <button ion-button menuToggle end>
+    <!-- <button ion-button menuToggle end>
       <ion-icon name="menu"></ion-icon>
-    </button>
+    </button> -->
 
     <ion-title>{{tempGroupName}}</ion-title>
 
@@ -99,7 +99,8 @@
       <span *ngFor="let res of users; let i=index" class="user_names">
         <ion-item *ngIf="res.id!=groupOwnerId && res.is_system_user!='1'" [ngClass]="(res.inGroup==true || userId==res.id)?'active':(res.wasInGroup==true && res.isEdit?'was-in-group':'')"
           (click)="userId==res.id?'':updateMember(i)">
-          <ion-label class="user_name_inner">{{res.name}}
+          <ion-label>
+            <span class="user_name_inner">{{res.name}}</span>
             <p>
               <span class="designation" *ngIf="res.title">{{res.title}}</span>
             </p>

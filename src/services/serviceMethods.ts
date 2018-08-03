@@ -439,6 +439,76 @@ checkInternet(){
         return result;
     }
 
+
+    getTextValueNew(allChatMentions, members, val) {
+        let mentionStr = "";
+        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
+            //mentionStr = "<span class='mention_style'>";
+            let oldMessage = false;
+            mentionStr = "<span class='mention_style'>";
+            for (let k = 0; k < allChatMentions.length; k++) {
+                for (let l = 0; l < members.length; l++) {
+                    if (members[l].id == allChatMentions[k].id) {
+                        if (val.indexOf("@" + members[l].name) == -1) {
+                            mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
+                            oldMessage = true;
+                        }
+                        let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
+                        val = this.replaceAll(val, "@" + members[l].name, newStr);
+                    }
+                }
+            }
+            mentionStr += "</span>";
+
+            if (oldMessage == true) {
+                val = mentionStr + val;
+            }
+            // mentionStr += "</span>";
+        }
+        return val;
+    }
+
+    /**
+     * 
+     * @param allChatMentions array of objects 
+     * @param members array of objects
+     * @param val description
+     */
+    getTextValueWithNamesNew(allChatMentions, members, val) {
+        let mentionStr = "";
+        let result = { html: val, text: val };
+        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
+            //mentionStr = "<span class='mention_style'>";
+            let oldMessage = false;
+            let tempNames = "";
+            let tempVal = val;
+            mentionStr = "<span class='mention_style'>";
+            for (let k = 0; k < allChatMentions.length; k++) {
+                for (let l = 0; l < members.length; l++) {
+                    if (members[l].id == allChatMentions[k].id) {
+                        tempNames += members[l].name + " ";
+                        if (val.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
+                            mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
+                            oldMessage = true;
+                        }
+                        let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
+                        val = this.replaceAll(val, "@" + members[l].name, newStr);
+                    }
+                }
+            }
+            mentionStr += "</span>";
+
+            result.text = tempNames + tempVal;
+            if (oldMessage == true) {
+                val = mentionStr + val;
+            }
+            // mentionStr += "</span>";
+            result.html = val;
+        }
+
+        return result;
+    }
+
     removeMentionsFromName(allChatMentions, members, val) {
         if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
@@ -503,6 +573,17 @@ checkInternet(){
         });
         // Show the loader
         this.loading.present();
+    }
+
+    isIphoneXDevice(platform) {
+        console.log('Width: ' + this.platform.width());
+        console.log('Height: ' + this.platform.height());
+        if (platform.width() == 375 && platform.height() == 788) {
+            return true;
+        } else {
+            return false;
+        }
+        //alert('Width: ' + this.platform.width() + 'Height: ' + this.platform.height());
     }
 
 

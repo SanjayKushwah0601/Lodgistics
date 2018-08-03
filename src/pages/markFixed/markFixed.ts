@@ -20,18 +20,18 @@ export class markFixedPage {
   public showSub;
   public hideSub;
   public userId: any;
-  public messageText="";
-  public tags=[];
+  public messageText = "";
+  public tags = [];
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public alertCtrl: AlertController, public nativeStorage: NativeStorage) {
     this.keyboard.disableScroll(true);
-    
-    this.tags=[
-      {text:"Repair",is_selected:false},
-      {text:"Replace",is_selected:false},
-      {text:"Paint",is_selected:false},
-      {text:"Touch-up",is_selected:false},
-      {text:"Clean",is_selected:false}
+
+    this.tags = [
+      { text: "Repair", is_selected: false },
+      { text: "Replace", is_selected: false },
+      { text: "Paint", is_selected: false },
+      { text: "Touch-up", is_selected: false },
+      { text: "Clean", is_selected: false }
     ];
 
     this.nativeStorage.getItem('user_auth').then(
@@ -76,7 +76,7 @@ export class markFixedPage {
     //       objData = {"feed":{ 'broadcast_start': from_date, 'broadcast_end': to_date }};
     //       url = createBroadcastUrl + "/" + this.id;
     //       console.log("dates="+JSON.stringify(objData));
-        
+
     //       this.commonMethod.putData(url, objData, accessToken).subscribe(
     //         data => {
     //           let foundRepos = data.json();
@@ -106,7 +106,7 @@ export class markFixedPage {
     // );
   }
 
- 
+
   ionViewDidLoad() {
     console.log("I'm alive!");
     this.platform.ready().then(() => {
@@ -127,20 +127,19 @@ export class markFixedPage {
     });
   }
 
-  selectTag(tag,is_selected,index){
-    if(is_selected==true){
-      this.tags[index].is_selected=false;
-      this.messageText = this.messageText.replace(tag,'');
+  selectTag(tag, is_selected, index) {
+    if (is_selected == true) {
+      this.tags[index].is_selected = false;
+      this.messageText = this.messageText.replace(tag, '');
     }
-    else{
-      this.tags[index].is_selected=true;
-      this.messageText=this.messageText.trim();
-      if(this.messageText=="")
-      {
-        this.messageText+=tag+" ";
+    else {
+      this.tags[index].is_selected = true;
+      this.messageText = this.messageText.trim();
+      if (this.messageText == "") {
+        this.messageText += tag + " ";
       }
-      else{
-        this.messageText+=" "+tag+" ";
+      else {
+        this.messageText += " " + tag + " ";
       }
     }
   }

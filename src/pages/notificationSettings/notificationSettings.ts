@@ -21,9 +21,9 @@ export class NotificationSettingsPage {
   public hideSub;
   public marginBottom = 0;
   public notificationData: any;
-  public allKeys=[];
-  public spinner=false;
-  public showLoader=false;
+  public allKeys = [];
+  public spinner = false;
+  public showLoader = false;
 
   constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, public alertCtrl: AlertController, public nativeStorage: NativeStorage) {
 
@@ -43,7 +43,7 @@ export class NotificationSettingsPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
 
-          this.spinner=true;
+          this.spinner = true;
           this.commonMethod.getDataWithoutLoder(getPushNotificationSettings, accessToken).subscribe(
             data => {
               this.notificationData = data.json();
@@ -61,27 +61,27 @@ export class NotificationSettingsPage {
               // }
 
               var o = this.notificationData;
-              for(var prop in o) {
-                if(prop!="id" && prop!="user_id"){
+              for (var prop in o) {
+                if (prop != "id" && prop != "user_id") {
                   console.log(prop);
                   let nameArray = prop.split("_");
-                  let name="";
-                  for(let i=0;i<nameArray.length;i++){
-                    if(nameArray[i]!='enabled' && nameArray[i]!='notification'){
-                      name+=nameArray[i].charAt(0).toUpperCase()+ nameArray[i].slice(1) +" ";
+                  let name = "";
+                  for (let i = 0; i < nameArray.length; i++) {
+                    if (nameArray[i] != 'enabled' && nameArray[i] != 'notification') {
+                      name += nameArray[i].charAt(0).toUpperCase() + nameArray[i].slice(1) + " ";
                     }
-                  } 
-                  this.allKeys.push({name:name,key:{key_name:prop,prop:o[prop]}});
+                  }
+                  this.allKeys.push({ name: name, key: { key_name: prop, prop: o[prop] } });
                 }
                 //console.log(prop,o[prop]);  
               }
-              this.spinner=false;
+              this.spinner = false;
 
 
             },
             err => {
               //this.commonMethod.hideLoader();
-              this.spinner=false;
+              this.spinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -130,24 +130,24 @@ export class NotificationSettingsPage {
   }
 
   update() {
-   console.log(this.allKeys);
-    let tempObj={
+    console.log(this.allKeys);
+    let tempObj = {
       id: this.notificationData.id,
       user_id: this.notificationData.user_id
     };
 
-    for(let i=0;i<this.allKeys.length;i++){
-      let keyName=this.allKeys[i].key.key_name;
-      
+    for (let i = 0; i < this.allKeys.length; i++) {
+      let keyName = this.allKeys[i].key.key_name;
+
       this.zone.run(() => {
         //this.checkPageHeight();
-        tempObj[keyName]= JSON.parse(JSON.stringify(this.allKeys[i].key.prop));
+        tempObj[keyName] = JSON.parse(JSON.stringify(this.allKeys[i].key.prop));
       });
 
-    } 
-    
+    }
 
-   console.log(tempObj);
+
+    console.log(tempObj);
 
 
     let alertVar = this.alertCtrl.create({
@@ -159,12 +159,12 @@ export class NotificationSettingsPage {
       accessToken => {
         if (this.commonMethod.checkNetwork()) {
           //let objData = this.notificationData;
-          this.showLoader=true;
+          this.showLoader = true;
           this.commonMethod.putDataWithoutLoder(updatePushNotificationSettings, tempObj, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
               //this.commonMethod.hideLoader();
-              this.showLoader=false;
+              this.showLoader = false;
               this.keyboard.close();
               this.viewCtrl.dismiss();
             },
@@ -183,7 +183,7 @@ export class NotificationSettingsPage {
               else {
                 alertVar.present();
               }
-              this.showLoader=false;
+              this.showLoader = false;
             },
             () => {
               //this.commonMethod.hideLoader();

@@ -1,26 +1,28 @@
 page-introInviteUsers {
-    .intro-box{ height: 100%; }
-    .box{ color: #fff;}
-    .box img{
-        height: 50px;
-        width: 50px;
-        float: right;
-        margin-top: 10%;
-        margin-right: -10px;
-    }
-    .hint_text{
-        padding-top: 22%;
-        margin-right: -40px;
-        float: right;
-        font-size: 2rem;
-    }
-    .close_btn{
-        color: #fff;
-        font-size: 4rem;
-        bottom: 20%;
-        position: absolute;
-        margin-left: 65%;
-    }
+  .intro-box {
+    height: 100%;
+  }
+  .box {
+    color: #fff;
+  }
+  .box img {
+    height: 50px;
+    width: 50px;
+    float: right;
+    margin-top: 10%;
+    margin-right: -10px;
+  }
+  .hint_text {
+    padding-top: 22%;
+    margin-right: -40px;
+    float: right;
+    font-size: 2rem;
+  }
+  .close_btn {
+    color: #fff;
+    font-size: 4rem;
+    bottom: 20%;
+    position: absolute;
+    margin-left: 65%;
+  }
 }
-
-

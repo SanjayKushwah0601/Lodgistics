@@ -28,11 +28,11 @@ export class StartPmPage {
   public messagesNotificationCount = 0;
   public interval: any;
   public userId = "";
-  public userPermissions:any;
+  public userPermissions: any;
   public isPopupOpen = false;
-  public roomNo="";
+  public roomNo = "";
   public alert: any;
-  public roomId="";
+  public roomId = "";
 
   constructor(public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, public keyboard: Keyboard, private sqlite: SQLite, public zone: NgZone, public modalCtrl: ModalController, public platform: Platform, public params: NavParams) {
 
@@ -40,23 +40,23 @@ export class StartPmPage {
       "wo_access": {
         "view_listing": false,
         "can_create": false,
-        "can_close":false
+        "can_close": false
       }
     };
     this.platform.ready().then(() => {
-      
-            this.commonMethod.getUserPermissions().then(
-              permissions => {
-                this.userPermissions = permissions;
-                if (!this.userPermissions.wo_access.can_create) {
-                  
-                }
-              },
-              error => {
-                return false;
-              }
-            );
-          });
+
+      this.commonMethod.getUserPermissions().then(
+        permissions => {
+          this.userPermissions = permissions;
+          if (!this.userPermissions.wo_access.can_create) {
+
+          }
+        },
+        error => {
+          return false;
+        }
+      );
+    });
 
     this.roomNo = this.params.get('roomNo') ? this.params.get('roomNo') : '';
     this.roomId = this.params.get('roomId') ? this.params.get('roomId') : '';
@@ -92,7 +92,7 @@ export class StartPmPage {
         this.userId = accessToken.user_id;
         console.log("access token details  : " + JSON.stringify(accessToken));
         if (this.commonMethod.checkNetwork()) {
-        
+
           this.commonMethod.getData(getRoomCheckListItemsUrl, accessToken).subscribe(
             data => {
               this.foundRepos = data.json();
@@ -169,10 +169,9 @@ export class StartPmPage {
     this.alert.present();
   }
 
-  markFixed()
-  {
+  markFixed() {
     this.isPopupOpen = true;
-    let modal = this.modalCtrl.create(markFixedPage,{ id: ''});
+    let modal = this.modalCtrl.create(markFixedPage, { id: '' });
     modal.onDidDismiss(data => {
       this.isPopupOpen = false;
       this.closekeyboard();
@@ -184,8 +183,8 @@ export class StartPmPage {
     this.keyboard.close();
   }
 
-  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id,maintenance_checklist_item_id) {
-    room_id=this.roomId;
+  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id, maintenance_checklist_item_id) {
+    room_id = this.roomId;
     let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id, maintenance_checklist_item_id: maintenance_checklist_item_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -195,7 +194,7 @@ export class StartPmPage {
 
   confirmResetStatus(name) {
     this.alert = this.alertCtrl.create({
-      message: "Reset the status of '"+name+"'?",
+      message: "Reset the status of '" + name + "'?",
       cssClass: 'confirm-work-order',
       enableBackdropDismiss: false,
       buttons: [
@@ -215,7 +214,7 @@ export class StartPmPage {
     });
     this.alert.present();
   }
-  
+
 
 
 }

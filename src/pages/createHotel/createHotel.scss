@@ -1,185 +1,185 @@
 page-createHotel {
-    .scroll-content {
-        overflow-y: hidden;
+  .scroll-content {
+    overflow-y: hidden;
+  }
+  .list-ios>.item-block:first-child,
+  .list-md>.item-block:first-child {
+    border-top: none;
+  }
+  .label-ios[stacked],
+  .label-md[stacked] {
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #BDBDBD;
+  }
+  .item-ios,
+  .item-md {
+    padding-left: 0px;
+    color: #424242;
+    font-size: 16px;
+  }
+  .show-pass {
+    float: right;
+    position: relative;
+    top: -35px;
+    color: #BDBDBD;
+    letter-spacing: 2px;
+    /*text-transform: uppercase;*/
+    font-size: 12px;
+  }
+  .text-blue {
+    color: #02B9E7;
+    text-align: left;
+    letter-spacing: 2px;
+  }
+  p {
+    color: #AEAEAE;
+  }
+  .text-center {
+    text-align: center;
+  }
+  form {
+    max-width: 272px;
+    margin: 16px auto auto auto;
+  }
+  .form-footer {
+    max-width: 272px;
+    margin: 16px auto auto auto;
+  }
+  .form-footer p {
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+  .form-footer p.text-center {
+    letter-spacing: 1px;
+  }
+  .item-md {
+    padding-left: 0px;
+    margin-bottom: 30px;
+  }
+  .item-label-stacked .text-input-md,
+  .item-label-floating .text-input-md {
+    color: #424242;
+  }
+  .button-full-md {
+    box-shadow: none;
+    border-radius: 4px;
+  }
+  ::-webkit-input-placeholder {
+    color: #424242;
+  }
+  ::-moz-placeholder {
+    color: #424242;
+  }
+  :-ms-input-placeholder {
+    color: #424242;
+  }
+  :-moz-placeholder {
+    color: #424242;
+  }
+  .text-input-ios,
+  .text-input-md {
+    color: #424242;
+    font-family: 'open_sanslight';
+  }
+  td.padr {
+    padding-right: 10px;
+  }
+  td.padl {
+    padding-left: 10px;
+  }
+  .text-input-ios,
+  .text-input-md {
+    color: #424242;
+  }
+  .toolbar-title-md {
+    margin-left: 0px !important;
+    margin-right: 40px;
+  }
+  .hotels_list {
+    margin-bottom: 0px;
+  }
+  .hotels_list .label-ios,
+  .hotels_list .label-md {
+    margin: 0px 0px 0px 0px;
+  }
+  .autosuggestion_list {
+    position: fixed;
+    z-index: 9;
+    background: #fff;
+    width: 80%;
+    max-height: 70%;
+    overflow: scroll; // scrollY="true"
+  }
+  .autosuggestion_list ion-label {
+    white-space: normal;
+  }
+  .autosuggestion_list .label-ios,
+  .autosuggestion_list .label-md {
+    margin: 0px 0px 0px 0px;
+  }
+  .list-md .item-input.ng-valid.input-has-value:not(.input-has-focus):last-child {
+    border-bottom-color: #02B9E7;
+    box-shadow: none !important;
+  }
+  .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
+    box-shadow: none !important;
+  }
+  .list-md .item-input.input-has-focus:last-child {
+    box-shadow: none !important;
+  }
+  .item-md.item-input.input-has-focus .item-inner {
+    box-shadow: none !important;
+  }
+  .scroll-content {
+    margin-bottom: 0px !important;
+  }
+  @media(max-width:749px) {
+    .label-ios,
+    .label-md {
+      font-size: 12px !important;
+      letter-spacing: 1px;
     }
-    .list-ios>.item-block:first-child,
-    .list-md>.item-block:first-child {
-        border-top: none;
-    }
-    .label-ios[stacked],
-    .label-md[stacked] {
-        text-transform: uppercase;
-        font-size: 12px;
-        color: #BDBDBD;
+    .margin-top {
+      margin-top: 68px;
     }
     .item-ios,
     .item-md {
-        padding-left: 0px;
-        color: #424242;
-        font-size: 16px;
+      margin-bottom: 10px;
     }
     .show-pass {
-        float: right;
-        position: relative;
-        top: -35px;
-        color: #BDBDBD;
-        letter-spacing: 2px;
-        /*text-transform: uppercase;*/
-        font-size: 12px;
+      font-size: 12px;
     }
-    .text-blue {
-        color: #02B9E7;
-        text-align: left;
-        letter-spacing: 2px;
-    }
-    p {
-        color: #AEAEAE;
-    }
-    .text-center {
-        text-align: center;
+    .a1 {
+      font-size: 12px;
+      margin-top: 1px;
     }
     form {
-        max-width: 272px;
-        margin: 16px auto auto auto;
+      max-width: 272px;
+      margin: 46px auto auto auto;
     }
-    .form-footer {
-        max-width: 272px;
-        margin: 16px auto auto auto;
+    .text-input-ios,
+    .text-input-md {
+      margin-top: 0px !important;
     }
-    .form-footer p {
-        letter-spacing: 2px;
-        margin-bottom: 40px;
+    .button-ios,
+    .button-md {
+      height: 52px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-weight: 300 !important;
     }
     .form-footer p.text-center {
-        letter-spacing: 1px;
+      margin-top: 5px;
     }
     .item-md {
-        padding-left: 0px;
-        margin-bottom: 30px;
-    }
-    .item-label-stacked .text-input-md,
-    .item-label-floating .text-input-md {
-        color: #424242;
-    }
-    .button-full-md {
-        box-shadow: none;
-        border-radius: 4px;
-    }
-    ::-webkit-input-placeholder {
-        color: #424242;
-    }
-    ::-moz-placeholder {
-        color: #424242;
-    }
-    :-ms-input-placeholder {
-        color: #424242;
-    }
-    :-moz-placeholder {
-        color: #424242;
+      padding-left: 0px;
+      margin-bottom: 15px;
     }
     .text-input-ios,
     .text-input-md {
-        color: #424242;
-        font-family: 'open_sanslight';
+      font-size: 16px;
+      color: #424242;
     }
-    td.padr {
-        padding-right: 10px;
-    }
-    td.padl {
-        padding-left: 10px;
-    }
-    .text-input-ios,
-    .text-input-md {
-        color: #424242;
-    }
-    .toolbar-title-md {
-        margin-left: 0px !important;
-        margin-right: 40px;
-    }
-    .hotels_list {
-        margin-bottom: 0px;
-    }
-    .hotels_list .label-ios,
-    .hotels_list .label-md {
-        margin: 0px 0px 0px 0px;
-    }
-    .autosuggestion_list {
-        position: fixed;
-        z-index: 9;
-        background: #fff;
-        width: 80%;
-        max-height: 70%;
-        overflow: scroll; // scrollY="true"
-    }
-    .autosuggestion_list ion-label {
-        white-space: normal;
-    }
-    .autosuggestion_list .label-ios,
-    .autosuggestion_list .label-md {
-        margin: 0px 0px 0px 0px;
-    }
-    .list-md .item-input.ng-valid.input-has-value:not(.input-has-focus):last-child {
-        border-bottom-color: #02B9E7;
-        box-shadow: none !important;
-    }
-    .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
-        box-shadow: none !important;
-    }
-    .list-md .item-input.input-has-focus:last-child {
-        box-shadow: none !important;
-    }
-    .item-md.item-input.input-has-focus .item-inner {
-        box-shadow: none !important;
-    }
-    .scroll-content {
-        margin-bottom: 0px !important;
-    }
-    @media(max-width:749px) {
-        .label-ios,
-        .label-md {
-            font-size: 12px !important;
-            letter-spacing: 1px;
-        }
-        .margin-top {
-            margin-top: 68px;
-        }
-        .item-ios,
-        .item-md {
-            margin-bottom: 10px;
-        }
-        .show-pass {
-            font-size: 12px;
-        }
-        .a1 {
-            font-size: 12px;
-            margin-top: 1px;
-        }
-        form {
-            max-width: 272px;
-            margin: 46px auto auto auto;
-        }
-        .text-input-ios,
-        .text-input-md {
-            margin-top: 0px !important;
-        }
-        .button-ios,
-        .button-md {
-            height: 52px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            font-weight: 300 !important;
-        }
-        .form-footer p.text-center {
-            margin-top: 5px;
-        }
-        .item-md {
-            padding-left: 0px;
-            margin-bottom: 15px;
-        }
-        .text-input-ios,
-        .text-input-md {
-            font-size: 16px;
-            color: #424242;
-        }
-    }
+  }
 }

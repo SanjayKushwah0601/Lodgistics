@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild, ElementRef, Input, Injectable } from '@angular/core';
-import { ViewController, NavController, AlertController, ModalController, Events, ActionSheetController, Platform,FabContainer } from 'ionic-angular';
+import { ViewController, NavController, AlertController, ModalController, Events, ActionSheetController, Platform, FabContainer } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Validator } from '../../validator';
@@ -43,12 +43,13 @@ import {
   WORKER_RENDER_PLATFORM,
   WORKER_SCRIPT
 } from '@angular';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
-  providers: [srviceMethodsCall, NativeStorage, Keyboard, Camera, Transfer, File, InAppBrowser,FabContainer]
+  providers: [srviceMethodsCall, NativeStorage, Keyboard, Camera, Transfer, File, InAppBrowser, FabContainer]
 })
 export class ProfilePage {
 
@@ -76,11 +77,11 @@ export class ProfilePage {
   public interval: any;
   public userPermissions: any;
   public actionSheet: any;
-  public spinner=false;
-  public updateApiInProgress=false;
-  fabButtonOpened=false;
+  public spinner = false;
+  public updateApiInProgress = false;
+  fabButtonOpened = false;
 
-  constructor(public platform: Platform, public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, public modalCtrl: ModalController, private keyboard: Keyboard, public events: Events, private camera: Camera, private transfer: Transfer, public actionSheetCtrl: ActionSheetController, private iab: InAppBrowser, private viewCtrl: ViewController) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public navCtrl: NavController, private _FB: FormBuilder, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, public modalCtrl: ModalController, private keyboard: Keyboard, public events: Events, private camera: Camera, private transfer: Transfer, public actionSheetCtrl: ActionSheetController, private iab: InAppBrowser, private viewCtrl: ViewController, public fabContainer: FabContainer) {
 
     this.viewWOUrl = viewWorkOrderUrl;
     //To do Need to remove
@@ -136,7 +137,7 @@ export class ProfilePage {
         count => {
           thisObj.feedNotificationCount = count.feed_count ? count.feed_count : 0;
           thisObj.messagesNotificationCount = count.message_count ? count.message_count : 0;
-          thisObj.woNotificationCount = count.wo_count ? count.wo_count: 0;
+          thisObj.woNotificationCount = count.wo_count ? count.wo_count : 0;
         },
         error => {
           return false;
@@ -163,7 +164,7 @@ export class ProfilePage {
 
         if (this.commonMethod.checkNetwork()) {
 
-          this.spinner=true;
+          this.spinner = true;
           this.commonMethod.getDataWithoutLoder(getProfileUrl + "/" + this.userId, accessToken).subscribe(
             data => {
               this.userData = data.json();
@@ -175,11 +176,11 @@ export class ProfilePage {
               }
               this.getRolesAndDepartmentsData();
               //alert(this.userData); 
-              this.spinner=false;
+              this.spinner = false;
             },
             err => {
               //this.commonMethod.hideLoader();
-              this.spinner=false;
+              this.spinner = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -208,19 +209,24 @@ export class ProfilePage {
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
   }
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
 
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
@@ -263,12 +269,12 @@ export class ProfilePage {
 
           let objData = { id: this.userId, 'user': { 'name': this.userData.name.trim(), 'email': this.userData.email.trim(), 'title': this.userData.title.trim(), 'phone_number': this.userData.phone_number.trim(), 'avatar_img_url': this.userData.avatar_img_url.trim(), 'department_ids': this.department_ids, 'role_id': this.userData.role_id } };
 
-          this.updateApiInProgress=true;
+          this.updateApiInProgress = true;
           this.commonMethod.putDataWithoutLoder(updateProfileUrl + "/" + this.userId, objData, accessToken).subscribe(
             data => {
               let foundRepos = data.json();
               console.error(foundRepos);
-              this.updateApiInProgress=false;
+              this.updateApiInProgress = false;
               //this.navCtrl.push(this.navCtrl.getActive().component);
 
               this.navCtrl.push(this.navCtrl.getActive().component).then(() => {
@@ -281,7 +287,7 @@ export class ProfilePage {
 
             },
             err => {
-              this.updateApiInProgress=false;
+              this.updateApiInProgress = false;
               alertVar.present();
               console.error("Error : " + err);
             },
@@ -345,7 +351,7 @@ export class ProfilePage {
     }).then((imageData) => {
       //this.base64Image = imageData;
       imageData = imageData.substring(0, imageData.indexOf('?'));
-      
+
       this.uploadImageOnAws(imageData);
     }, (err) => {
       console.log(err);
@@ -555,39 +561,42 @@ export class ProfilePage {
       });
       this.platform.resume.subscribe(() => {
         console.log("resume");
-        setTimeout(() => { 
-        this.nativeStorage.getItem('notificatio_click').then(
-          click => {
-            if (click.click && this.actionSheet != undefined) {
-              this.actionSheet.dismiss();
-            }
-          });
-      },2000);
+        setTimeout(() => {
+          this.nativeStorage.getItem('notificatio_click').then(
+            click => {
+              if (click.click && this.actionSheet != undefined) {
+                this.actionSheet.dismiss();
+              }
+            });
+        }, 2000);
       });
     });
   }
 
-  createFeedQuick(fab?: FabContainer){
+  createFeedQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.createFeed();
   }
 
-  createWorkOrderQuick(fab?: FabContainer){
+  createWorkOrderQuick(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
-    this.createWorkOrder('','','','','');
+    this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
+    this.createWorkOrder('', '', '', '', '');
   }
 
-  sendMessage(fab?: FabContainer){
+  sendMessage(fab?: FabContainer) {
     if (fab !== undefined) {
       fab.close();
     }
-    this.fabButtonOpened=false;
+    this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();
@@ -595,11 +604,11 @@ export class ProfilePage {
     modal.present();
   }
 
-  openFabButton(){
-    if(this.fabButtonOpened==false){
-        this.fabButtonOpened=true;
-    }else{
-        this.fabButtonOpened=false;
+  openFabButton() {
+    if (this.fabButtonOpened == false) {
+      this.fabButtonOpened = true;
+    } else {
+      this.fabButtonOpened = false;
     }
   }
 

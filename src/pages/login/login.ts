@@ -3,7 +3,7 @@ import { NavController, AlertController, Platform, Events, NavParams } from 'ion
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validator } from '../../validator';
 import { srviceMethodsCall } from '../../services/serviceMethods';
-import { getLoginUrl } from '../../services/configURLs';
+import { getLoginUrl, getMentionables } from '../../services/configURLs';
 import { getAllMembersUrl } from '../../services/configURLs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
@@ -811,7 +811,7 @@ export class LoginPage {
                         if (this.notification == undefined || (prevUserId > 0 && prevUserId != this.foundRepos.user.id)) {
                           this.showLoader = false;
                           //this.commonMethod.hideLoader();
-                          this.navCtrl.setRoot(FeedsPage);
+                          this.getMentionable()
                         }
                         else {
                           this.showLoader = false;
@@ -859,6 +859,36 @@ export class LoginPage {
         return '';
       }
     );
+  }
+
+
+  getMentionable() {
+    this.nativeStorage.getItem('user_auth').then(
+      accessToken => {
+        if (this.commonMethod.checkNetwork()) {
+          this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
+            data => {
+              let foundRepos = data.json();
+              for (let i = 0; i < foundRepos.departments.length; i++) {
+                foundRepos.departments[i].name = foundRepos.departments[i].name.toUpperCase()
+              }
+
+              this.nativeStorage.setItem('mentionable', foundRepos)
+                .then((data) => {
+                  this.navCtrl.setRoot(FeedsPage)
+                }).catch((err) => { })
+
+
+              console.log(foundRepos)
+            }, err => {
+              // alertVar.present();
+              console.error("Error : " + err);
+            },
+            () => {
+              console.log('getData completed');
+            })
+        }
+      })
   }
   valchange() {
 

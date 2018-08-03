@@ -89,7 +89,7 @@ export class WebHomePage {
             click => {
               if (click.click) {
                 this.browser.close();
-              }else{
+              } else {
                 this.navCtrl.setRoot(FeedsPage);
               }
             },
@@ -104,14 +104,14 @@ export class WebHomePage {
       click => {
         if (click.click) {
           this.browser.close();
-        }else{
+        } else {
           this.navCtrl.setRoot(FeedsPage);
         }
       },
       error => {
         this.navCtrl.setRoot(FeedsPage);
       });
-   
+
   }
 
   getUrl(url) {

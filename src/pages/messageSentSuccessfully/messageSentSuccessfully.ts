@@ -1,6 +1,8 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController, Platform, NavParams, ViewController } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { GroupChatPage } from '../groupChat/groupChat';
 
 @Component({
   selector: 'page-messageSentSuccessfully',
@@ -10,38 +12,65 @@ import { Keyboard } from '@ionic-native/keyboard';
 
 export class MessageSentSuccessfullyPage {
 
+  private arrivedFrom: string = '' // Mendatory if you want to perform custom behavior after countdown finished
+  private message: string = ''
+  private navigationMessage: string = ''
+  private buttonText: string = ''
+
   public timer: any;
   public maxTime = 3;
-  private name: string = 'user'
+  private isGroup: boolean = false
+  private mGroupInfo: any;
 
-  constructor(public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController) {
 
-    this.name = this.params.get('name')
+
+  constructor(public platform: Platform, public navCtrl: NavController, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, private sqlite: SQLite) {
+
     this.keyboard.disableScroll(true);
+
+    this.arrivedFrom = this.params.get('arrivedFrom')
+    this.message = this.params.get('message')
+    this.navigationMessage = this.params.get('navigationMessage')
+    this.buttonText = this.params.get('buttonText')
+
+    this.isGroup = this.params.get('is_group');
+    this.mGroupInfo = this.params.get('group_info')
     this.startTimer();
   }
 
   startTimer() {
     let thisObj = this;
-    this.timer = setTimeout(function () {
-      if (thisObj.maxTime > 1) {
+    this.timer = setTimeout(() => {
+      if (thisObj.maxTime > 0) {
+        thisObj.maxTime -= 1;
         thisObj.startTimer();
       }
       else {
-        thisObj.dismiss(true);
+        debugger
+        if (this.arrivedFrom == 'SendMessagePage') {
+          if (thisObj.isGroup) {
+            thisObj.navigateToGroup(thisObj.mGroupInfo)
+            return
+          } else {
+            thisObj.dismiss(true)
+            return
+          }
+        } else {
+          // Default behavior after countdown finished
+          thisObj.dismiss(true)
+          return
+        }
       }
-      // thisObj.maxTime-=1;
     }, 1000);
   }
 
-  /**
-   * To close this modal
-   * @param redirect if it is true, Redirect user to group and if it is false redirect just stay on the same page but need to refresh the page
-   */
   dismiss(redirect) {
     this.keyboard.close();
     this.viewCtrl.dismiss({ redirect: redirect });
   }
 
+  navigateToGroup(mGroupInfo) {
+    this.viewCtrl.dismiss({ redirect: false, group_info: mGroupInfo });
+  }
 }
 

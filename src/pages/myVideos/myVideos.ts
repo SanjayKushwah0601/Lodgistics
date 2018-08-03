@@ -16,6 +16,7 @@ import { TaskChecklistPage } from '../taskChecklist/taskChecklist';
 import { SendMessagePage } from '../sendMessage/sendMessage';
 import { CreateWorkOrderPage } from '../createWorkOrder/createWorkOrder';
 import { CreateFeedsPage } from '../createFeeds/createFeeds';
+import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
 
 @Component({
   selector: 'page-myVideos',
@@ -36,7 +37,7 @@ export class MyVideosPage {
   public spinner = false;
   public fabButtonOpened = false;
 
-  constructor(public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, private keyboard: Keyboard, private viewCtrl: ViewController, private youtube: YoutubeVideoPlayer, private modalCtrl: ModalController, public fabContainer: FabContainer) {
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public navCtrl: NavController, public commonMethod: srviceMethodsCall, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private http: Http, public zone: NgZone, private keyboard: Keyboard, private viewCtrl: ViewController, private youtube: YoutubeVideoPlayer, private modalCtrl: ModalController, public fabContainer: FabContainer) {
 
     this.userPermissions = {
       "wo_access": {
@@ -130,18 +131,23 @@ export class MyVideosPage {
 
   /* functions for footer */
   openChatPage() {
+    this.googleAnalytics.bottomTabClick('Open Chat Page')
     this.navCtrl.setRoot(ChattingPage);
   }
   openMyMentionPage() {
+    this.googleAnalytics.bottomTabClick('Open Mentions Page')
     this.navCtrl.setRoot(MyMentionPage);
   }
   openFeedPage() {
+    this.googleAnalytics.bottomTabClick('Open Feed Page')
     this.navCtrl.setRoot(FeedsPage);
   }
   openWOPage() {
+    this.googleAnalytics.bottomTabClick('Open Work Order Page')
     this.navCtrl.setRoot(WorkOrderPage);
   }
   openTaskChecklistPage() {
+    this.googleAnalytics.bottomTabClick('Open Check List Page')
     this.navCtrl.setRoot(TaskChecklistPage);
   }
 
@@ -215,6 +221,7 @@ export class MyVideosPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Post')
     this.createFeed();
   }
 
@@ -223,6 +230,7 @@ export class MyVideosPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create Work Order')
     this.createWorkOrder('', '', '', '', '');
   }
 
@@ -231,6 +239,7 @@ export class MyVideosPage {
       fab.close();
     }
     this.fabButtonOpened = false;
+    this.googleAnalytics.fabButtonClick('Create New Message')
     let modal = this.modalCtrl.create(SendMessagePage);
     modal.onDidDismiss(data => {
       this.closekeyboard();

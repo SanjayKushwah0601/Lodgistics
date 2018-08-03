@@ -1,98 +1,85 @@
 page-messageSentSuccessfully {
-    ion-content {
-        height: 50%;
-        background: #00b1e1;
-        margin-top: 40%;
-        margin-left: 15%;
-        margin-right: 15%;
-        width: 70%;
-    }
-    .scroll-content {
-        background: #00b1e1;
-        text-align: center;
-        font-family: 'open-sans';
-        border-radius: 15px;
-        padding: 0px !important;
-    }
-    .circle {
-        height: 80px;
-        width: 80px;
-        border-radius: 100%;
-        border: 2px solid #fff;
-        text-align: center;
-        margin: auto;
-        margin-top: 12%;
-    }
-    .circle ion-icon {
-        font-size: 6.2em;
-        color: #fff;
-        margin-top: -28%;
-    }
-    .text_title {
-        margin-top: 2%;
-        font-size: 2em;
-        color: #fff;
-        letter-spacing: 5px;
-    }
-    .text_title_sub_text {
-        color: #fff;
-        font-size: 16px;
-        margin-top: 2%;
-        padding: 0px 6px;
-    }
-    .text_title_sub_text span {
-        font-size: 20px;
-    }
-    .action_btn {
-        width: 100%;
-        background-color: #fff;
-        color: #808080;
-        padding: 10px 25px 10px 25px;
-        border-radius: 0px;
-        bottom: 0px;
-        position: absolute;
-        display: flex;
-        border: none;
-        margin: 0px;
-    }
-    #page-bg {
-        background-color: #111 !important;
-        position: fixed !important;
-        height: 100%;
-        width: 100%;
-        z-index: 1;
-        opacity: 0.8;
-    }
-    .redirect-msg {
-        margin-top: 25%;
-        font-size: 14px;
-    }
-    button.activated {
-        background-color: #fff !important;
-        opacity: 0.5 !important;
-    } //iPhone 5 & 5S in portrait & landscape
-    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-        ion-content {
-            height: 68%;
-            margin-top: 20%;
-        }
-    } //iPhone 6 in portrait & landscape // iPhone 8
-    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
-        ion-content {
-            height: 60%;
-            margin-top: 25%;
-        }
-    } //iPhone 8 Plus //iPhone 6+
-    @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
-        ion-content {
-            height: 55%;
-            margin-top: 30%;
-        }
-    } //iPhone X
-    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-        ion-content {
-            height: 50%;
-            margin-top: 40%;
-        }
-    }
+  ion-content {
+    height: 57%;
+    margin-top: 30%;
+    background: #00b1e1;
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 70%;
+  }
+  .scroll-content {
+    background: #00b1e1;
+    text-align: center;
+    font-family: 'open-sans';
+    border-radius: 15px;
+    padding: 0px !important;
+  }
+  .circle {
+    height: 80px;
+    width: 80px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    text-align: center;
+    margin: auto;
+    margin-top: 12%;
+  }
+  .circle ion-icon {
+    font-size: 6.2em;
+    color: #fff;
+    margin-top: -28%;
+  }
+  .text_title {
+    margin-top: 2%;
+    font-size: 2em;
+    color: #fff;
+    letter-spacing: 5px;
+  }
+  .text_title_sub_text {
+    color: #fff;
+    font-size: 16px;
+    margin-top: 2%;
+    padding: 0px 6px;
+  }
+  .text_title_sub_text span {
+    font-size: 14px;
+    font-family: 'open-sans';
+  }
+  .action_btn {
+    width: 100%;
+    background-color: #fff;
+    color: #808080;
+    padding: 10px 25px 10px 25px;
+    border-radius: 0px;
+    bottom: 0px;
+    position: absolute;
+    display: flex;
+    border: none;
+    margin: 0px;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  #page-bg {
+    background-color: #111 !important;
+    position: fixed !important;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    opacity: 0.8;
+  }
+  .redirect-msg {
+    margin-top: 25%;
+    font-size: 14px;
+    font-family: 'open_sanslight';
+  }
+  button.activated {
+    background-color: #fff !important;
+    opacity: 0.5 !important;
+  } //iPhone 5 & 5S in portrait & landscape
+  @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {}
+  //iPhone 6 in portrait & landscape // iPhone 8
+  @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {}
+  //iPhone 8 Plus //iPhone 6+
+  @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {}
+  //iPhone X
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {}
 }
