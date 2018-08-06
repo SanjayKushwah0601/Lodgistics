@@ -1264,6 +1264,7 @@ export class GroupChatPage {
     let pttwo = str.substring(charpos + (badtext.length));
     return (ptone + pttwo);
   }
+
   selectUser(e, memberInfo, add) {
     let mentionAdded = true;
     if (this.showMentions == true && this.textMessage != "") {
@@ -2326,6 +2327,7 @@ export class GroupChatPage {
   changeModelValue() {
     this.zone.run(() => {
       this.textMessage = this.textMessage;
+      debugger
       this.mentionMembers = this.items;
     });
   }
