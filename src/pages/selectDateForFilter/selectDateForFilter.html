@@ -1,0 +1,39 @@
+<!-- <ion-content padding no-bounce disable-scroll> -->
+<div class="page-wraper-box">
+
+  <div class="box">
+
+    <ion-title class="wo_title">SELECT DATE TO FILTER
+      <ion-icon class="popup-close-button close-icon1" ios="ios-close" md="md-close" (click)="dismiss()"></ion-icon>
+    </ion-title>
+
+    <table>
+      <tr>
+        <td colspan="2">
+          Select a date.
+          <!-- {{dateRange.from}} - {{dateRange.to}} -->
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <ion-calendar [(ngModel)]="dateRange" (onChange)="onChange()" [options]="optionsRange" [type]="type" [format]="'YYYY-MM-DD'">
+          </ion-calendar>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <div class="popup-buttons" class="float_right">
+            <ion-spinner class="api_loader_spinner" *ngIf="apiInProgress" name="bubbles"></ion-spinner>
+            <!-- <button *ngIf="!apiInProgress" [disabled]="!dateRange.from || !dateRange.to" tappable full ion-button (click)="createFollowUp()">SAVE</button> -->
+            <button *ngIf="!apiInProgress" tappable full ion-button (click)="dateSelection()">SAVE</button>
+          </div>
+        </td>
+      </tr>
+
+    </table>
+
+
+  </div>
+</div>
+<!-- </ion-content> -->

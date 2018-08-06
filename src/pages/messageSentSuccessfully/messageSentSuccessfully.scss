@@ -1,6 +1,6 @@
 page-messageSentSuccessfully {
   ion-content {
-    height: 57%;
+    height: 58%;
     margin-top: 30%;
     background: #00b1e1;
     margin-left: 15%;
@@ -82,17 +82,17 @@ page-messageSentSuccessfully {
   } //iPhone 6 in portrait & landscape // iPhone 8 pixel 2
   @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
     ion-content {
-      height: 57%;
+      height: 58%;
     }
   } //iPhone 8 Plus //iPhone 6+
   @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
     ion-content {
-      height: 57%;
+      height: 58%;
     }
   } //iPhone X
   @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
     ion-content {
-      height: 57%;
+      height: 58%;
     }
   }
 }

@@ -316,6 +316,7 @@ export class AddEditGroupPage {
       if (networkState != Connection.NONE) {
         let allIds = [];
 
+        debugger
         for (let i = 0; i < this.users.length; i++) {
           if (this.users[i].inGroup == true) {
             allIds.push(this.users[i].id);
@@ -594,7 +595,7 @@ export class AddEditGroupPage {
   }
 
   updateGroupInfo(formData) {
-
+    debugger
     if (this.base64Image != "" && this.isNewImageAvailable == true) {
       let commonMethod = this.commonMethod;
       let transfer = this.transfer;

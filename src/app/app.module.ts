@@ -52,6 +52,7 @@ import { SendMessagePage } from '../pages/sendMessage/sendMessage';
 import { createFollowUpPage } from '../pages/createFollowUp/createFollowUp';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 // import { Deeplinks } from '@ionic-native/deeplinks';
+import { UpdateAppPage } from '../pages/updateApp/updateApp';
 
 
 import { TranslationService } from '../providers/translation.service';
@@ -64,9 +65,8 @@ import { Buffer } from 'buffer';
 // import 'intl/locale-data/jsonp/en';
 import { NewUserPage } from '../pages/newUser/newUser';
 import { DateLabelStr } from './dateLabel.pipe.ts';
-import { PressDirective } from '../directives/press/press';
 import { Market } from '@ionic-native/market';
-import { UpdateAppPage } from '../pages/updateApp/updateApp';
+import { PressDirective } from '../directives/press/press';
 import { NotificationPermissionPage } from '../pages/notificationPermission/notificationPermission';
 import { RemovehtmltagsPipe } from '../pipes/removehtmltags/removehtmltags';
 import { UserListPopoverPage } from '../pages/user-list-popover/user-list-popover';
@@ -74,6 +74,7 @@ import { MessageSentSuccessfullyPage } from '../pages/messageSentSuccessfully/me
 import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { GoogleAnalyticsProvider } from '../providers/google-analytics/google-analytics';
 import { Intercom } from '@ionic-native/intercom';
+import { SelectDateForFilterPage } from '../pages/selectDateForFilter/selectDateForFilter';
 
 enableProdMode();
 
@@ -135,11 +136,12 @@ export class SafeHtmlPipe implements PipeTransform {
     NotificationPermissionPage,
     RemovehtmltagsPipe,
     UserListPopoverPage,
-    MessageSentSuccessfullyPage
+    MessageSentSuccessfullyPage,
+    SelectDateForFilterPage
   ],
-  imports: [ 
-    MbscModule,
+  imports: [
     FormsModule,
+    MbscModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
@@ -196,7 +198,8 @@ export class SafeHtmlPipe implements PipeTransform {
     UpdateAppPage,
     NotificationPermissionPage,
     UserListPopoverPage,
-    MessageSentSuccessfullyPage
+    MessageSentSuccessfullyPage,
+    SelectDateForFilterPage
   ],
   providers: [
     StatusBar,

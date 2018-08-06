@@ -13,6 +13,7 @@ page-createWorkOrder {
     color: #757575;
     border: none;
     height: 100%;
+    overflow: scroll;
   }
   .popup-buttons {
     width: auto;
@@ -286,7 +287,14 @@ page-createWorkOrder {
   }
   .disable_text {
     color: #999 !important;
-  } // .request-label{ margin-left: 2px; }
+  }
+  // button[disabled],
+  // [ion-button][disabled] {
+  //   cursor: default;
+  //   opacity: 1;
+  //   /* color: red; */
+  //   background: #b8eefc;
+  // } // .request-label{ margin-left: 2px; }
   // .demo-non-form {
   //     color: initial;
   //     width: 100%;
