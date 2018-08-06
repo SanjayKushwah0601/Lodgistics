@@ -74,12 +74,25 @@ page-messageSentSuccessfully {
   button.activated {
     background-color: #fff !important;
     opacity: 0.5 !important;
-  } //iPhone 5 & 5S in portrait & landscape
-  @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {}
-  //iPhone 6 in portrait & landscape // iPhone 8
-  @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {}
-  //iPhone 8 Plus //iPhone 6+
-  @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {}
-  //iPhone X
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {}
+  } //iPhone 5 & 5S in portrait & landscape moto g
+  @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    ion-content {
+      height: 66%;
+    }
+  } //iPhone 6 in portrait & landscape // iPhone 8 pixel 2
+  @media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+    ion-content {
+      height: 57%;
+    }
+  } //iPhone 8 Plus //iPhone 6+
+  @media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
+    ion-content {
+      height: 57%;
+    }
+  } //iPhone X
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+    ion-content {
+      height: 57%;
+    }
+  }
 }
