@@ -675,22 +675,25 @@ page-feeds {
   .card-footer ion-col button {
     height: 90% !important;
   }
-.search-date-options {
+  .search-date-options {
     height: 20px;
     border-bottom: 0px solid #E5E5E5;
     font-family: 'open_sanslight';
   }
-  .search-date-options-text{
+  .search-date-options-text {
     color: #00b1e1;
     font-weight: bold;
     font-family: 'open_sanslight';
     font-size: 12px;
     height: 30px;
   }
-  .search-date-options .ion-ios-close{
+  .search-date-options .ion-ios-close {
     margin-top: -15px;
     color: grey !important;
     font-size: 3.2em !important;
+  }
+  .item-md.item-block .item-inner {
+    padding-right: 0px;
   }
   @keyframes fadein {
     from {

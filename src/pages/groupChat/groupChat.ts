@@ -204,13 +204,41 @@ export class GroupChatPage {
                 "is_system_user": allMembers.rows.item(i).is_system_user,
                 "total": allMembers.rows.item(i).total
               };
-              if (allMembers.rows.item(i).user_id != this.groupInfo.owner_id && allMembers.rows.item(i).is_system_user != 1) {
-                this.totalMentionUsers += 1;
-              }
+              //   if (allMembers.rows.item(i).user_id != this.groupInfo.owner_id && allMembers.rows.item(i).is_system_user != 1) {
+              //     this.totalMentionUsers += 1;
+              //   }
+              //   if (allMembers.rows.item(i).user_id == this.groupInfo.owner_id) {
+              //     this.groupCreatorName = allMembers.rows.item(i).name;
+              //   }
+              //   this.users.push(tempUserInfo);
+
+              //   if (i == (allMembers.rows.length - 1)) {
+              //     this.members = this.users;
+              //     this.updateChatData();
+              //   }
+
               if (allMembers.rows.item(i).user_id == this.groupInfo.owner_id) {
                 this.groupCreatorName = allMembers.rows.item(i).name;
               }
-              this.users.push(tempUserInfo);
+
+              if (this.groupInfo.users != undefined && this.groupInfo.users.length > 0) {
+                for (let m = 0; m < this.groupInfo.users.length; m++) {
+                  if (this.groupInfo.users[m].id == allMembers.rows.item(i).user_id) {
+
+                    if (allMembers.rows.item(i).user_id != this.groupInfo.owner_id && allMembers.rows.item(i).is_system_user != 1) {
+                      this.totalMentionUsers += 1;
+                    }
+
+                    this.users.push(tempUserInfo);
+                  }
+                }
+              } else {
+                if (allMembers.rows.item(i).user_id != this.groupInfo.owner_id && allMembers.rows.item(i).is_system_user != 1) {
+                  this.totalMentionUsers += 1;
+                }
+                this.users.push(tempUserInfo);
+              }
+              //this.users.push(tempUserInfo);
 
               if (i == (allMembers.rows.length - 1)) {
                 this.members = this.users;

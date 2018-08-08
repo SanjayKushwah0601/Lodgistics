@@ -481,30 +481,29 @@ checkInternet(){
             //mentionStr = "<span class='mention_style'>";
             let oldMessage = false;
             let tempNames = "";
-            let tempVal = val;
+            let tempVal = JSON.parse(JSON.stringify(val));
             mentionStr = "<span class='mention_style'>";
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
                     if (members[l].id == allChatMentions[k].id) {
                         tempNames += members[l].name + " ";
-                        if (tempVal.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
+                        if (val.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
                             oldMessage = true;
                         }
                         let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        tempVal = this.replaceAll(tempVal, "@" + members[l].name, newStr);
+                        val = this.replaceAll(val, "@" + members[l].name, newStr);
                     }
                 }
             }
             mentionStr += "</span>";
 
-            // result.text = tempNames + tempVal;
-            // result.text = tempVal;
-            // if (oldMessage == true) {
-            //     val = mentionStr + val;
-            // }
+            //result.text = tempNames + tempVal;
+            if (oldMessage == true) {
+                val = mentionStr + val;
+            }
             // mentionStr += "</span>";
-            result.html = tempVal;
+            result.html = val;
         }
 
         return result;
@@ -602,16 +601,17 @@ checkInternet(){
                         if (val.indexOf("@" + members[l].name) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
                             oldMessage = true;
+                        } else {
+                            let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
+                            val = this.replaceAll(val, "@" + members[l].name, newStr);
                         }
-                        let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        val = this.replaceAll(val, "@" + members[l].name, newStr);
                     }
                 }
             }
             mentionStr += "</span>";
 
             if (oldMessage == true) {
-                val = mentionStr + val;
+                // val = mentionStr + val;
             }
             // mentionStr += "</span>";
         }
@@ -637,23 +637,24 @@ checkInternet(){
                 for (let l = 0; l < members.length; l++) {
                     if (members[l].id == allChatMentions[k].id) {
                         tempNames += members[l].name + " ";
-                        if (val.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
+                        if (tempVal.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
                             oldMessage = true;
                         }
                         let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        val = this.replaceAll(val, "@" + members[l].name, newStr);
+                        tempVal = this.replaceAll(tempVal, "@" + members[l].name, newStr);
                     }
                 }
             }
             mentionStr += "</span>";
 
             // result.text = tempNames + tempVal;
+            // result.text = tempVal;
             if (oldMessage == true) {
                 val = mentionStr + val;
             }
             // mentionStr += "</span>";
-            result.html = val;
+            result.html = tempVal;
         }
 
         return result;

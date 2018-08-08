@@ -145,20 +145,20 @@
                     <p *ngIf="(item.showMore == undefined || item.showMore)">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                       <span [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
-                      <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more.</a>
-                      <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less.</a>
+                      <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                      <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
                     <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
                       <span [innerHTML]="updateHtml1(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
-                      <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more..</a>
-                      <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less..</a>
+                      <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
+                      <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
 
 
                   </td>
                 </tr>
-                <tr *ngIf="item.image_url!='' && foundRepos.image_url!=null && foundRepos.image_url!='null' ">
+                <tr *ngIf="item.image_url!='' && item.image_url!=null && item.image_url!='null' ">
                   <td (click)="showImage(item.image_url)">
                     <img [ngClass]="item.image_width<item.image_height?'fit-img-obj':''" src="{{item.image_url}}">
                   </td>
