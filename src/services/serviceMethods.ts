@@ -440,33 +440,6 @@ checkInternet(){
     }
 
 
-    getTextValueNew1(allChatMentions, members, val) {
-        let mentionStr = "";
-        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
-            //mentionStr = "<span class='mention_style'>";
-            let oldMessage = false;
-            mentionStr = "<span class='mention_style'>";
-            for (let k = 0; k < allChatMentions.length; k++) {
-                for (let l = 0; l < members.length; l++) {
-                    if (members[l].id == allChatMentions[k].id) {
-                        if (val.indexOf("@" + members[l].name) == -1) {
-                            mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
-                            oldMessage = true;
-                        }
-                        let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        val = this.replaceAll(val, "@" + members[l].name, newStr);
-                    }
-                }
-            }
-            mentionStr += "</span>";
-
-            if (oldMessage == true) {
-                val = mentionStr + val;
-            }
-            // mentionStr += "</span>";
-        }
-        return val;
-    }
 
     /**
      * 
@@ -477,7 +450,7 @@ checkInternet(){
     getTextValueWithNamesNew(allChatMentions, members, val) {
         let mentionStr = "";
         let result = { html: val, text: val };
-        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
+        if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
             let oldMessage = false;
             let tempNames = "";
@@ -485,7 +458,7 @@ checkInternet(){
             mentionStr = "<span class='mention_style'>";
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
-                    if (members[l].id == allChatMentions[k].id) {
+                    if (members[l].id == allChatMentions[k]) {
                         tempNames += members[l].name + " ";
                         if (val.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
@@ -591,13 +564,13 @@ checkInternet(){
 
     getTextValueNew(allChatMentions, members, val) {
         let mentionStr = "";
-        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
+        if (allChatMentions.length > 0 && parseInt(allChatMentions[0]) > 0) {
             //mentionStr = "<span class='mention_style'>";
             let oldMessage = false;
             mentionStr = "<span class='mention_style'>";
             for (let k = 0; k < allChatMentions.length; k++) {
                 for (let l = 0; l < members.length; l++) {
-                    if (members[l].id == allChatMentions[k].id) {
+                    if (members[l].id == allChatMentions[k]) {
                         if (val.indexOf("@" + members[l].name) == -1) {
                             mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
                             oldMessage = true;
@@ -616,47 +589,5 @@ checkInternet(){
             // mentionStr += "</span>";
         }
         return val;
-    }
-
-    /**
-     * 
-     * @param allChatMentions array of objects 
-     * @param members array of objects
-     * @param val description
-     */
-    getTextValueWithNamesNew1(allChatMentions, members, val) {
-        let mentionStr = "";
-        let result = { html: val, text: val };
-        if (allChatMentions.length > 0 && parseInt(allChatMentions[0].id) > 0) {
-            //mentionStr = "<span class='mention_style'>";
-            let oldMessage = false;
-            let tempNames = "";
-            let tempVal = val;
-            mentionStr = "<span class='mention_style'>";
-            for (let k = 0; k < allChatMentions.length; k++) {
-                for (let l = 0; l < members.length; l++) {
-                    if (members[l].id == allChatMentions[k].id) {
-                        tempNames += members[l].name + " ";
-                        if (tempVal.toLowerCase().indexOf("@" + members[l].name.toLowerCase()) == -1) {
-                            mentionStr += "<span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + " ";
-                            oldMessage = true;
-                        }
-                        let newStr = "<span class='mention_style'><span style='color:#BDBDBD;font-size:13px;'>@</span>" + members[l].name + "</span> ";
-                        tempVal = this.replaceAll(tempVal, "@" + members[l].name, newStr);
-                    }
-                }
-            }
-            mentionStr += "</span>";
-
-            // result.text = tempNames + tempVal;
-            // result.text = tempVal;
-            if (oldMessage == true) {
-                val = mentionStr + val;
-            }
-            // mentionStr += "</span>";
-            result.html = tempVal;
-        }
-
-        return result;
     }
 }

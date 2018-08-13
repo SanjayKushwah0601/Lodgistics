@@ -20,12 +20,60 @@ import { getWoDataUrl } from '../../services/configURLs';
 import { updateWoDataUrl } from '../../services/configURLs';
 import { createWorkOrderUrl, getAssignableUsersUrl } from '../../services/configURLs';
 import { UtilMethods } from '../../services/utilMethods';
+import { mobiscroll, MbscSelectOptions, MbscFormOptions } from '@mobiscroll/angular';
 import { GoogleAnalyticsProvider } from '../../providers/google-analytics/google-analytics';
+import { MessageSentSuccessfullyPage } from '../messageSentSuccessfully/messageSentSuccessfully';
+import { FeedsPage } from '../feeds/feeds';
+
+
+let names = [{
+  text: "Abigail Hodges",
+  value: 1
+}, {
+  text: "Adam Robertson",
+  value: 2
+}, {
+  text: "Adrian Mackay",
+  value: 3
+}, {
+  text: "Adrian Springer",
+  value: 4
+}
+  // Showing partial data. Download full source.
+],
+  myData = {
+    url: 'https://trial.mobiscroll.com/airports/',
+    remoteFilter: true,
+    dataType: 'jsonp',
+    processResponse: function (data) {
+      var i,
+        item,
+        ret = [];
+
+      if (data) {
+        for (i = 0; i < data.length; i++) {
+          item = data[i];
+          ret.push({
+            value: item.code,
+            text: item.name,
+            html: '<div style="font-size:16px;line-height:18px;">' + item.name + '</div><div style="font-size:10px;line-height:12px;">' + item.location + ', ' + item.code + '</div>'
+          });
+        }
+      }
+
+      return ret;
+    }
+  };
+
+mobiscroll.settings = {
+  theme: 'material'
+};
+
 
 @Component({
   selector: 'page-createWorkOrder',
   templateUrl: 'createWorkOrder.html',
-  providers: [UtilMethods,srviceMethodsCall, Keyboard, Camera, Transfer, File, NativeStorage, SQLite]
+  providers: [UtilMethods, srviceMethodsCall, Keyboard, Camera, Transfer, File, NativeStorage, SQLite]
 })
 
 export class CreateWorkOrderPage {
@@ -59,8 +107,52 @@ export class CreateWorkOrderPage {
   private canEditClosedWo: boolean = false;
 
   private tempWorkOrderStatus: string;
+  public allStatus = ['open', 'closed', 'working'];
+  public allPriority = [['Low', 'l'], ['Medium', 'm'], ['High', 'h']];
 
-  constructor(public googleAnalytics: GoogleAnalyticsProvider,public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public utilMethods: UtilMethods) {
+  public localData = "";
+  public locationData = [];
+  public publicAreaData = [];
+  public equipmentData = [];
+  public select: any;
+  public roomCheckListItemsData = [];
+  public publicAreaCheckListItemsData = [];
+
+  formSettings = {
+    theme: 'material'
+  };
+
+  names: any = names;
+  myData: any = myData;
+
+  localSettings = {
+    filter: true,
+    display: 'top',
+    closeOnOverlayTap: true,
+    rows: 7,
+    filterPlaceholderText: 'Type to filter'
+  };
+
+  remoteSettings = {
+    multiline: 2,
+    height: 50,
+    data: myData,
+    filter: true
+  };
+
+
+  //  public nonFormSettings: MbscSelectOptions = {
+  //     multiline: 2,
+  //     height: 50,
+  //     data: myData,
+  //     filter: true,
+  //     inputClass: 'demo-non-form'
+  // };
+
+
+
+  constructor(public googleAnalytics: GoogleAnalyticsProvider, public platform: Platform, public params: NavParams, private keyboard: Keyboard, public viewCtrl: ViewController, public zone: NgZone, public modalCtrl: ModalController, public commonMethod: srviceMethodsCall, public events: Events, private camera: Camera, private transfer: Transfer, private file: File, public actionSheetCtrl: ActionSheetController, public alertCtrl: AlertController, public nativeStorage: NativeStorage, private sqlite: SQLite, public utilMethods: UtilMethods) {
+
 
     this.selectOptions = {
       cssClass: 'select-drop-down'
@@ -71,7 +163,7 @@ export class CreateWorkOrderPage {
     this.getAssignableUsers();
 
     this.keyboard.disableScroll(true);
-    this.userPermissions = { "wo_access": { "priority": false, "status": false, "due_to_date": false, "assigned_to_id": false, "assignable": false, "view_all": false, "view_department": false, "view_own": false, "view_assigned_to": false, "view_listing": false, "can_create": false, "team": true,"can_delete" :false, "can_edit" :false } };
+    this.userPermissions = { "wo_access": { "priority": false, "status": false, "due_to_date": false, "assigned_to_id": false, "assignable": false, "view_all": false, "view_department": false, "view_own": false, "view_assigned_to": false, "view_listing": false, "can_create": false, "team": true, "can_delete": false, "can_edit": false } };
 
     this.commonMethod.getUserPermissions().then(
       permissions => {
@@ -92,6 +184,7 @@ export class CreateWorkOrderPage {
           this.publicArea = data.publicArea;
           this.equipment = data.equipment;
           this.processData();
+          this.updateLocationDataForInput();
         },
         error => {
           console.error(error);
@@ -120,11 +213,12 @@ export class CreateWorkOrderPage {
                     this.room = foundRepos.Room;
                     this.publicArea = foundRepos.PublicArea;
                     this.equipment = foundRepos.Equipment;
+                    this.updateLocationDataForInput();
 
                     this.nativeStorage.setItem('wo_data', { locationType: this.locationType, room: this.room, publicArea: this.publicArea, equipment: this.equipment })
                       .then(
-                      () => { console.log('Stored wo_data!'); },
-                      error => { console.error('Error storing wo_data', error); }
+                        () => { console.log('Stored wo_data!'); },
+                        error => { console.error('Error storing wo_data', error); }
                       );
                     this.commonMethod.hideLoader();
                     this.processData();
@@ -165,17 +259,16 @@ export class CreateWorkOrderPage {
     this.img[1] = "";
     this.workOrderData = {
       descriptions: '',
-      priority: 'm',
+      priority: '',
       status: 'open',
-      due_to_date: '',
-      assigned_to_id: '-2',
-      maintainable_type: 'Room',
+      due_to_date: '',//new Date().toISOString(),
+      assigned_to_id: '',
+      maintainable_type: '',
       maintainable_id: '',
       maintenance_checklist_item_id: "",
       first_img_url: "",
       second_img_url: "",
-      closed: false,
-      other_maintainable_location: ''
+      closed: false
     };
 
     this.nativeStorage.getItem('user_auth').then(
@@ -185,7 +278,7 @@ export class CreateWorkOrderPage {
 
     this.keyboard.disableScroll(true);
 
-    
+
     //To do Need to remove
     //this.projectBaseUrl = baseUrl;
     this.projectBaseUrl = "http://dev.lodgistics.com";
@@ -239,10 +332,7 @@ export class CreateWorkOrderPage {
                 this.updateCheckList();
                 this.workOrderData.maintenance_checklist_item_id = woData.maintenance_checklist_item_id;
                 this.workOrderData.closed = woData.closed;
-                this.workOrderData.other_maintainable_location = (woData.maintainable_type=='Other'?((typeof woData.other_maintainable_location !== 'undefined')?woData.other_maintainable_location:''):'');
-                if(this.workOrderData.other_maintainable_location!='' && woData.maintainable_type=='Other'){
-                  this.workOrderData.maintainable_id = this.workOrderData.other_maintainable_location;
-                }
+
                 // Store the initial work order status in a variable
                 this.tempWorkOrderStatus = woData.status;
                 //let foundRepos = data.json();
@@ -367,6 +457,7 @@ export class CreateWorkOrderPage {
               console.log(foundRepos);
               this.commonMethod.hideLoader();
               this.viewCtrl.dismiss({ id: this.id, work_order_id: foundRepos.id, work_order_url: foundRepos.work_order_url, work_order_status: foundRepos.status });
+              this.successMessage();
             },
             err => {
               this.commonMethod.hideLoader();
@@ -435,7 +526,7 @@ export class CreateWorkOrderPage {
     }).then((imageData) => {
       //this.sendImage(imageData);
       //this.img[index]=imageData;
-      this.uploadImageOnAws(imageData, index);
+      this.uploadImageOnAws(imageData.substring(0, imageData.indexOf('?')), index);
     }, (err) => {
       console.log(err);
     });
@@ -643,11 +734,35 @@ export class CreateWorkOrderPage {
             this.commonMethod.getData(url, accessToken).subscribe(
               data => {
                 if (this.roomCheckListItems.length <= 0 && this.workOrderData.maintainable_type == 'Room') {
+                  this.roomCheckListItemsData = [];
+                  let tempData = [];
                   this.roomCheckListItems = data.json();
                   //console.log("==" + JSON.stringify(this.roomCheckListItems));
+                  for (let i = 0; i < this.roomCheckListItems.length; i++) {
+                    tempData.push({ text: "---- " + this.roomCheckListItems[i].name + " ----", value: this.roomCheckListItems[i].id, disabled: true });
+                    for (let j = 0; j < this.roomCheckListItems[i].checklist_items.length; j++) {
+                      tempData.push({ text: this.roomCheckListItems[i].checklist_items[j].name, value: this.roomCheckListItems[i].checklist_items[j].id, disabled: false });
+                    }
+                  }
+                  this.roomCheckListItemsData = tempData;
+                  //console.log("this.roomCheckListItemsData="+JSON.stringify(this.roomCheckListItemsData));
                 }
+                //else if( this.publicAreaCheckListItems.length <= 0 && (this.workOrderData.maintainable_type == 'PublicArea' || this.workOrderData.maintainable_type == 'Public Area') ){
                 else {
+                  this.publicAreaCheckListItemsData = [];
+                  let tempData = [];
                   this.publicAreaCheckListItems = data.json();
+
+                  for (let i = 0; i < this.publicAreaCheckListItems.length; i++) {
+                    if (this.publicAreaCheckListItems[i].id == this.workOrderData.maintainable_id) {
+                      //this.publicAreaCheckListItemsData.push({ text: this.publicAreaCheckListItems[i].name, value: this.publicAreaCheckListItems[i].id });
+                      for (let j = 0; j < this.publicAreaCheckListItems[i].checklist_items.length; j++) {
+                        tempData.push({ text: this.publicAreaCheckListItems[i].checklist_items[j].name, value: this.publicAreaCheckListItems[i].checklist_items[j].id });
+                      }
+                    }
+                  }
+                  this.publicAreaCheckListItemsData = tempData;
+                  //console.log("this.publicAreaCheckListItems="+JSON.stringify(this.publicAreaCheckListItems));
                   //console.log("==" + JSON.stringify(this.publicAreaCheckListItems));
                 }
 
@@ -879,12 +994,11 @@ export class CreateWorkOrderPage {
     );
   }
 
-  closeKeyBoard()
-  {
+  closeKeyBoard() {
     this.keyboard.close();
   }
 
-getAssignableUsers() {
+  getAssignableUsers() {
     let alertVar = this.alertCtrl.create({
       title: 'Error!',
       subTitle: 'Invalid Details!',
@@ -920,6 +1034,219 @@ getAssignableUsers() {
         return '';
       }
     );
+  }
+
+  selectAssignTo() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Assigned To',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.members.length; i++) {
+      let thisObj = this;
+      let name = this.members[i][0];
+      //let id=this.departmentsData[i].id;
+      let id = this.members[i][1];
+      let className = '';
+      if (id == thisObj.workOrderData.assigned_to_id) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.assigned_to_id = id;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  getAssignToUserName() {
+    for (var i = 0; i < this.members.length; i++) {
+      if (this.workOrderData.assigned_to_id == this.members[i][1]) {
+        return this.members[i][0];
+      }
+    }
+  }
+
+  selectStatus() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Status',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.allStatus.length; i++) {
+      let thisObj = this;
+      let name = this.allStatus[i];
+      let className = '';
+      if (this.workOrderData.status == this.allStatus[i]) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name.charAt(0).toUpperCase() + name.slice(1), cssClass: className, handler: () => {
+          thisObj.workOrderData.status = name;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  selectPriority() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Priority',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.allPriority.length; i++) {
+      let thisObj = this;
+      let name = this.allPriority[i][0];
+      //let id=this.departmentsData[i].id;
+      let id = this.allPriority[i][1];
+      let className = '';
+      if (id == thisObj.workOrderData.priority) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.priority = id;
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  getPriorityName() {
+    for (var i = 0; i < this.allPriority.length; i++) {
+      if (this.workOrderData.priority == this.allPriority[i][1]) {
+        return this.allPriority[i][0];
+      }
+    }
+  }
+
+  selectLocation() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Location',
+      cssClass: 'wo-action-items'
+    });
+    for (var i = 0; i < this.locationType.length; i++) {
+      let thisObj = this;
+      let name = this.locationType[i];
+      let className = '';
+      if (this.workOrderData.maintainable_type == this.locationType[i]) {
+        className = 'selected-action-sheet-item';
+      }
+      actionSheet.addButton({
+        text: name, cssClass: className, handler: () => {
+          thisObj.workOrderData.maintainable_type = name;
+          thisObj.workOrderData.maintainable_id = "";
+        }
+      });
+    }
+
+    actionSheet.addButton({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    });
+
+    actionSheet.present();
+  }
+
+  updateLocationDataForInput() {
+    this.locationData = [];
+    this.publicAreaData = [];
+    this.equipmentData = [];
+
+    for (let i = 0; i < this.room.length; i++) {
+      this.locationData.push({ text: this.room[i].room_number, value: this.room[i].id });
+    }
+    for (let i = 0; i < this.publicArea.length; i++) {
+      this.publicAreaData.push({ text: this.publicArea[i].name, value: this.publicArea[i].id });
+    }
+    for (let i = 0; i < this.equipment.length; i++) {
+      this.equipmentData.push({ text: this.equipment[i].name, value: this.equipment[i].id });
+    }
+  }
+
+  removeFocus() {
+    //this.closeKeyBoard();
+    //(document.querySelector("#loaction-type input") as HTMLElement).blur();
+  }
+
+  showImage(url) {
+    let alert = this.alertCtrl.create({
+      title: '',
+      message: '<div class="img-loader"></div><img src="' + url + '" class="loaded-image" alt="Loading..." >',
+      cssClass: 'image_upload_alert',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  closekeyboard() {
+    this.keyboard.close();
+  }
+
+  successMessage() {
+    let modal = this.modalCtrl.create(MessageSentSuccessfullyPage, {
+      message: 'WO created successfully!',
+      navigationMessage: 'You will be taken back in ',
+      buttonText: 'CREATE ANOTHER WO'
+    });
+    modal.onDidDismiss(data => {
+      this.closekeyboard();
+      if (data.redirect) {
+        this.dismiss();
+      } else {
+        let modal = this.modalCtrl.create(CreateWorkOrderPage);
+        modal.onDidDismiss(data => {
+          this.closekeyboard();
+        });
+        modal.present({
+          animate: false
+        });
+        setTimeout(() => {
+          //this.dismiss()
+        }, 300);
+      }
+    });
+    modal.present();
+  }
+
+  getLocationName(maintainable_id) {
   }
 
 }

@@ -35,47 +35,24 @@
 
       </ion-item>
 
-      <span *ngIf="foundRepos.image_url=='' || foundRepos.image_url==null" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
-        <ion-card-content ngClass="selectable">
-          <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
-          <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_targets) | safeHtml"></p>
-        </ion-card-content>
-      </span>
 
-
-      <span *ngIf="foundRepos.image_url!='' && foundRepos.image_url!=null && foundRepos.image_url!='null'" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
+      <span (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
         <ion-card-content ngClass="selectable">
           <table class="card-table card-table-2">
             <tr>
               <td class="">
                 <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
-                <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_targets) | safeHtml"></p>
+                <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_user_ids) | safeHtml"></p>
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="foundRepos.image_url!='' && foundRepos.image_url!=null && foundRepos.image_url!='null'">
               <td (load)="imageLoaded()" (click)="showImage(foundRepos.image_url)">
-                <img (load)="imageLoaded()" [ngClass]="foundRepos.image_width<=foundRepos.image_height?'fit-img-obj':''" src="{{foundRepos.image_url}}">
+                <img (load)="imageLoaded()" class="fit-img-obj" src="{{foundRepos.image_url}}">
               </td>
             </tr>
           </table>
         </ion-card-content>
       </span>
-
-      <!-- <span *ngIf="foundRepos.image_url!='' && foundRepos.image_width<foundRepos.image_height" (click)="translate(foundRepos.title,foundRepos.body,'es',true,0)">
-        <ion-card-content ngClass="selectable">
-          <table class="card-table">
-            <tr>
-              <td (click)="showImage(foundRepos.image_url)">
-                <img (load)="imageLoaded()" style="width:200px;height:250px;" src="{{foundRepos.image_url}}">
-              </td>
-              <td class="td-box-2">
-                <p *ngIf="foundRepos.title" class="feed_title" [innerHTML]="updateHtml1(foundRepos.title) | safeHtml"></p>
-                <p [innerHTML]="updateHtml(foundRepos.body, foundRepos.mentioned_targets) | safeHtml"></p>
-              </td>
-            </tr>
-          </table>
-        </ion-card-content>
-      </span> -->
 
       <ion-row class="card-footer">
         <ion-col>
@@ -115,7 +92,7 @@
 
         </ion-item>
         <ion-card-content (click)="translate('',item.body,'es',false,j)" ngClass="selectable">
-          <p class="sub-card-text" [innerHTML]="updateHtml(item.body,item.mentioned_targets) | safeHtml"></p>
+          <p class="sub-card-text" [innerHTML]="updateHtml(item.body,item.mentioned_user_ids) | safeHtml"></p>
         </ion-card-content>
       </span>
 

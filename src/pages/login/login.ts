@@ -811,7 +811,8 @@ export class LoginPage {
                         if (this.notification == undefined || (prevUserId > 0 && prevUserId != this.foundRepos.user.id)) {
                           this.showLoader = false;
                           //this.commonMethod.hideLoader();
-                          this.getMentionable()
+                          this.navCtrl.setRoot(FeedsPage)
+                          // this.getMentionable()
                         }
                         else {
                           this.showLoader = false;

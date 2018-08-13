@@ -270,13 +270,20 @@ export class FeedsPage {
         tempApiDate.setMinutes(tempApiDate.getMinutes() - 5);
         console.log("new date=" + tempApiDate);
 
-        console.log("callTodaysFeedInBackground url: " + getFeedsUrl + '?updated_after=' + this.updateAfter + addDate);
+        let updated_after = this.getLatestUpdatedDate();
+        if (updated_after == '') {
+          updated_after = startDate + "T00:00:00" + this.timeZoneOffset;
+        }
+        // if(updated_after==''){
+        //   updated_after=tempApiDate.toString();
+        // }
+        console.log("callTodaysFeedInBackground url: " + getFeedsUrl + '?updated_after=' + updated_after + addDate);
 
         if (this.commonMethod.checkNetwork()) {
           this.showLoaderTodays = true;
           this.lastUpdatesAt = new Date();
 
-          this.commonMethod.getDataWithoutLoder(getFeedsUrl + '?updated_after=' + encodeURIComponent(this.updateAfter) + addDate, accessToken).subscribe(
+          this.commonMethod.getDataWithoutLoder(getFeedsUrl + '?updated_after=' + updated_after + addDate, accessToken).subscribe(
             data => {
 
               this.updateAfter = tempApiDate.toString();
@@ -666,502 +673,11 @@ export class FeedsPage {
     //this.state = (this.state === 'inactive' ? 'active' : 'inactive');
   }
 
-  test() {
-    // let json = '[{"id":21368,"title":"","body":"@FOOD &amp; BEVERAGE&nbsp;","created_at":"2018-07-31T02:38:06.088-04:00","updated_at":"2018-08-03T11:00:11.825-04:00","image_url":null,"image_width":null,"image_height":null,"work_order_id":4092,"room_number":null,"broadcast_start":"2018-08-09","broadcast_end":"2018-08-31","follow_up_start":null,"follow_up_end":null,"comments_count":1,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":82,"type":"Department"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4092","work_order":{"id":4092,"property_id":8,"description":"@FOOD &amp; BEVERAGE&nbsp;","priority":"h","status":"working","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":6,"opened_by_user_id":247,"created_at":"2018-08-03T10:52:06.772-04:00","updated_at":"2018-08-03T10:58:01.194-04:00","closed_by_user_id":null,"first_img_url":"","second_img_url":"","location_detail":"Room #106 / Keyhole","closed_at":null,"opened_at":"2018-08-03T10:52:06.763-04:00","maintenance_checklist_item_id":8212,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4092","closed":false},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21429,"title":"HI","body":"Hi","created_at":"2018-08-03T09:00:31.486-04:00","updated_at":"2018-08-03T10:38:21.646-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4090,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":"2018-08-06","follow_up_end":"2018-08-09","comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4090","work_order":{"id":4090,"property_id":8,"description":"Hi","priority":"h","status":"open","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":5,"opened_by_user_id":250,"created_at":"2018-08-03T09:59:35.604-04:00","updated_at":"2018-08-03T09:59:35.604-04:00","closed_by_user_id":null,"first_img_url":"","second_img_url":"","location_detail":"Room #105 / Door Locks","closed_at":null,"opened_at":"2018-08-03T09:59:35.595-04:00","maintenance_checklist_item_id":2,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4090","closed":false},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21430,"title":"TITLE","body":"Hi","created_at":"2018-08-03T09:55:14.332-04:00","updated_at":"2018-08-03T09:55:14.332-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21428,"title":"HI","body":"Hi","created_at":"2018-08-03T09:00:18.306-04:00","updated_at":"2018-08-03T09:00:18.306-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21427,"title":"HI","body":"Hi","created_at":"2018-08-03T08:59:54.268-04:00","updated_at":"2018-08-03T08:59:54.268-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21426,"title":"HILTON HOTEL BOSTON AREA","body":"Description test @ALL @HOUSEKEEPING @FOOD & BEVERAGE @MAINTENANCE @FRONT DESK @3RD PARTY VENDORS @PURCHASING @TEST DEPT @Hugo (Chief Engineer) @Nikhil (Admin) @John B (Technician) @Abhishek (FD Manager) @Animesh (GM) @Mary Jane (HK Assistant) @Exe (Engineer) @Cormac (Engineer) @Joe M (Chef) @Peter K (F&B Manager) @Akanksha (Exex HK)","created_at":"2018-08-03T08:59:03.379-04:00","updated_at":"2018-08-03T08:59:03.379-04:00","image_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21426/964ba2fe-a93b-4735-8b72-f512679b2b34_250_1533301442826_538085.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=0d30ce58603919d098628c6d9ec179163966f8c9a93aeae31eed860e06cce392","image_width":800,"image_height":523,"work_order_id":null,"room_number":null,"broadcast_start":"2018-08-15","broadcast_end":"2018-08-15","follow_up_start":"2018-08-23","follow_up_end":"2018-08-31","comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[{"id":249,"type":"User"},{"id":262,"type":"User"},{"id":263,"type":"User"},{"id":254,"type":"User"},{"id":253,"type":"User"},{"id":251,"type":"User"},{"id":247,"type":"User"},{"id":248,"type":"User"},{"id":252,"type":"User"},{"id":9,"type":"User"},{"id":19,"type":"User"},{"id":466,"type":"Department"},{"id":86,"type":"Department"},{"id":85,"type":"Department"},{"id":84,"type":"Department"},{"id":83,"type":"Department"},{"id":82,"type":"Department"},{"id":13,"type":"Department"},{"id":7,"type":"Department"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21367,"title":"","body":"@HOUSEKEEPING","created_at":"2018-07-31T01:52:48.260-04:00","updated_at":"2018-08-03T08:58:07.290-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4086,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":13,"type":"Department"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4086","work_order":{"id":4086,"property_id":8,"description":"@HOUSEKEEPING","priority":"l","status":"open","due_to_date":null,"assigned_to_id":253,"maintainable_type":"PublicArea","maintainable_id":501,"opened_by_user_id":247,"created_at":"2018-08-03T08:58:06.507-04:00","updated_at":"2018-08-03T08:58:06.507-04:00","closed_by_user_id":null,"first_img_url":"","second_img_url":"","location_detail":"Public Area 'Breakfast Area' / Long text item","closed_at":null,"opened_at":"2018-08-03T08:58:06.500-04:00","maintenance_checklist_item_id":8258,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4086","closed":false},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21423,"title":"HILTON GARDEN HOTEL BOSTON","body":"Hi@Akanksha (Exex HK) @Animesh (GM)@Abhishek (FD Manager)","created_at":"2018-08-03T06:58:39.269-04:00","updated_at":"2018-08-03T07:02:45.000-04:00","image_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21423/b42209ec-ffb7-495d-8ebe-ed26dbafb436_250_1533294232760_1533294142601.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=49f3c00e34657bee42c74ea2831574ade62e1c3b54589e7f8ae7628bf793667a","image_width":800,"image_height":600,"work_order_id":4075,"room_number":null,"broadcast_start":"2018-08-17","broadcast_end":"2018-08-25","follow_up_start":"2018-08-16","follow_up_end":"2018-08-24","comments_count":2,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[{"id":248,"type":"User"},{"id":247,"type":"User"},{"id":249,"type":"User"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4075","work_order":{"id":4075,"property_id":8,"description":"Hi@Akanksha (Exex HK) @Animesh (GM)@Abhishek (FD Manager)","priority":"m","status":"closed","due_to_date":null,"assigned_to_id":-2,"maintainable_type":"Room","maintainable_id":2,"opened_by_user_id":247,"created_at":"2018-08-03T07:02:29.766-04:00","updated_at":"2018-08-03T07:02:45.197-04:00","closed_by_user_id":247,"first_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21423/b42209ec-ffb7-495d-8ebe-ed26dbafb436_250_1533294232760_1533294142601.jpg?X-Amz-Expires=600&X-Amz-Date=20180803T110208Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180803/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=968e87905b0fe9a3fc781e5e0613297c1ffcac3d6b1b51e43c22a73b51e38f74","second_img_url":"","location_detail":"Room #102 / A long named area near the entrance of the room","closed_at":"2018-08-03T07:02:44.876-04:00","opened_at":"2018-08-03T07:02:29.758-04:00","maintenance_checklist_item_id":8240,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4075","closed":true},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21422,"title":"TITLE","body":"Description@Akanksha (Exex HK)","created_at":"2018-08-03T06:44:50.460-04:00","updated_at":"2018-08-03T06:44:50.460-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[{"id":249,"type":"User"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21421,"title":"TEST IS THE PROTOTYPE TO CONFIRM ORDERS","body":"test is the prototype to confirm orders @Gaurav (Admin)","created_at":"2018-08-03T06:37:45.827-04:00","updated_at":"2018-08-03T06:37:45.827-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":250,"type":"User"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21415,"title":"","body":"@Gaurav (Admin)&nbsp;<div>Animes created this post... from web</div>","created_at":"2018-08-03T03:02:23.611-04:00","updated_at":"2018-08-03T06:15:33.534-04:00","image_url":null,"image_width":null,"image_height":null,"work_order_id":4073,"room_number":null,"broadcast_start":"2018-08-08","broadcast_end":"2018-08-17","follow_up_start":null,"follow_up_end":null,"comments_count":2,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":250,"type":"User"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4073","work_order":{"id":4073,"property_id":8,"description":"@Gaurav (Admin)&nbsp;<div>Animes created this post... from web</div>","priority":"h","status":"open","due_to_date":null,"assigned_to_id":250,"maintainable_type":"Room","maintainable_id":5,"opened_by_user_id":250,"created_at":"2018-08-03T03:05:15.940-04:00","updated_at":"2018-08-03T03:05:15.940-04:00","closed_by_user_id":null,"first_img_url":"","second_img_url":"","location_detail":"Room #105 / A long named area near the entrance of the room","closed_at":null,"opened_at":"2018-08-03T03:05:15.932-04:00","maintenance_checklist_item_id":8240,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4073","closed":false},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21420,"title":"","body":"@Gaurav (Admin)&nbsp;<div><span style=\"font-size: 24px;\">Phone Numbers\r\n</span></div><div>+91 8855887673\r\n</div><div><ul><li>020 32505165&nbsp;<br></li></ul></div><div><span style=\"font-weight: bold; font-style: italic; text-decoration-line: underline;\">Cuisines\r\n</span></div><div><span style=\"background-color: rgb(255, 0, 0);\">North Indian, Chinese, Fast Food\r\n</span></div>","created_at":"2018-08-03T03:50:13.694-04:00","updated_at":"2018-08-03T03:50:13.694-04:00","image_url":null,"image_width":null,"image_height":null,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":250,"type":"User"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21419,"title":"","body":"@Animesh (GM)","created_at":"2018-08-03T03:45:50.734-04:00","updated_at":"2018-08-03T03:46:14.925-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":null,"room_number":null,"broadcast_start":"2018-08-09","broadcast_end":"2018-08-10","follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":250,"name":"Gaurav (Admin)","role":"Admin","title":"Ops Manager","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"},"mentioned_targets":[{"id":247,"type":"User"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21418,"title":"","body":"@Gaurav (Admin)&nbsp; hi from web","created_at":"2018-08-03T03:44:11.212-04:00","updated_at":"2018-08-03T03:44:11.212-04:00","image_url":null,"image_width":null,"image_height":null,"work_order_id":null,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":250,"type":"User"}],"work_order_url":null,"work_order":null,"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21283,"title":"CREATING SECOND POST USING THE BUTTON","body":"Will it or will it not is the question!! ?!! 🙂 only has image.","created_at":"2018-07-19T17:33:38.426-04:00","updated_at":"2018-08-03T02:54:57.000-04:00","image_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21283/ef709d9a-6787-467a-acd5-49dcf008ae86_9_1532036300836_2Q__.jpeg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=d13b6380296ea29416a09d347da102d286cf63a47ac93d28885d457d7ed19456","image_width":800,"image_height":600,"work_order_id":4048,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":2,"created_by":{"id":9,"name":"Nikhil (Admin)","role":"Admin","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245"},"mentioned_targets":[],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4048","work_order":{"id":4048,"property_id":8,"description":"Will it or will it not is the question!! ?!! 🙂 only has image.<br />Hi<br />Hey <br />Hello ","priority":"h","status":"closed","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":1,"opened_by_user_id":250,"created_at":"2018-07-20T03:48:55.910-04:00","updated_at":"2018-08-03T02:54:56.578-04:00","closed_by_user_id":250,"first_img_url":"","second_img_url":"","location_detail":"Room #101 / Door Locks","closed_at":"2018-08-03T02:54:56.578-04:00","opened_at":"2018-07-20T03:48:55.901-04:00","maintenance_checklist_item_id":2,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4048","closed":true},"created_by_system":false,"room_id":null,"completed_at":"2018-07-19T17:38:33.395-04:00","completed_by":{"id":9,"name":"Nikhil (Admin)","role":"Admin","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245"}},{"id":21381,"title":"HELLO","body":"Hiiiii @HOUSEKEEPING","created_at":"2018-08-01T07:26:26.908-04:00","updated_at":"2018-08-03T02:48:47.000-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4070,"room_number":null,"broadcast_start":"2018-08-01","broadcast_end":"2018-08-01","follow_up_start":null,"follow_up_end":null,"comments_count":1,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":13,"type":"Department"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4070","work_order":{"id":4070,"property_id":8,"description":"Hiiiii @HOUSEKEEPING","priority":"h","status":"closed","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":3,"opened_by_user_id":250,"created_at":"2018-08-03T02:47:44.953-04:00","updated_at":"2018-08-03T02:48:47.327-04:00","closed_by_user_id":247,"first_img_url":"","second_img_url":"","location_detail":"Room #103 / Another decently long name","closed_at":"2018-08-03T02:48:46.909-04:00","opened_at":"2018-08-03T02:47:44.945-04:00","maintenance_checklist_item_id":8241,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4070","closed":true},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21380,"title":"HI","body":"Hi","created_at":"2018-08-01T07:25:16.065-04:00","updated_at":"2018-08-03T02:46:49.000-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4066,"room_number":null,"broadcast_start":"2018-08-01","broadcast_end":"2018-08-01","follow_up_start":null,"follow_up_end":null,"comments_count":1,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4066","work_order":{"id":4066,"property_id":8,"description":"Hi hello hey 👋 ","priority":"m","status":"closed","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":1,"opened_by_user_id":247,"created_at":"2018-08-01T10:13:22.027-04:00","updated_at":"2018-08-03T02:46:48.599-04:00","closed_by_user_id":250,"first_img_url":"https://lodgistics-development-images.s3.us-east-2.amazonaws.com/photos/upload/14111152-9523-4bcd-b32a-1c594b798b88_247_1533132973838_cdv_photo_004.jpg","second_img_url":"","location_detail":"Room #101 / A long named area near the entrance of the room","closed_at":"2018-08-03T02:46:48.599-04:00","opened_at":"2018-08-01T10:13:22.016-04:00","maintenance_checklist_item_id":8240,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4066","closed":true},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21402,"title":"","body":"@ALL","created_at":"2018-08-02T06:05:00.011-04:00","updated_at":"2018-08-03T02:45:24.824-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4069,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":0,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":7,"type":"Department"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4069","work_order":{"id":4069,"property_id":8,"description":"@ALL","priority":"","status":"open","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":2,"opened_by_user_id":250,"created_at":"2018-08-03T02:45:23.335-04:00","updated_at":"2018-08-03T02:45:23.335-04:00","closed_by_user_id":null,"first_img_url":"","second_img_url":"","location_detail":"Room #102 / Fire Alarm exit plan panel","closed_at":null,"opened_at":"2018-08-03T02:45:23.327-04:00","maintenance_checklist_item_id":8216,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4069","closed":false},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21406,"title":"","body":"@TEST DEPT","created_at":"2018-08-02T07:45:11.119-04:00","updated_at":"2018-08-03T02:44:02.000-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4067,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":1,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":466,"type":"Department"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4067","work_order":{"id":4067,"property_id":8,"description":"@TEST DEPT","priority":"l","status":"closed","due_to_date":"2021-01-01","assigned_to_id":250,"maintainable_type":"Room","maintainable_id":1,"opened_by_user_id":247,"created_at":"2018-08-02T08:02:26.000-04:00","updated_at":"2018-08-03T02:44:01.528-04:00","closed_by_user_id":250,"first_img_url":"","second_img_url":"","location_detail":"Room #101 / A long named area near the entrance of the room","closed_at":"2018-08-03T02:44:01.528-04:00","opened_at":"2018-08-02T08:02:25.991-04:00","maintenance_checklist_item_id":8240,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4067","closed":true},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null},{"id":21408,"title":"","body":"The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service. @Akanksha (Exex HK) @Gaurav (Admin) @Abhishek (FD Manager)","created_at":"2018-08-02T10:13:14.845-04:00","updated_at":"2018-08-03T02:43:44.000-04:00","image_url":null,"image_width":0,"image_height":0,"work_order_id":4068,"room_number":null,"broadcast_start":null,"broadcast_end":null,"follow_up_start":null,"follow_up_end":null,"comments_count":2,"created_by":{"id":247,"name":"Animesh (GM)","role":"General Manager","title":"GM","avatar":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68","avatar_img_url":"https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"},"mentioned_targets":[{"id":248,"type":"User"},{"id":250,"type":"User"},{"id":249,"type":"User"}],"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4068","work_order":{"id":4068,"property_id":8,"description":"The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service. @Akanksha (Exex HK) @Gaurav (Admin) @Abhishek (FD Manager)","priority":"h","status":"closed","due_to_date":"2021-01-01","assigned_to_id":247,"maintainable_type":"Room","maintainable_id":1,"opened_by_user_id":247,"created_at":"2018-08-03T02:23:53.317-04:00","updated_at":"2018-08-03T02:43:44.430-04:00","closed_by_user_id":250,"first_img_url":"https://lodgistics-development-images.s3.us-east-2.amazonaws.com/photos/upload/27ae9b4e-1fa4-4ce0-9d58-c8347735f6ad_247_1533277718469_cdv_photo_001.jpg","second_img_url":"","location_detail":"Room #101 / A long named area near the entrance of the room","closed_at":"2018-08-03T02:43:44.017-04:00","opened_at":"2018-08-03T02:23:53.308-04:00","maintenance_checklist_item_id":8240,"work_order_url":"https://dev.lodgistics.com/maintenance/work_orders?id=4068","closed":true},"created_by_system":false,"room_id":null,"completed_at":null,"completed_by":null}]'
-    let json = [
-      {
-        "id": 21451,
-        "title": "HI",
-        "body": "hi",
-        "created_at": "2018-08-07T04:31:57.188-04:00",
-        "updated_at": "2018-08-07T04:31:57.188-04:00",
-        "image_url": null,
-        "image_width": 0,
-        "image_height": 0,
-        "work_order_id": null,
-        "room_number": null,
-        "broadcast_start": null,
-        "broadcast_end": null,
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 0,
-        "created_by": {
-          "id": 247,
-          "name": "Animesh (GM)",
-          "role": "General Manager",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180807T084857Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180807/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=40c8d82200cddc074d656a53bf7c13feb38da76d7971dd2b76b7bfe889ffb5b5",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180807T084857Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180807/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=40c8d82200cddc074d656a53bf7c13feb38da76d7971dd2b76b7bfe889ffb5b5"
-        },
-        "mentioned_targets": [
-          {
-            "id": 250,
-            "type": "User"
-          }
-        ],
-        "work_order_url": null,
-        "work_order": null,
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      },
-      {
-        "id": 21368,
-        "title": "",
-        "body": "@FOOD & BEVERAGE ",
-        "created_at": "2018-07-31T02:38:06.088-04:00",
-        "updated_at": "2018-08-03T11:00:11.825-04:00",
-        "image_url": null,
-        "image_width": null,
-        "image_height": null,
-        "work_order_id": 4092,
-        "room_number": null,
-        "broadcast_start": "2018-08-09",
-        "broadcast_end": "2018-08-31",
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 1,
-        "created_by": {
-          "id": 247,
-          "name": "Animesh (GM)",
-          "role": "General Manager",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"
-        },
-        "mentioned_targets": [
-          {
-            "id": 82,
-            "type": "Department"
-          }
-        ],
-        "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4092",
-        "work_order": {
-          "id": 4092,
-          "property_id": 8,
-          "description": "@FOOD & BEVERAGE ",
-          "priority": "h",
-          "status": "working",
-          "due_to_date": "2021-01-01",
-          "assigned_to_id": 247,
-          "maintainable_type": "Room",
-          "maintainable_id": 6,
-          "opened_by_user_id": 247,
-          "created_at": "2018-08-03T10:52:06.772-04:00",
-          "updated_at": "2018-08-03T10:58:01.194-04:00",
-          "closed_by_user_id": null,
-          "first_img_url": "",
-          "second_img_url": "",
-          "location_detail": "Room #106 / Keyhole",
-          "closed_at": null,
-          "opened_at": "2018-08-03T10:52:06.763-04:00",
-          "maintenance_checklist_item_id": 8212,
-          "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4092",
-          "closed": false
-        },
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      },
-      {
-        "id": 21426,
-        "title": "HILTON HOTEL BOSTON AREA",
-        "body": "Description test @ALL @HOUSEKEEPING @FOOD & BEVERAGE @MAINTENANCE @FRONT DESK @3RD PARTY VENDORS @PURCHASING @TEST DEPT @Hugo (Chief Engineer) @Nikhil (Admin) @John B (Technician) @Abhishek (FD Manager) @Animesh (GM) @Mary Jane (HK Assistant) @Exe (Engineer) @Cormac (Engineer) @Joe M (Chef) @Peter K (F&B Manager) @Akanksha (Exex HK)",
-        "created_at": "2018-08-03T08:59:03.379-04:00",
-        "updated_at": "2018-08-03T08:59:03.379-04:00",
-        "image_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21426/964ba2fe-a93b-4735-8b72-f512679b2b34_250_1533301442826_538085.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=0d30ce58603919d098628c6d9ec179163966f8c9a93aeae31eed860e06cce392",
-        "image_width": 800,
-        "image_height": 523,
-        "work_order_id": null,
-        "room_number": null,
-        "broadcast_start": "2018-08-15",
-        "broadcast_end": "2018-08-15",
-        "follow_up_start": "2018-08-23",
-        "follow_up_end": "2018-08-31",
-        "comments_count": 0,
-        "created_by": {
-          "id": 250,
-          "name": "Gaurav (Admin)",
-          "role": "Admin",
-          "title": "Ops Manager",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/250/negris_avatar.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=b089bf3a0aef8613245af8784ef7a2e4a98bca19d43a8dc6fdf651ba97c718aa"
-        },
-        "mentioned_targets": [
-          {
-            "id": 249,
-            "type": "User"
-          },
-          {
-            "id": 262,
-            "type": "User"
-          },
-          {
-            "id": 263,
-            "type": "User"
-          },
-          {
-            "id": 254,
-            "type": "User"
-          },
-          {
-            "id": 253,
-            "type": "User"
-          },
-          {
-            "id": 251,
-            "type": "User"
-          },
-          {
-            "id": 247,
-            "type": "User"
-          },
-          {
-            "id": 248,
-            "type": "User"
-          },
-          {
-            "id": 252,
-            "type": "User"
-          },
-          {
-            "id": 9,
-            "type": "User"
-          },
-          {
-            "id": 19,
-            "type": "User"
-          },
-          {
-            "id": 466,
-            "type": "Department"
-          },
-          {
-            "id": 86,
-            "type": "Department"
-          },
-          {
-            "id": 85,
-            "type": "Department"
-          },
-          {
-            "id": 84,
-            "type": "Department"
-          },
-          {
-            "id": 83,
-            "type": "Department"
-          },
-          {
-            "id": 82,
-            "type": "Department"
-          },
-          {
-            "id": 13,
-            "type": "Department"
-          },
-          {
-            "id": 7,
-            "type": "Department"
-          }
-        ],
-        "work_order_url": null,
-        "work_order": null,
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      },
-      {
-        "id": 21367,
-        "title": "",
-        "body": "@HOUSEKEEPING",
-        "created_at": "2018-07-31T01:52:48.260-04:00",
-        "updated_at": "2018-08-03T08:58:07.290-04:00",
-        "image_url": null,
-        "image_width": 0,
-        "image_height": 0,
-        "work_order_id": 4086,
-        "room_number": null,
-        "broadcast_start": null,
-        "broadcast_end": null,
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 0,
-        "created_by": {
-          "id": 247,
-          "name": "Animesh (GM)",
-          "role": "General Manager",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"
-        },
-        "mentioned_targets": [
-          {
-            "id": 13,
-            "type": "Department"
-          }
-        ],
-        "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4086",
-        "work_order": {
-          "id": 4086,
-          "property_id": 8,
-          "description": "@HOUSEKEEPING",
-          "priority": "l",
-          "status": "open",
-          "due_to_date": null,
-          "assigned_to_id": 253,
-          "maintainable_type": "PublicArea",
-          "maintainable_id": 501,
-          "opened_by_user_id": 247,
-          "created_at": "2018-08-03T08:58:06.507-04:00",
-          "updated_at": "2018-08-03T08:58:06.507-04:00",
-          "closed_by_user_id": null,
-          "first_img_url": "",
-          "second_img_url": "",
-          "location_detail": "Public Area 'Breakfast Area' / Long text item",
-          "closed_at": null,
-          "opened_at": "2018-08-03T08:58:06.500-04:00",
-          "maintenance_checklist_item_id": 8258,
-          "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4086",
-          "closed": false
-        },
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      },
-      {
-        "id": 21415,
-        "title": "",
-        "body": "@Gaurav (Admin) <div>Animes created this post... from web</div>",
-        "created_at": "2018-08-03T03:02:23.611-04:00",
-        "updated_at": "2018-08-03T06:15:33.534-04:00",
-        "image_url": null,
-        "image_width": null,
-        "image_height": null,
-        "work_order_id": 4073,
-        "room_number": null,
-        "broadcast_start": "2018-08-08",
-        "broadcast_end": "2018-08-17",
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 2,
-        "created_by": {
-          "id": 247,
-          "name": "Animesh (GM)",
-          "role": "General Manager",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"
-        },
-        "mentioned_targets": [
-          {
-            "id": 250,
-            "type": "User"
-          }
-        ],
-        "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4073",
-        "work_order": {
-          "id": 4073,
-          "property_id": 8,
-          "description": "@Gaurav (Admin) <div>Animes created this post... from web</div>",
-          "priority": "h",
-          "status": "open",
-          "due_to_date": null,
-          "assigned_to_id": 250,
-          "maintainable_type": "Room",
-          "maintainable_id": 5,
-          "opened_by_user_id": 250,
-          "created_at": "2018-08-03T03:05:15.940-04:00",
-          "updated_at": "2018-08-03T03:05:15.940-04:00",
-          "closed_by_user_id": null,
-          "first_img_url": "",
-          "second_img_url": "",
-          "location_detail": "Room #105 / A long named area near the entrance of the room",
-          "closed_at": null,
-          "opened_at": "2018-08-03T03:05:15.932-04:00",
-          "maintenance_checklist_item_id": 8240,
-          "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4073",
-          "closed": false
-        },
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      },
-      {
-        "id": 21283,
-        "title": "CREATING SECOND POST USING THE BUTTON",
-        "body": "Will it or will it not is the question!! ?!! 🙂 only has image.",
-        "created_at": "2018-07-19T17:33:38.426-04:00",
-        "updated_at": "2018-08-03T02:54:57.000-04:00",
-        "image_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/engage/message/image/21283/ef709d9a-6787-467a-acd5-49dcf008ae86_9_1532036300836_2Q__.jpeg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=d13b6380296ea29416a09d347da102d286cf63a47ac93d28885d457d7ed19456",
-        "image_width": 800,
-        "image_height": 600,
-        "work_order_id": 4048,
-        "room_number": null,
-        "broadcast_start": null,
-        "broadcast_end": null,
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 2,
-        "created_by": {
-          "id": 9,
-          "name": "Nikhil (Admin)",
-          "role": "Admin",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245"
-        },
-        "mentioned_targets": [
-        ],
-        "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4048",
-        "work_order": {
-          "id": 4048,
-          "property_id": 8,
-          "description": "Will it or will it not is the question!! ?!! 🙂 only has image.<br />Hi<br />Hey <br />Hello ",
-          "priority": "h",
-          "status": "closed",
-          "due_to_date": "2021-01-01",
-          "assigned_to_id": 247,
-          "maintainable_type": "Room",
-          "maintainable_id": 1,
-          "opened_by_user_id": 250,
-          "created_at": "2018-07-20T03:48:55.910-04:00",
-          "updated_at": "2018-08-03T02:54:56.578-04:00",
-          "closed_by_user_id": 250,
-          "first_img_url": "",
-          "second_img_url": "",
-          "location_detail": "Room #101 / Door Locks",
-          "closed_at": "2018-08-03T02:54:56.578-04:00",
-          "opened_at": "2018-07-20T03:48:55.901-04:00",
-          "maintenance_checklist_item_id": 2,
-          "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4048",
-          "closed": true
-        },
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": "2018-07-19T17:38:33.395-04:00",
-        "completed_by": {
-          "id": 9,
-          "name": "Nikhil (Admin)",
-          "role": "Admin",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/9/Logo_only.png?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=70b4f22114debe66d367fa06e7980ced4f32482475de31612a64e4fb2b450245"
-        }
-      },
-      {
-        "id": 21408,
-        "title": "",
-        "body": "The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service. @Akanksha (Exex HK) @Gaurav (Admin) @Abhishek (FD Manager)",
-        "created_at": "2018-08-02T10:13:14.845-04:00",
-        "updated_at": "2018-08-03T02:43:44.000-04:00",
-        "image_url": null,
-        "image_width": 0,
-        "image_height": 0,
-        "work_order_id": 4068,
-        "room_number": null,
-        "broadcast_start": null,
-        "broadcast_end": null,
-        "follow_up_start": null,
-        "follow_up_end": null,
-        "comments_count": 2,
-        "created_by": {
-          "id": 247,
-          "name": "Animesh (GM)",
-          "role": "General Manager",
-          "title": "GM",
-          "avatar": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68",
-          "avatar_img_url": "https://lodgistics-development-images.s3-us-east-2.amazonaws.com/uploads/user/avatar/247/zn178412.jpg?X-Amz-Expires=600&X-Amz-Date=20180806T102325Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJNDK35POEL43BOUQ/20180806/us-east-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=29719c679bbab6196fe9ce594a480eaa0d4c6315ebc3574e84c0a65d08b28c68"
-        },
-        "mentioned_targets": [
-          {
-            "id": 248,
-            "type": "User"
-          },
-          {
-            "id": 250,
-            "type": "User"
-          },
-          {
-            "id": 249,
-            "type": "User"
-          }
-        ],
-        "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4068",
-        "work_order": {
-          "id": 4068,
-          "property_id": 8,
-          "description": "The Hotel Hesperia is the right choice for visitors who are searching for a combination of charm, peace and quiet, and a convenient position from which to explore Venice. It is a small, comfortable hotel, situated on the Canale di Cannaregio. ... The hotel provides an internet point, and a Wi-Fi service. @Akanksha (Exex HK) @Gaurav (Admin) @Abhishek (FD Manager)",
-          "priority": "h",
-          "status": "closed",
-          "due_to_date": "2021-01-01",
-          "assigned_to_id": 247,
-          "maintainable_type": "Room",
-          "maintainable_id": 1,
-          "opened_by_user_id": 247,
-          "created_at": "2018-08-03T02:23:53.317-04:00",
-          "updated_at": "2018-08-03T02:43:44.430-04:00",
-          "closed_by_user_id": 250,
-          "first_img_url": "https://lodgistics-development-images.s3.us-east-2.amazonaws.com/photos/upload/27ae9b4e-1fa4-4ce0-9d58-c8347735f6ad_247_1533277718469_cdv_photo_001.jpg",
-          "second_img_url": "",
-          "location_detail": "Room #101 / A long named area near the entrance of the room",
-          "closed_at": "2018-08-03T02:43:44.017-04:00",
-          "opened_at": "2018-08-03T02:23:53.308-04:00",
-          "maintenance_checklist_item_id": 8240,
-          "work_order_url": "https://dev.lodgistics.com/maintenance/work_orders?id=4068",
-          "closed": true
-        },
-        "created_by_system": false,
-        "room_id": null,
-        "completed_at": null,
-        "completed_by": null
-      }
-    ];
-
-    for (let i = 0; i < json.length; i++) {
-      this.updateHtmlTest(json[i].body, json[i].mentioned_targets)
-    }
-  }
-
-  updateHtmlTest(val, mentioned_targets) {
+  updateHtml(val, mentioned_user_ids, i, j) {
 
     let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
-    }
-
-    let newValue = this.commonMethod.getTextValueWithNamesNew(allChatMentions, this.members, val);
-    if (newValue.text != "" && newValue.text.length > this.textLengthValue) {
-      // val = newValue.text.substring(0, this.textLengthValue);
-      var newValueWrap = this.commonMethod.getTextValueWithNamesNew(allChatMentions, this.members, newValue.text.substring(0, this.textLengthValue));
-      // var newValueWrap = this.commonMethod.getTextValueNew(allChatMentions, this.members, val);
-      if (newValueWrap.html != "") {
-        val = newValueWrap.html + "....";
-      }
-    } else if (newValue.html != "") {
-      if (newValue.html != "") {
-        val = newValue.html;
-      }
-    }
-    // this.foundRepos[i].value[j].showMore = true;
-    // let htmlStr="<span '(click)=showMore("+i+","+j+")'>Read More</span>";
-    val = val.replace(/text-decoration-line/g, "text-decoration");
-    return val;
-    //return val.length > this.textLengthValue ? val.substring(0, this.textLengthValue)  : val; 
-
-
-  }
-
-  updateHtml(val, mentioned_targets, i, j) {
-
-    let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
     }
 
     let newValue = this.commonMethod.getTextValueWithNamesNew(allChatMentions, this.members, val);
@@ -1185,10 +701,10 @@ export class FeedsPage {
 
 
   }
-  updateHtml1(val, mentioned_targets, i, j) {
+  updateHtml1(val, mentioned_user_ids, i, j) {
     let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
     }
 
     // let newValue = this.commonMethod.getTextValue(allChatMentions, this.members, val);
@@ -1240,11 +756,11 @@ export class FeedsPage {
   }
 
 
-  translate(title, sourceText, langCode, i, j, mentioned_targets) {
+  translate(title, sourceText, langCode, i, j, mentioned_user_ids) {
 
     let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
     }
 
     sourceText = sourceText.replace(/\n/g, "<br/>");
@@ -1509,7 +1025,7 @@ export class FeedsPage {
     }, 4000);
   }
 
-  confirmWorkOrder(id, value, image_url, mentioned_targets, room_id) {
+  confirmWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
     this.alert = this.alertCtrl.create({
       message: createWorkOrderConfirmMsg,
       cssClass: 'confirm-work-order',
@@ -1525,7 +1041,7 @@ export class FeedsPage {
           text: 'Yes',
           handler: data => {
             console.log('Yes clicked');
-            this.createWorkOrder(id, value, image_url, mentioned_targets, room_id);
+            this.createWorkOrder(id, value, image_url, mentioned_user_ids, room_id);
           }
         }
       ]
@@ -1533,8 +1049,8 @@ export class FeedsPage {
     this.alert.present();
   }
 
-  createWorkOrder(id, value, image_url, mentioned_targets, room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_targets, room_id: room_id });
+  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
       this.callTodaysFeedInBackground();
@@ -2307,5 +1823,20 @@ export class FeedsPage {
     this.navCtrl.setRoot(FeedsPage);
   }
 
+  /**
+   * Function to get latest updated date to refresh filter
+  **/
+  getLatestUpdatedDate() {
+    let updated_at = "";
+    for (var key in this.foundRepos) {
+      let obj = this.foundRepos[key];
+      for (let k = 0; k < obj.value.length; k++) {
+        if (updated_at == '') {
+          updated_at = obj.value[k].updated_at;
+        }
+      }
+    }
+    return updated_at;
+  }
 
 }

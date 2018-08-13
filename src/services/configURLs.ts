@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-let isProductionServer = false;
+let isProductionServer = true;
 let basePath = "dev";
 let googleAnalyticsTrackingId = 'UA-123135893-1' //dev
 let translApiKey = 'AIzaSyBLSNqlaHGAE92rEcDzH95vNYb2M06zGzI' //dev
@@ -17,14 +17,14 @@ export let webSocketBaseUrl = "wss://" + basePath + ".lodgistics.com/";
 
 export let getLoginUrl = baseUrl + "api/auth";
 export let getProfileUrl = baseUrl + "api/users";
-export let getFeedsUrl = baseUrl + "api/v2/feeds";
-export let createFeedUrl = baseUrl + "api/v2/feeds";
+export let getFeedsUrl = baseUrl + "api/feeds";
+export let createFeedUrl = baseUrl + "api/feeds";
 export let chatListingUrl = baseUrl + "api/chats";
 //export let addEditGroupUrl = baseUrl+"api/chat_groups";
 export let addEditGroupUrl = baseUrl + "api/chats";
 export let chatHistoryUrl = baseUrl + "api/chat_messages";
 export let getAllMembersUrl = baseUrl + "api/users";
-export let getMyMentionsUrl = baseUrl + "api/v2/mentions";
+export let getMyMentionsUrl = baseUrl + "api/mentions";
 export let getAwsSignedUrl = baseUrl + "api/s3_sign";
 export let deleteMentionUrl = baseUrl + "api/chat_mentions";
 export let getPrivateOnlyUrl = baseUrl + "api/chats/private_only";
@@ -75,4 +75,4 @@ export let createFollowUpUrl = baseUrl + "api/feeds";
 export let getFollowUpUrl = baseUrl + "api/feeds/follow_ups";
 export let getAssignableUsersUrl = baseUrl + "api/work_orders/assignable_users";
 export let checkForAppUpdateUrl = baseUrl + "api/check_for_app_update";
-export let getMentionables = baseUrl + "api/v2/mentionables";
+export let getMentionables = baseUrl + "api/mentionables";

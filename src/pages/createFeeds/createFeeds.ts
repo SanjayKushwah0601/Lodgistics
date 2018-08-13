@@ -140,9 +140,8 @@ export class CreateFeedsPage {
     if (this.mentionUsers.length > 0) {
       for (let i = 0; i < this.mentionUsers.length; i++) {
         let obj = { id: this.mentionUsers[i].id + '', type: this.mentionUsers[i].type }
-        mentionId.push(obj);
-        // feedData = feedData.replace("@"+this.mentionUsers[i].name,'');
-
+        mentionId.push(this.mentionUsers[i].id);
+        // mentionId.push(obj);
         let mention_user_id = this.mentionUsers[i].id;
         this.commonMethod.updateMentionsDb(mention_user_id, 'post', 1);
       }
@@ -169,7 +168,7 @@ export class CreateFeedsPage {
         image_url: this.feedS3FileUrl,
         image_width: width,
         image_height: height,
-        mentioned_targets: mentionId,
+        mentioned_user_ids: mentionId,
         local_time: new Date() + "",
         broadcast_start: this.broadcast_start,
         broadcast_end: this.broadcast_start,
@@ -196,11 +195,12 @@ export class CreateFeedsPage {
               this.foundRepos = data.json();
               console.error(this.foundRepos);
               this.googleAnalytics.trackPostEvents(GoogleAnalyticsProvider.ACTION_POST_CREATE, "Post/Feed is created")
-              this.successMessage();
               this.apiInProgress = false;
               this.zone.run(() => {
                 this.postButtonEnable = false;
               });
+              this.navCtrl.setRoot(FeedsPage);
+              // this.successMessage();
             },
             err => {
               this.apiInProgress = false;
@@ -263,7 +263,7 @@ export class CreateFeedsPage {
 
 
   getMentionable() {
-    this.nativeStorage.getItem('mentionable')
+    /*this.nativeStorage.getItem('mentionable')
       .then((data) => {
         if (data) {
           for (let i = 0; i < data.departments.length; i++) {
@@ -296,49 +296,7 @@ export class CreateFeedsPage {
       }).catch((err) => {
         this.getMentionableFromServer()
       })
-    // this.nativeStorage.getItem('user_auth').then(
-    //   accessToken => {
-
-    //     if (this.commonMethod.checkNetwork()) {
-
-    //       this.commonMethod.getDataWithoutLoder(getMentionables, accessToken).subscribe(
-    //         data => {
-    //           let foundRepos = data.json();
-
-    //           for (let i = 0; i < foundRepos.departments.length; i++) {
-    //             let tempUserInfo = {
-    //               "id": foundRepos.departments[i].id,
-    //               "name": foundRepos.departments[i].name.toUpperCase(),
-    //               "type": 'Department',
-    //               "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
-    //               // "total": allMembers.rows.item(i).total
-    //             };
-
-    //             this.members.push(tempUserInfo);
-    //           }
-    //           for (let i = 0; i < foundRepos.users.length; i++) {
-    //             let tempUserInfo = {
-    //               "id": foundRepos.users[i].id,
-    //               "name": foundRepos.users[i].name,
-    //               "type": 'User',
-    //               "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
-    //               // "total": allMembers.rows.item(i).total
-    //             };
-
-    //             this.members.push(tempUserInfo);
-    //           }
-    //           this.mentionMembers = this.members
-    //           console.log(foundRepos)
-    //         }, err => {
-    //           this.apiInProgress = false;
-    //           // alertVar.present();
-    //           console.error("Error : " + err);
-    //         },
-    //         () => {
-    //           console.log('getData completed');
-    //         })
-    //     }
-    //   })
+      */
   }
 
   getMentionableFromServer() {
@@ -516,7 +474,7 @@ export class CreateFeedsPage {
                   "total": allMembers.rows.item(i).total
                 };
 
-                // this.members.push(tempUserInfo);
+                this.members.push(tempUserInfo);
               }
             }
 

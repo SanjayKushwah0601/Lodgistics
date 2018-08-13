@@ -36,8 +36,8 @@
       </ion-row>
 
       <ion-row *ngIf="showFilter" class="search-date-options">
-        <ion-col col-11 class="search-date-options-text" (click)="openDateFilter(searchResultEndDate)">
-            Post setup for {{searchResultStartDate | dateLabelStr}} - {{searchResultEndDate | dateLabelStr}}
+        <ion-col col-11 class="search-date-options-text">
+          Post setup for {{searchResultStartDate | dateLabelStr}} - {{searchResultEndDate | dateLabelStr}}
         </ion-col>
         <ion-col col-1 center (click)="closeDateFilter()" class="no-border">
           <ion-icon ios="ios-close" md="md-close"></ion-icon>
@@ -93,7 +93,7 @@
   <span *ngFor="let res of foundRepos; let i=index">
     <ion-item-group>
       <!--<ion-label class='btn-day' *ngIf='i==0' style='text-align:center;'>Today</ion-label>-->
-      <ion-item-divider sticky class="date_label_divider" text-center align-items-center (click)="openDateFilter(res.date)">
+      <ion-item-divider sticky class="date_label_divider" text-center align-items-center>
         <ion-label text-center class="btn-day" *ngIf="i==0 && !showFilter" style="text-align:center;">Today</ion-label>
         <ion-label text-center class="btn-day" *ngIf="i==1 && !showFilter" style="text-align:center;">Yesterday</ion-label>
         <ion-label text-center class="btn-day" *ngIf="i>1 && !showFilter" style="text-align:center;">{{(res.date | dateLabelStr) | uppercase}}</ion-label>
@@ -134,23 +134,23 @@
           </ion-item>
 
 
-          
+
 
           <span>
-            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_targets)" ngClass="selectable">
+            <ion-card-content (click)="translate(item.title,item.body,'es',i,j,item.mentioned_user_ids)" ngClass="selectable">
               <table class="card-table card-table-2">
                 <tr>
                   <td class="">
-                    <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></p> -->
+                    <!-- <p [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></p> -->
                     <p *ngIf="(item.showMore == undefined || item.showMore)">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
                     <p *ngIf="item.showMore==false && item.body.length>textLengthValue">
                       <span *ngIf="item.title" class="feed_title" [innerHTML]="updateHtml(item.title, '',i,j)+'<br/>' | safeHtml"></span>
-                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_targets,i,j) | safeHtml"></span>
+                      <span [innerHTML]="updateHtml1(item.body, item.mentioned_user_ids,i,j) | safeHtml"></span>
                       <a *ngIf="(item.showMore == undefined || item.showMore) && item.body.length>textLengthValue" (click)="showMore(i,j)" class="show_more_less">Show more</a>
                       <a *ngIf="item.showMore==false && item.body.length>textLengthValue" (click)="showLess(i,j)" class="show_more_less">Show Less</a>
                     </p>
@@ -160,7 +160,7 @@
                 </tr>
                 <tr *ngIf="item.image_url!='' && item.image_url!=null && item.image_url!='null' ">
                   <td (click)="showImage(item.image_url)">
-                    <img [ngClass]="item.image_width<item.image_height?'fit-img-obj':''" src="{{item.image_url}}">
+                    <img class="fit-img-obj" src="{{item.image_url}}">
                   </td>
                 </tr>
               </table>
@@ -200,7 +200,7 @@
 
 
             <ion-col *ngIf="userPermissions.wo_access && userPermissions.wo_access.can_create && !item.work_order_id>0" class="border-right card-btn"
-              (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_targets,item.room_id?item.room_id:''):''">
+              (click)="!(item.work_order_id && item.work_order_id>0)?confirmWorkOrder(item.id,item.body,item.image_url,item.mentioned_user_ids,item.room_id?item.room_id:''):''">
               <button ion-button icon-left clear>
                 <!-- <div [ngClass]="(item.work_order_id && item.work_order_id>0)?'wo-dissable':''">Create Work Order</div> -->
                 <ion-icon ios="ios-construct" md="md-construct" [ngClass]="(item.work_order_id && item.work_order_id>0)?'option-icon wo-dissable':'option-icon'"></ion-icon>

@@ -1,0 +1,162 @@
+<!-- <ion-content padding no-bounce disable-scroll> -->
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{wo_no==''?'CREATE NEW WORK ORDER':'EDIT WORK ORDER #'}}{{wo_no!=''?wo_no:''}}</ion-title>
+    <ion-buttons right>
+      <button ion-button right (click)="dismiss()">
+        <ion-icon class="popup-close-button" ios="ios-close" md="md-close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons left>
+      <button ion-button left (click)="broadcastList()">
+        <span start class="broadcast" *ngIf="broadcast_count>0">
+          <span>
+            <!-- <ion-icon ios="ios-megaphone" md="md-megaphone" class="icon_broadcast"></ion-icon>  -->
+            <span class="broadcast_btn">
+              <img src="assets/img/broadcost-red-icon.png" />
+            </span>
+            ({{broadcast_count}})</span>
+        </span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content class="page-wraper-box">
+
+  <div class="box">
+
+    <table>
+      <tr>
+        <td>
+          <ion-label class="request-label">Request </ion-label>
+          <textarea tappable rows="4" class="request" placeholder="Description" [ngModel]="workOrderData.descriptions | removehtmltags"
+            (ngModelChange)="workOrderData.descriptions=$event"></textarea>
+        </td>
+      </tr>
+    </table>
+
+    <ion-list>
+      <ion-item (click)="wo_no!=''?closeKeyBoard():''">
+        <ion-label (click)="wo_no!=''?'':selectLocation()">Location Type
+          <span [ngClass]="wo_no!=''?'selected_value disable_text':'selected_value'" *ngIf="workOrderData.maintainable_type">{{workOrderData.maintainable_type}}</span>
+          <span class="default_value" *ngIf="!workOrderData.maintainable_type">Select</span>
+        </ion-label>
+
+      </ion-item>
+
+      <ion-item *ngIf="workOrderData.maintainable_type && workOrderData.maintainable_type=='Other'">
+        <ion-label>{{workOrderData.maintainable_type}}
+        </ion-label>
+        <ion-input [disabled]="wo_no!=''" class="other_input" type="text" value="{{workOrderData.maintainable_id}}" [(ngModel)]="workOrderData.maintainable_id"
+          placeholder="Type other location"></ion-input>
+      </ion-item>
+
+
+      <ion-item *ngIf="workOrderData.maintainable_type && workOrderData.maintainable_type!='Other'" (click)="wo_no!=''?closeKeyBoard():''">
+        <!-- <ion-label>Location <span class="required">*</span></ion-label> -->
+        <mbsc-form [options]="formSettings">
+          <div class="mbsc-form-group">
+            <mbsc-select [disabled]="wo_no!=''" id="loaction-type" *ngIf="workOrderData.maintainable_type=='Room'" (onClose)="removeFocus()"
+              [(ngModel)]="workOrderData.maintainable_id" (ngModelChange)="updateCheckList()" [options]="localSettings" [data]="locationData"
+              placeholder="Select">{{workOrderData.maintainable_type}}</mbsc-select>
+            <mbsc-select [disabled]="wo_no!=''" *ngIf="workOrderData.maintainable_type=='PublicArea' || workOrderData.maintainable_type=='Public Area'"
+              [(ngModel)]="workOrderData.maintainable_id" (ngModelChange)="updateCheckList()" [options]="localSettings" [data]="publicAreaData"
+              placeholder="Select">{{workOrderData.maintainable_type}}</mbsc-select>
+            <mbsc-select [disabled]="wo_no!=''" *ngIf="workOrderData.maintainable_type=='Equipment'" [(ngModel)]="workOrderData.maintainable_id"
+              (ngModelChange)="updateCheckList()" [options]="localSettings" [data]="equipmentData" placeholder="Select">{{workOrderData.maintainable_type}}</mbsc-select>
+          </div>
+        </mbsc-form>
+
+      </ion-item>
+
+
+
+      <ion-item *ngIf="(workOrderData.maintainable_type && workOrderData.maintainable_id && workOrderData.maintainable_type!='Equipment' && workOrderData.maintainable_type!='Other')"
+        (click)="(!workOrderData.maintainable_id || wo_no!='')?closeKeyBoard():''">
+
+        <mbsc-form [options]="formSettings">
+          <div class="mbsc-form-group">
+            <mbsc-select [disabled]="wo_no!=''" *ngIf="workOrderData.maintainable_type=='Room'" (onClose)="removeFocus()" [(ngModel)]="workOrderData.maintenance_checklist_item_id"
+              [options]="localSettings" [data]="roomCheckListItemsData" placeholder="Select Area (optional)">Area</mbsc-select>
+            <mbsc-select [disabled]="wo_no!=''" *ngIf="workOrderData.maintainable_type=='PublicArea' || workOrderData.maintainable_type=='Public Area'"
+              [(ngModel)]="workOrderData.maintenance_checklist_item_id" [options]="localSettings" [data]="publicAreaCheckListItemsData"
+              placeholder="Select Area (optional)">Area</mbsc-select>
+          </div>
+        </mbsc-form>
+
+      </ion-item>
+
+      <ion-item (click)="(!userPermissions.wo_access.assigned_to_id && wo_no!='')?closeKeyBoard():''">
+        <ion-label (click)="((!userPermissions.wo_access.assigned_to_id && wo_no!='') || workOrderData.closed)?'':selectAssignTo()">Assigned To
+          <span class="selected_value  assign_name" *ngIf="workOrderData.assigned_to_id">{{getAssignToUserName()}}</span>
+          <span class="default_value" *ngIf="!workOrderData.assigned_to_id">Select</span>
+        </ion-label>
+
+      </ion-item>
+      <ion-item (click)="(!userPermissions.wo_access.priority && wo_no!='')?closeKeyBoard():''">
+        <ion-label (click)="((!userPermissions.wo_access.priority && wo_no!='') || workOrderData.closed)?'':selectPriority()">Priority
+          <span class="selected_value" *ngIf="workOrderData.priority">{{getPriorityName()}}</span>
+          <span class="default_value" *ngIf="!workOrderData.priority">Select</span>
+        </ion-label>
+
+      </ion-item>
+      <ion-item (click)="(!userPermissions.wo_access.status && wo_no!='')?closeKeyBoard():''">
+        <ion-label (click)="((!userPermissions.wo_access.status && wo_no!='') || (workOrderData.closed && !canEditClosedWo))?'':selectStatus()">Status
+          <span class="selected_value">{{workOrderData.status | titlecase}}</span>
+        </ion-label>
+
+      </ion-item>
+
+      <ion-item (click)="(!userPermissions.wo_access.due_to_date && wo_no!='')?closeKeyBoard():''">
+        <ion-label>Due Date</ion-label>
+        <ion-datetime [disabled]="(!userPermissions.wo_access.due_to_date && wo_no!='') || workOrderData.closed" tappable [(ngModel)]="workOrderData.due_to_date"
+          min="{{minDate}}" max="{{maxDate}}" displayFormat="MM/DD/YYYY" placeholder="Select Date (optional)"></ion-datetime>
+      </ion-item>
+
+      <ion-item *ngIf="!img[0]" (click)="(!workOrderData.closed)?(!img[0]?showGalleryPrompt('0'):''):''">
+        <ion-label>Attach Photo
+          <span class="optional_text img-optional-text">(optional)</span>
+        </ion-label>
+      </ion-item>
+      <ion-item *ngIf="img[0]">
+        <ion-label>
+          <ion-icon class="close-icon-row" ios="ios-close" md="md-close" (click)="(!workOrderData.closed)?removeImg('0'):''"></ion-icon>
+
+          <div class="row-img-box" (click)="showImage(img[0])">
+            <span class="img-name selected_value">Image 1</span>
+            <img src="{{img[0]}}" class="img-box" />
+          </div>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="img[0] && !img[1]" (click)="(!workOrderData.closed)?(!img[1]?showGalleryPrompt('1'):''):''">
+        <ion-label>Attach Photo
+          <span *ngIf="!img[1]" class="optional_text img-optional-text">(optional)</span>
+        </ion-label>
+      </ion-item>
+      <ion-item *ngIf="img[1]">
+        <ion-label>
+          <ion-icon class="close-icon-row" ios="ios-close" md="md-close" (click)="(!workOrderData.closed)?removeImg('1'):''"></ion-icon>
+          <div class="row-img-box" (click)="showImage(img[1])">
+            <span class="img-name selected_value">Image 2</span>
+            <img src="{{img[1]}}" class="img-box" />
+          </div>
+        </ion-label>
+      </ion-item>
+
+    </ion-list>
+
+    <div class="popup-buttons">
+      <!-- <button *ngIf="wo_no!='' && userPermissions.wo_access.can_delete" (click)="confirmCloseWorkOrder()" class="delete_wo" tappable ion-button>Delete WO#{{wo_no}}</button> -->
+      <!-- <button tappable ion-button full (click)="dismiss()">Cancel</button> -->
+    </div>
+
+  </div>
+</ion-content>
+<ion-footer>
+  <button style="margin: 0;" *ngIf="wo_no==''" tappable ion-button full [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id)"
+    (click)="createWorkOrder()">CREATE WO</button>
+  <button style="margin: 0;" *ngIf="(wo_no!='' && userPermissions.wo_access.can_edit) && ( !workOrderData.closed || (workOrderData.closed && workOrderData.status!='closed') )"
+    tappable ion-button full [disabled]="(!workOrderData.descriptions || !workOrderData.maintainable_type || !workOrderData.maintainable_id  || (workOrderData.closed && canEditClosedWo && workOrderData.status=='closed'))"
+    (click)="updateWorkOrder()">{{workOrderData.status=='closed'?'CLOSE WO':'UPDATE WO'}}</button>
+</ion-footer>

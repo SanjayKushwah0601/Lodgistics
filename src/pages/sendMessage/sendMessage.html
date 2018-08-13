@@ -45,14 +45,15 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type != 'private'">
+      <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0">
         <ion-col col-10>
           <ion-list>
             <ion-item>
               <ion-label class="to_label">To:</ion-label>
               <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
                 <span *ngFor="let res of allUsers;" text-wrap>
-                  <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span>
+                  <!-- <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span> -->
+                  <span class="user_name">{{res.name}}</span>
                   <span>{{res.type=='group'?'(Group)':''}}</span>
                 </span>
               </ion-label>
@@ -64,7 +65,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
+      <!-- <ion-row class="user_name_box with_selected_user" *ngIf="allUsers.length>0 && allUsers[0].type == 'private'">
         <ion-col col-9>
           <ion-list no-lines>
             <ion-item no-lines>
@@ -72,8 +73,6 @@
               <ion-label *ngIf="allUsers.length>0" class="sendin_footer" [ngClass]="!isShowMore ? 'long-text' : ''">
                 <div *ngFor="let res of allUsers; let i = index">
                   <span *ngIf="i < 2" text-wrap class="user_name">{{res.name}}
-                    <!-- <span >{{res.name}}</span> -->
-                    <!-- <span *ngIf="i==1 && allUsers.length > 2">...</span> -->
 
                   </span>
                   <a *ngIf="i == 1 && allUsers.length > 2 && !isShowMore" class="show-more" (click)="presentPopover($event, !isShowMore)">+{{allUsers.length - 2}} More</a>
@@ -97,11 +96,7 @@
             </ion-item>
           </ion-list>
         </ion-col>
-      </ion-row>
-
-      <!-- <ion-label *ngIf="allUsers.length>0" class="sendin_footer">
-      <span *ngFor="let res of allUsers;" text-wrap> <span class="select_gray_text">Sending To {{res.type=='group'?'Group':'User'}}</span> <span (click)="res.type=='group'?selectGroups():selectIndividual()" class="user_name">{{res.name}}</span></span><ion-icon name="close" (click)="resetSelection()"></ion-icon>
-  </ion-label>  -->
+      </ion-row> -->
 
     </ion-grid>
   </ion-navbar>

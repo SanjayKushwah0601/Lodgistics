@@ -795,7 +795,8 @@ export class SendMessagePage {
             data => {
               this.googleAnalytics.trackMessageEvents(GoogleAnalyticsProvider.ACTION_SEND, 'Message sent from the create message screen')
               console.log(data.json());
-              this.successMessage(name, isGroup, groupInfo)
+              this.dismiss()
+              // this.successMessage(name, isGroup, groupInfo)
             },
             err => {
               console.error("Error : " + err);

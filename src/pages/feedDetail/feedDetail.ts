@@ -290,10 +290,10 @@ export class FeedDetailPage {
   }
 
   // TODO: Need to move this function into utility folder. 
-  updateHtml(val, mentioned_targets) {
+  updateHtml(val, mentioned_user_ids) {
     let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
     }
 
     // let mentionStr = this.commonMethod.getMentionString(allChatMentions, this.members);
@@ -348,27 +348,27 @@ export class FeedDetailPage {
             console.log(JSON.stringify(this.members));
           }
         }
-        this.nativeStorage.getItem('mentionable')
-          .then((data) => {
-            if (data) {
-              for (let i = 0; i < data.departments.length; i++) {
-                let tempUserInfo = {
-                  "id": data.departments[i].id,
-                  "name": data.departments[i].name,
-                  "type": 'Department',
-                  "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
-                  // "total": allMembers.rows.item(i).total
-                };
-                this.totalMentionUsers += 1;
-                this.members.push(tempUserInfo);
-              }
-              console.log(data)
-            } else {
-              this.getMentionableFromServer()
-            }
-          }).catch((err) => {
-            this.getMentionableFromServer()
-          })
+        // this.nativeStorage.getItem('mentionable')
+        //   .then((data) => {
+        //     if (data) {
+        //       for (let i = 0; i < data.departments.length; i++) {
+        //         let tempUserInfo = {
+        //           "id": data.departments[i].id,
+        //           "name": data.departments[i].name,
+        //           "type": 'Department',
+        //           "image": 'https://vertua.com.ph/wp-content/uploads/2015/03/avatar.png',
+        //           // "total": allMembers.rows.item(i).total
+        //         };
+        //         this.totalMentionUsers += 1;
+        //         this.members.push(tempUserInfo);
+        //       }
+        //       console.log(data)
+        //     } else {
+        //       this.getMentionableFromServer()
+        //     }
+        //   }).catch((err) => {
+        //     this.getMentionableFromServer()
+        //   })
 
       }, (error1) => {
         console.log("SELECT MEMBERS ERROR: " + JSON.stringify(error1));

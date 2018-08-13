@@ -605,12 +605,12 @@ export class MyMentionPage {
   }
 
   //TODO: Need to move this function into utility folder. 
-  updateHtml(val, mentioned_targets) {
+  updateHtml(val, mentioned_user_ids) {
     //return "<span style='color:#02B9E7'>@Abhishek</span> " + val.replace(/text-decoration-line/g, "text-decoration");
 
     let allChatMentions = [];
-    if (mentioned_targets != '' && mentioned_targets != null) {
-      allChatMentions = mentioned_targets;
+    if (mentioned_user_ids != '' && mentioned_user_ids != null) {
+      allChatMentions = mentioned_user_ids;
     }
 
     // let mentionStr = this.commonMethod.getMentionString(allChatMentions, this.members);
@@ -1271,8 +1271,8 @@ export class MyMentionPage {
     }
   }
 
-  createWorkOrder(id, value, image_url, mentioned_targets, room_id) {
-    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_targets, room_id: room_id });
+  createWorkOrder(id, value, image_url, mentioned_user_ids, room_id) {
+    let modal = this.modalCtrl.create(CreateWorkOrderPage, { id: id, value: value, image_url: image_url, mentioned_user_ids: mentioned_user_ids, room_id: room_id });
     modal.onDidDismiss(data => {
       this.closekeyboard();
     });

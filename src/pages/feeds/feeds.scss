@@ -513,8 +513,9 @@ page-feeds {
   }
   .time_text {
     text-overflow: ellipsis;
-    width: 30%;
+    width: 80%;
     overflow: hidden;
+    margin-top: 0px;
   }
   .icon-mark-complete {
     font-size: 2.8em;
@@ -694,6 +695,9 @@ page-feeds {
   }
   .item-md.item-block .item-inner {
     padding-right: 0px;
+  }
+  .time-label-fix {
+    margin-top: 0px !important;
   }
   @keyframes fadein {
     from {
